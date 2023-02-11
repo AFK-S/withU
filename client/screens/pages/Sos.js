@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
 
-<<<<<<< HEAD
 const Sos = () => {
     return (
         <View style={styles.container}>
@@ -13,22 +12,13 @@ const Sos = () => {
 }
 
 const styles = StyleSheet.create({
-=======
-const SOSButton = ({ onPress }) => (
-    <Ripple onPress={onPress} style={styles.sosButtonContainer}>
-        <Text style={styles.sosButtonText}>SOS</Text>
-    </Ripple>
-);
-
-const styles = {
->>>>>>> refs/remotes/origin/dev
     container: {
         // padding: 20,
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center'
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-        sosButton: {
+    sosButton: {
         // backgroundColor: 'red',
         // paddingVertical: 15,
         // marginVertical:350,
@@ -41,7 +31,7 @@ const styles = {
         justifyContent: 'center',
 
     },
-        buttonText: {
+    buttonText: {
         color: '#fff',
         textAlign: 'center',
         fontWeight: 'bold'

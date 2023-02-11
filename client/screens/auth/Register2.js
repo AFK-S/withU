@@ -3,8 +3,6 @@ import { View, TextInput, TouchableOpacity, Text, StyleSheet, SafeAreaView } fro
 import Styles from '../../CommonStyles';
 
 const Register2 = ({ navigation }) => {
-    const [name, setName] = useState('');
-    const [password, setPassword] = useState('');
     const [detail, setDetail] = useState({
         name: '',
         phone: '',
@@ -14,7 +12,7 @@ const Register2 = ({ navigation }) => {
     })
     const handleLogin = () => {
         console.log(`name: ${detail.name}, Password: ${detail.phone} & ${detail.address} & ${detail.pin_code}`);
-        // navigation.navigate('login')
+        navigation.navigate('login')
     };
 
     return (

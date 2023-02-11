@@ -16,7 +16,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   const Stack = createNativeStackNavigator();
 
   const Tab = createBottomTabNavigator();
@@ -35,16 +35,8 @@ export default function App() {
     <>
       <StatusBar barStyle={'dark-content'} />
       <NavigationContainer >
-        {isLoggedIn ? <MainScreen /> : <Auth />}        
+        {isLoggedIn ? <MainScreen /> : <Auth />}
       </NavigationContainer >
-      <NavigationContainer>
-        <Tab.Navigator>
-            <Tab.Screen name='sos' component={Sos}/>
-            <Tab.Screen name='map' component={Map}/>
-            <Tab.Screen name='alert' component={Map}/>
-
-        </Tab.Navigator>
-      </NavigationContainer>
 
     </>
   );
