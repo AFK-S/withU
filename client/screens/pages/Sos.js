@@ -1,45 +1,69 @@
-import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import Ripple from 'react-native-material-ripple';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useEffect, useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { Audio } from "expo-av"
+import Styles from '../../CommonStyles';
 
-const SOSButton = ({ onPress }) => (
-    <Ripple onPress={onPress} style={styles.sosButtonContainer}>
-        <Text style={styles.sosButtonText}>SOS</Text>
-    </Ripple>
-);
+const Sos = () => {
+    const [sound, setSound] = React.useState();
 
-const styles = {
+    async function playSound() {
+
+        console.log('Loading Sound');
+        const { sound } = await Audio.Sound.createAsync(require('../../assets/sos.mp3')
+        );
+        setSound(sound);
+        console.log();
+
+        console.log('Playing Sound');
+        await sound.playAsync();
+    }
+
+    React.useEffect(() => {
+        return sound
+            ? () => {
+                console.log('Unloading Sound');
+                sound.unloadAsync();
+            }
+            : undefined;
+    }, [sound]);
+
+
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <View style={{ borderColor: "red", borderWidth: 7, borderRadius: 100, padding: 10 }}>
+                    <TouchableOpacity style={styles.sosButton} onPress={playSound}>
+                        <Text style={styles.buttonText}>SOS</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </SafeAreaView>
+    );
+}
+
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center'
     },
-    sosButtonContainer: {
-        alignItems: 'center',
-        backgroundColor: 'red',
-        borderRadius: 50,
-        height: 70,
+    sosButton: {
+        backgroundColor: "red",
+        width: 150,
+        height: 150,
+        borderRadius: 200,
+        alignItems: "center",
         justifyContent: 'center',
-        width: 70,
+        borderWidth: 5,
+        borderColor: 'red',
     },
-    sosButtonText: {
-        color: 'white',
-        fontSize: 24,
-    },
-};
-const Tab = createBottomTabNavigator();
-export default class MyPage extends React.Component {
-    handleSOSPress = () => {
-        // Do something when the SOS button is pressed
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <SOSButton onPress={this.handleSOSPress} />
-            </View>
-        );
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 30,
+        fontFamily: Styles.bold.fontFamily,
     }
-}
+})
+
+export default Sos;
