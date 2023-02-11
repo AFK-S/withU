@@ -1,46 +1,41 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
-import Ripple from 'react-native-material-ripple';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const SOSButton = ({ onPress }) => (
-
-    <Ripple onPress={onPress} style={styles.sosButtonContainer}>
-        <Text style={styles.sosButtonText}>SOS</Text>
-    </Ripple>
-);
-
-const styles = {
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    sosButtonContainer: {
-        alignItems: 'center',
-        backgroundColor: 'red',
-        borderRadius: 50,
-        height: 70,
-        justifyContent: 'center',
-        width: 70,
-    },
-    sosButtonText: {
-        color: 'white',
-        fontSize: 24,
-    },
-};
-const Tab = createBottomTabNavigator();
-export default class MyPage extends React.Component {
-    handleSOSPress = () => {
-        // Do something when the SOS button is pressed
-    };
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <SOSButton onPress={this.handleSOSPress} />
-            </View>
-        );
-    }
+const Sos = () => {
+    return (
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.sosButton}>
+                <Text style={styles.buttonText}>SOS</Text>
+            </TouchableOpacity>
+        </View>
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        // padding: 20,
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+        sosButton: {
+        // backgroundColor: 'red',
+        // paddingVertical: 15,
+        // marginVertical:350,
+        // borderRadius: 50
+        backgroundColor: "red",
+        width: 150,
+        height: 150,
+        borderRadius: 200,
+        alignItems: "center",
+        justifyContent: 'center',
+
+    },
+        buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    }
+})
+
+export default Sos;
