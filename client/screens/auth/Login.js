@@ -7,13 +7,12 @@ const LoginForm = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        // Add your authentication logic here
         console.log(`Username: ${username}, Password: ${password}`);
     };
 
     return (
         <View style={styles.container}>
-            <SafeAreaView style={{ width: "100%" }}>
+            <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
                 <Text style={[Styles.bold, styles.title]}>withU</Text>
                 <TextInput
                     style={styles.input}

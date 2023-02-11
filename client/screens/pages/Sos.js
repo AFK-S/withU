@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
+<<<<<<< HEAD
 const Sos = () => {
     return (
         <View style={styles.container}>
@@ -12,6 +13,15 @@ const Sos = () => {
 }
 
 const styles = StyleSheet.create({
+=======
+const SOSButton = ({ onPress }) => (
+    <Ripple onPress={onPress} style={styles.sosButtonContainer}>
+        <Text style={styles.sosButtonText}>SOS</Text>
+    </Ripple>
+);
+
+const styles = {
+>>>>>>> refs/remotes/origin/dev
     container: {
         // padding: 20,
         flex:1,

@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 const Styles = StyleSheet.create({
     bg: {
-        backgroundColor: "#ea4c89"
+        backgroundColor: "#FA198B"
     },
     bold: {
         fontFamily: 'Poppins-Bold',
@@ -17,7 +17,7 @@ const Styles = StyleSheet.create({
         fontWeight: '400'
     },
     button: {
-        backgroundColor: "#ea4c89",
+        backgroundColor: "#FA198B",
         padding: 15,
         borderRadius: 25,
         paddingHorizontal: 30
