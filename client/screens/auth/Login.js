@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, SafeAreaView } from 'react-native';
+import Styles from '../../CommonStyles';
 
-const LoginForm = () => {
+const LoginForm = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -12,35 +13,46 @@ const LoginForm = () => {
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-                onChangeText={text => setUsername(text)}
-                value={username}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                onChangeText={text => setPassword(text)}
-                value={password}
-            />
-            <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+            <SafeAreaView style={{ width: "100%" }}>
+                <Text style={[Styles.bold, styles.title]}>withU</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    onChangeText={text => setUsername(text)}
+                    value={username}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    secureTextEntry
+                    onChangeText={text => setPassword(text)}
+                    value={password}
+                />
+                <TouchableOpacity onPress={handleLogin} style={{ ...Styles.button, marginTop: 10 }}>
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ marginTop: 20 }} onPress={() => navigation.navigate('register')}>
+                    <Text style={{ textAlign: "center", fontFamily: Styles.medium.fontFamily }}>New to withU ? Register Here</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20
+        padding: 40,
+        backgroundColor: '#fff',
+        flex: 1,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
     },
     input: {
-        height: 40,
-        marginBottom: 20,
-        paddingHorizontal: 10,
-        borderRadius: 5,
+        height: 50,
+        marginBottom: 30,
+        paddingHorizontal: 15,
+        borderRadius: 18,
         borderWidth: 1,
         borderColor: '#ccc'
     },
@@ -52,7 +64,13 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontFamily: Styles.bold.fontFamily,
+        fontSize: 18
+    },
+    title: {
+        fontSize: 60,
+        textAlign: 'center',
+        marginBottom: 50,
     }
 });
 

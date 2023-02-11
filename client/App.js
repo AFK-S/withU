@@ -22,13 +22,12 @@ export default function App() {
   }
 
   return (
-    // <View style={styles.container}>
-    //   <StatusBar barStyle={'dark-content'} />
-    // {/* <Auth /> */ }
-    <NavigationContainer >
-      <Auth />
-    </NavigationContainer >
-    // </View >
+    <>
+      <StatusBar barStyle={'dark-content'} />
+      <NavigationContainer >
+        <Auth />
+      </NavigationContainer >
+    </>
   );
 }
 

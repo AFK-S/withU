@@ -3,7 +3,8 @@ import React from 'react'
 import GetStarted from './GetStarted'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginForm from './Login';
-
+import Sos from '../pages/Sos'
+import Register from './Register';
 const AuthScreen = () => {
     const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,8 @@ const AuthScreen = () => {
             <Stack.Screen name='home' component={GetStarted}
                 options={{ headerShown: false }} />
             <Stack.Screen name='login' component={LoginForm}
+                options={{ headerShown: false }} />
+            <Stack.Screen name='register' component={Register}
                 options={{ headerShown: false }} />
         </Stack.Navigator>
 
