@@ -7,8 +7,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import GetStarted from './screens/auth/GetStarted';
 import LoginForm from './screens/auth/Login';
+import { useState } from 'react';
+import MainScreen from './screens/MainScreen';
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   const Stack = createNativeStackNavigator();
 
   let [fontsLoaded] = useFonts({
@@ -25,7 +28,7 @@ export default function App() {
     <>
       <StatusBar barStyle={'dark-content'} />
       <NavigationContainer >
-        <Auth />
+        {isLoggedIn ? <MainScreen /> : <Auth />}
       </NavigationContainer >
     </>
   );
