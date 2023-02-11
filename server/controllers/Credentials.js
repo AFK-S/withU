@@ -6,14 +6,17 @@ const Register = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ type: "error", message: errors.array() });
   }
-  const { name, email_address, password } = req.body;
+  const { name, email_address, phone_number, emergency_contact, password } =
+    req.body;
   try {
     const response = await User.create({
       name,
       email_address,
+      phone_number,
+      emergency_contact,
       password,
     });
-    return res.json(response);
+    return res.json({ type: "success", data: response });
   } catch (err) {
     console.error(err);
     res.status(400).json({ type: "error", message: err });
@@ -36,7 +39,7 @@ const Login = async (req, res) => {
         .status(400)
         .json({ type: "error", message: "Invalid Credentials" });
     }
-    return res.json(response);
+    return res.json({ type: "success", data: response });
   } catch (err) {
     console.error(err);
     res.status(400).json({ type: "error", message: err });

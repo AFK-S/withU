@@ -22,6 +22,25 @@ const UserSchema = new Schema(
       required: [true, "Please add an Email Address"],
       unique: true,
     },
+    phone_number: {
+      type: String,
+      trim: true,
+      match: [
+        /^[0-9]{10}$/,
+        (props) => `${props.value} is not a valid phone number`,
+      ],
+      required: [true, "Please add a Phone Number"],
+      unique: true,
+    },
+    emergency_contact: {
+      type: Array,
+      trim: true,
+      match: [
+        /^[0-9]{10}$/,
+        (props) => `${props.value} is not a valid phone number`,
+      ],
+      required: [true, "Please add an Emergency Contact"],
+    },
     password: {
       type: String,
       required: [true, "Please add a Password"],
