@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginForm from './Login';
 import Sos from '../pages/Sos'
 import Register from './Register';
+import Register2 from './Register2';
 const AuthScreen = () => {
     const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,8 @@ const AuthScreen = () => {
             <Stack.Screen name='login' component={LoginForm}
                 options={{ headerShown: false }} />
             <Stack.Screen name='register' component={Register}
+                options={{ headerShown: false }} />
+            <Stack.Screen name='register2' component={Register2}
                 options={{ headerShown: false }} />
         </Stack.Navigator>
 
