@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const SOSButton = ({ onPress }) => (
-
     <Ripple onPress={onPress} style={styles.sosButtonContainer}>
         <Text style={styles.sosButtonText}>SOS</Text>
     </Ripple>

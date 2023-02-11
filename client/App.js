@@ -11,7 +11,7 @@ import { useState } from 'react';
 import MainScreen from './screens/MainScreen';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const Stack = createNativeStackNavigator();
 
   let [fontsLoaded] = useFonts({
