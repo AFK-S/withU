@@ -1,12 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import Auth from './screens/auth/AuthScreen'
+import * as Font from 'expo-font';
+import { useFonts } from 'expo-font'
+import AppLoading from 'expo-app-loading';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import GetStarted from './screens/auth/GetStarted';
+import LoginForm from './screens/auth/Login';
+import { useState } from 'react';
+import MainScreen from './screens/MainScreen';
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const Stack = createNativeStackNavigator();
+
+  let [fontsLoaded] = useFonts({
+    'Poppins-Bold': require('./assets/Fonts/Poppins-Bold.ttf'),
+    'Poppins-Thin': require('.//assets/Fonts/Poppins-Thin.ttf'),
+    'Poppins-Medium': require('.//assets/Fonts/Poppins-Medium.ttf')
+  })
+
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <StatusBar barStyle={'dark-content'} />
+      <NavigationContainer >
+        {isLoggedIn ? <MainScreen /> : <Auth />}
+      </NavigationContainer >
+    </>
   );
 }
 
@@ -17,4 +41,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
 });
