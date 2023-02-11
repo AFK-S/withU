@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import Ripple from 'react-native-material-ripple';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const SOSButton = ({ onPress }) => (
+
     <Ripple onPress={onPress} style={styles.sosButtonContainer}>
         <Text style={styles.sosButtonText}>SOS</Text>
     </Ripple>
@@ -27,7 +30,7 @@ const styles = {
         fontSize: 24,
     },
 };
-
+const Tab = createBottomTabNavigator();
 export default class MyPage extends React.Component {
     handleSOSPress = () => {
         // Do something when the SOS button is pressed
