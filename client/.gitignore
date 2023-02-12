@@ -1,5 +1,5 @@
 node_modules/
-/node_modules
+node_modules
 .expo/
 dist/
 npm-debug.*
@@ -7,7 +7,7 @@ npm-debug.*
 *.p8
 *.p12
 *.key
-*.mobileprovision
+*.mobileprovision   
 *.orig.*
 web-build/
 
