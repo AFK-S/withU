@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import Auth from './screens/auth/AuthScreen'
 import * as Font from 'expo-font';
 import { useFonts } from 'expo-font'
-// import AppLoading from 'expo-app-loading';
+import AppLoading from 'expo-app-loading';
 import { NavigationContainer, TabActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import GetStarted from './screens/auth/GetStarted';
@@ -27,9 +27,9 @@ export default function App() {
     'Poppins-Medium': require('.//assets/Fonts/Poppins-Medium.ttf')
   })
 
-  // if (!fontsLoaded) {
-  //   return <AppLoading />
-  // }
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
 
   return (
     <>
