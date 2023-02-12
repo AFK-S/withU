@@ -27,7 +27,7 @@ On pressing SOS button, it will provide information about nearby police stations
 
 
 ## Developed by
-- [Karandeep Singh Sandhu](https://linktodocumentation)
+- [Karandeep Singh Sandhu](https://github.com/Karan2310)
 - [Aditya Rai](https://github.com/adi50920)
 - [Faizan Potrick](https://github.com/FaizanPotrick)
 - [Sarthak Deshmukh](https://github.com/SarthakDeshmukh13)
