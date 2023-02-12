@@ -10,7 +10,7 @@ const MainScreen = () => {
     const Tab = createBottomTabNavigator();
     return (
         <Tab.Navigator
-            initialRouteName='MAP'
+            initialRouteName='SOS'
             screenOptions={{
                 tabBarShowLabel: false,
                 tabBarStyle: {
