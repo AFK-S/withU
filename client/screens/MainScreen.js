@@ -1,7 +1,8 @@
-import { StyleSheet, View, Image, Text } from 'react-native'
+import { StyleSheet, View, Image, Text, Platform } from 'react-native'
 import React from 'react'
 import Sos from './pages/Sos';
 import Map from './pages/Map';
+import Alerts from './pages/Alerts';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
@@ -21,17 +22,14 @@ const MainScreen = () => {
                     backgroundColor: '#FA198B',
                     borderWidth: 3,
                     borderColor: "#FA198B",
-                    borderRadius: 20,
-                    height: 70,
-                    borderTopColor: "#FA198B",
-                    borderTopWidth: 3,
-                    // ...styles.shadow
+                    borderRadius: 25,
+                    height: 75,
                 }
             }}>
             <Tab.Screen name='MAP' component={Map}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: Platform.OS === 'android' ? 0 : 10 }}>
                             <Image
                                 source={require('../assets/icons/map.png')}
                                 resizeMode='contain'
@@ -46,9 +44,9 @@ const MainScreen = () => {
             <Tab.Screen name='SOS' component={Sos}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: Platform.OS === 'android' ? 0 : 10 }}>
                             <Image
-                                source={require('../assets/icons/sos.png')}
+                                source={require('../assets/icons/alert.png')}
                                 resizeMode='contain'
                                 style={{
                                     width: 35,
@@ -59,12 +57,12 @@ const MainScreen = () => {
                     )
                 }}
             />
-            <Tab.Screen name='ALERT' component={Map}
+            <Tab.Screen name='ALERTS' component={Alerts}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: Platform.OS === 'android' ? 0 : 10 }}>
                             <Image
-                                source={require('../assets/icons/alert.png')}
+                                source={require('../assets/icons/sos.png')}
                                 resizeMode='contain'
                                 style={{
                                     width: 35,
