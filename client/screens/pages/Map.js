@@ -1,15 +1,65 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import MapView, { Marker }  from 'react-native-maps';
+import * as Location from 'expo-location';
 
 const Map = () => {
-    return (
-        <View>
-            <Text>Map</Text>
-            <Text>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum sequi porro officia sapiente quia maxime, corrupti amet explicabo asperiores ipsa ducimus aliquam culpa autem sed voluptates labore, minus illum cumque? Odit neque soluta illo. Expedita error quasi exercitationem dicta deleniti tenetur aspernatur. Consequatur officiis molestiae ducimus delectus consectetur! Nihil rem amet quis, voluptates eveniet commodi voluptas enim atque voluptate eligendi velit suscipit sunt ex quod itaque modi officiis consequuntur libero quaerat et necessitatibus tenetur illum. Quaerat doloribus accusamus perferendis sapiente in doloremque magni dolorum atque ad, ducimus molestias, pariatur harum consectetur blanditiis maxime, reiciendis fuga quis officia neque. Nihil, officia.</Text>
-        </View>
-    )
-}
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-export default Map
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      }
 
-const styles = StyleSheet.create({})
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  return (
+  <View style={styles.container}>
+      {errorMsg ? (
+        <Text>{errorMsg}</Text>
+      ) : location ? (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        onMapReady={() => console.log(`Coordinate: (${location.coords.latitude}, ${location.coords.longitude})`)}
+
+        >
+          <Marker
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+            title="Current Location"
+          />
+        </MapView>
+      ) : (
+        <Text>Waiting for location</Text>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
+
+export default Map;
