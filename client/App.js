@@ -14,7 +14,7 @@ import Map from "./screens/pages/Map";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const Stack = createNativeStackNavigator();
 
