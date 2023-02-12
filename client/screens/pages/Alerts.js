@@ -31,7 +31,7 @@ const Alerts = () => {
         },
     ]
     return (
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
             <FlatList data={alertList} renderItem={({ item }) => {
                 return (
                     <View style={styles.card}>
