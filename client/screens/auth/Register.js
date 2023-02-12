@@ -17,10 +17,10 @@ const Register = ({ navigation }) => {
 
   const handleLogin = () => {
     navigation.navigate("register2", { cred: register });
-    register = {
+    setRegister({
       email_address: "",
       password: "",
-    };
+    });
   };
 
   return (
@@ -34,12 +34,16 @@ const Register = ({ navigation }) => {
             setRegister({ ...register, email_address: text })
           }
           value={register.email_address}
+          autoCapitalize="none"
+          autoComplete="none"
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           secureTextEntry
           onChangeText={(text) => setRegister({ ...register, password: text })}
+          autoCapitalize="none"
+          autoComplete="none"
           value={register.password}
         />
         <TouchableOpacity

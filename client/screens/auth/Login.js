@@ -10,24 +10,21 @@ import {
 import Styles from "../../CommonStyles";
 import axios from "axios";
 
-const LoginForm = ({ navigation }) => {
+const LoginForm = ({ navigation, setIsLoggedIn }) => {
   const [login, setLogin] = useState({
     email_address: "",
     password: "",
   });
 
   const handleLogin = async () => {
-    console.log(login);
     try {
       const { data } = await axios.put(
-        "http://192.168.0.105:8000/api/login",
+        "http://192.168.0.110:8000/api/login",
         login
       );
       console.log(data);
-      login = {
-        email_address: "",
-        password: "",
-      };
+      setLogin({ email_address: "", password: "" });
+      setIsLoggedIn(true);
     } catch (error) {
       console.log(error);
     }
@@ -42,12 +39,16 @@ const LoginForm = ({ navigation }) => {
           placeholder="Email Address"
           onChangeText={(text) => setLogin({ ...login, email_address: text })}
           value={login.email_address}
+          autoCapitalize="none"
+          autoComplete="none"
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           secureTextEntry
           onChangeText={(text) => setLogin({ ...login, password: text })}
+          autoCapitalize="none"
+          autoComplete="none"
           value={login.password}
         />
         <TouchableOpacity

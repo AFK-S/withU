@@ -10,7 +10,7 @@ import {
 import Styles from "../../CommonStyles";
 import axios from "axios";
 
-const Register2 = ({ route, navigation }) => {
+const Register2 = ({ route, navigation, setIsLoggedIn }) => {
   const { cred } = route.params;
   const [register, setRegister] = useState({
     name: "",
@@ -23,7 +23,7 @@ const Register2 = ({ route, navigation }) => {
     console.log(register);
     try {
       const { data } = await axios.post(
-        "http://192.168.0.105:8000/api/register",
+        "http://192.168.0.110:8000/api/register",
         {
           name: register.name,
           email_address: register.email_address,
@@ -33,17 +33,17 @@ const Register2 = ({ route, navigation }) => {
         }
       );
       console.log(data);
-      register = {
+      setRegister({
         name: "",
         email_address: "",
         phone_number: "",
         emergency_contacts: "",
         password: "",
-      };
+      });
+      setIsLoggedIn(true);
     } catch (error) {
       console.log(error);
     }
-    // navigation.navigate("login");
   };
 
   return (
@@ -57,6 +57,8 @@ const Register2 = ({ route, navigation }) => {
           placeholder="Name"
           onChangeText={(text) => setRegister({ ...register, name: text })}
           value={register.name}
+          autoCapitalize="none"
+          autoComplete="none"
         />
         <TextInput
           style={styles.input}
@@ -66,6 +68,8 @@ const Register2 = ({ route, navigation }) => {
             setRegister({ ...register, phone_number: text })
           }
           value={register.phone_number}
+          autoCapitalize="none"
+          autoComplete="none"
         />
         <TextInput
           style={styles.input}
@@ -75,6 +79,8 @@ const Register2 = ({ route, navigation }) => {
             setRegister({ ...register, emergency_contacts: text })
           }
           value={register.emergency_contacts}
+          autoCapitalize="none"
+          autoComplete="none"
         />
 
         <TouchableOpacity
@@ -92,6 +98,8 @@ const Register2 = ({ route, navigation }) => {
               textAlign: "center",
               fontFamily: Styles.medium.fontFamily,
             }}
+            autoCapitalize="none"
+            autoComplete="none"
           >
             Back
           </Text>

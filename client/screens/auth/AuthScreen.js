@@ -6,8 +6,7 @@ import LoginForm from "./Login";
 import Sos from "../pages/Sos";
 import Register from "./Register";
 import Register2 from "./Register2";
-const AuthScreen = ({isLoggedIn, setIsLoggedIn}) => {
-  console.log(isLoggedIn)
+const AuthScreen = ({ setIsLoggedIn }) => {
   const Stack = createNativeStackNavigator();
 
   return (
@@ -17,21 +16,22 @@ const AuthScreen = ({isLoggedIn, setIsLoggedIn}) => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="login"
-        component={LoginForm}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="login" options={{ headerShown: false }}>
+        {(props) => <LoginForm {...props} setIsLoggedIn={setIsLoggedIn} />}
+      </Stack.Screen>
       <Stack.Screen
         name="register"
         component={Register}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      <Stack.Screen name="register2" options={{ headerShown: false }}>
+        {(props) => <Register2 {...props} setIsLoggedIn={setIsLoggedIn} />}
+      </Stack.Screen>
+      {/* <Stack.Screen
         name="register2"
         component={Register2}
         options={{ headerShown: false }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
