@@ -32,6 +32,16 @@ const UserSchema = new Schema(
       required: [true, "Please add a Phone Number"],
       unique: true,
     },
+    gender: {
+      type: String,
+      trim: true,
+      enum: ["male", "female"],
+      match: [
+        /^(male|female)$/,
+        (props) => `${props.value} is not a valid gender`,
+      ],
+      required: [true, "Please add a Gender"],
+    },
     emergency_contact: {
       type: Array,
       trim: true,

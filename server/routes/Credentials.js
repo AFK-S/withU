@@ -13,6 +13,7 @@ router.post(
     .isEmail()
     .withMessage("Invalid Email Address"),
   body("phone_number").not().isEmpty().withMessage("Phone Number is required"),
+  body("gender").not().isEmpty().withMessage("Gender is required"),
   body("emergency_contact")
     .not()
     .isEmpty()
