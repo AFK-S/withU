@@ -6,9 +6,9 @@ const socket = (http) => {
   const io = new Server(http);
 
   io.on("connection", (socket) => {
-    socket.on("Set_Active_Users", async (user_id, coordinates) => {
+    socket.on("Set_Active_User", async (user_id, coordinates) => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-      users[socket.id] = {
+      users[user_id] = {
         socket_id: socket.id,
         user_id: user_id,
         coordinates: coordinates,
@@ -22,9 +22,12 @@ const socket = (http) => {
     SOS(socket);
     socket.on("disconnect", async () => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-      if (users[socket.id]) {
-        delete users[socket.id];
-        fs.writeFileSync("./json/isActive.json", JSON.stringify(users));
+      for (const user_id in users) {
+        if (users[user_id].socket_id === socket.id) {
+          delete users[user_id];
+          fs.writeFileSync("./json/isActive.json", JSON.stringify(users));
+          break;
+        }
       }
     });
   });
