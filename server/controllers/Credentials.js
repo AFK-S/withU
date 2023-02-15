@@ -1,10 +1,12 @@
-const User = require("../models/User");
 const { validationResult } = require("express-validator");
+const User = require("../models/User");
 
 const Register = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ type: "error", message: errors.array()[0].msg });
+    return res
+      .status(400)
+      .json({ type: "error", message: errors.array()[0].msg });
   }
   const {
     name,
@@ -23,7 +25,10 @@ const Register = async (req, res) => {
       emergency_contact,
       password,
     });
-    return res.json(response._id);
+    return res.json({
+      user_id: response._id,
+      gender: response.gender,
+    });
   } catch (err) {
     console.error(err);
     res.status(400).json({ type: "error", message: err });
@@ -48,7 +53,10 @@ const Login = async (req, res) => {
         .status(400)
         .json({ type: "error", message: "Invalid Credentials" });
     }
-    return res.json(response._id);
+    return res.json({
+      user_id: response._id,
+      gender: response.gender,
+    });
   } catch (err) {
     console.error(err);
     res.status(400).json({ type: "error", message: err });

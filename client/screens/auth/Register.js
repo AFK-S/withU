@@ -16,7 +16,7 @@ const Register = ({ navigation }) => {
     password: "",
   });
 
-  const handleLogin = () => {
+  const onSubmit = () => {
     navigation.navigate("register2", {
       cred: register,
       setCred: setRegister,
@@ -55,7 +55,7 @@ const Register = ({ navigation }) => {
           value={register.password}
         />
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={onSubmit}
           style={{ ...Styles.button, marginTop: 10 }}
         >
           <Text style={styles.buttonText}>Next</Text>

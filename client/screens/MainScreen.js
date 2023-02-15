@@ -3,37 +3,48 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import io from "socket.io-client";
 import * as Location from "expo-location";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sos from "./pages/Sos";
 import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
 
 const MainScreen = () => {
-  const socket = io("http://192.168.0.105:8000", { transports: ["websocket"] });
+  const socket = io("http://192.168.0.105:8000", {
+    transports: ["websocket"],
+  });
 
-  const [location, setLocation] = useState(null);
-
-  socket.on("connect", async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      return console.error("Permission to access location was denied");
-    }
-    const { coords } = await Location.getCurrentPositionAsync({});
-    const user_id = await AsyncStorage.getItem("user_id");
-    socket.emit("Set_Active_User", user_id, {
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    });
-    setLocation({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    });
-    console.log("Socket Connected");
+  socket.on("connect", () => {
+    console.log("Connected");
   });
 
   socket.on("connect_error", (err) => {
     console.log(err);
   });
+
+  const [location, setLocation] = useState(null);
+
+  const GetLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      return console.error("Permission to access location was denied");
+    }
+    const { coords } = await Location.getCurrentPositionAsync({});
+    return {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    };
+  };
+
+  useEffect(() => {
+    (async () => {
+      const coordinate = await GetLocation();
+      const { user_id, gender } = JSON.parse(
+        await AsyncStorage.getItem("user")
+      );
+      socket.emit("Set_Active_User", user_id, gender, coordinate);
+      setLocation(coordinate);
+    })();
+  }, []);
 
   const Tab = createBottomTabNavigator();
   return (

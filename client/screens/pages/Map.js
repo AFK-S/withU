@@ -30,7 +30,13 @@ const Map = ({ socket, location }) => {
           }
         >
           {activeUsers.map((user, index) => {
-            return <Marker key={index} coordinate={user.coordinates} title={user._id} />;
+            return (
+              <Marker
+                key={index}
+                coordinate={user.coordinates}
+                title={user._id}
+              />
+            );
           })}
         </MapView>
       ) : (

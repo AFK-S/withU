@@ -23,7 +23,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
         "http://192.168.0.105:8000/api/login",
         login
       );
-      await AsyncStorage.setItem("user_id", data);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
       setLogin({ email_address: "", password: "" });
       setIsLogin(true);
     } catch (err) {

@@ -39,7 +39,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
           password: register.password,
         }
       );
-      await AsyncStorage.setItem("user_id", data);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
       setCred({
         name: "",
         email_address: "",

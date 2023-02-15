@@ -15,16 +15,15 @@ export default function App() {
     message: "",
   });
 
-  const checkIsLogin = async () => {
-    const user_id = await AsyncStorage.getItem("user_id");
-    if (user_id === null && user_id.length !== 24) {
-      return setIsLogin(false);
-    }
-    setIsLogin(true);
-  };
-
   useEffect(() => {
-    checkIsLogin();
+    (async () => {
+      const user = await AsyncStorage.getItem("user");
+      const { user_id, gender } = JSON.parse(user);
+      if (user === null && user_id.length !== 24 && gender) {
+        return setIsLogin(false);
+      }
+      setIsLogin(true);
+    })();
   }, [isLogin]);
 
   const [fontsLoaded] = useFonts({
