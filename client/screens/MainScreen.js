@@ -69,6 +69,7 @@ const MainScreen = () => {
       <Tab.Screen
         name="MAP"
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -94,8 +95,8 @@ const MainScreen = () => {
       </Tab.Screen>
       <Tab.Screen
         name="SOS"
-        component={Sos}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -116,7 +117,9 @@ const MainScreen = () => {
             </View>
           ),
         }}
-      />
+      >
+        {(props) => <Sos {...props} socket={socket} location={location} />}
+      </Tab.Screen>
       <Tab.Screen
         name="ALERTS"
         component={Alerts}

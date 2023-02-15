@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Circle, Marker } from "react-native-maps";
 
 const Map = ({ socket, location }) => {
   const [activeUsers, setActiveUsers] = useState([]);
@@ -23,21 +23,19 @@ const Map = ({ socket, location }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          onMapReady={() =>
-            console.log(
-              `Coordinate: (${location.latitude}, ${location.longitude})`
-            )
-          }
+          provider="google"
         >
           {activeUsers.map((user, index) => {
             return (
               <Marker
                 key={index}
                 coordinate={user.coordinates}
-                title={user._id}
+                title={user.user_id}
+                description={user.gender}
               />
             );
           })}
+          <Circle center={location} radius={100} />
         </MapView>
       ) : (
         <Text>Waiting for location</Text>
