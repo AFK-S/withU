@@ -1,47 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import MapView, { Marker }  from 'react-native-maps';
-import * as Location from 'expo-location';
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
-const Map = () => {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+const Map = ({ socket, location }) => {
+  const [activeUsers, setActiveUsers] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
+  socket.emit("Get_Active_Users", (users) => {
+    setActiveUsers(users);
+  });
 
   return (
-  <View style={styles.container}>
-      {errorMsg ? (
-        <Text>{errorMsg}</Text>
-      ) : location ? (
+    <View style={styles.container}>
+      {location !== null ? (
         <MapView
-          style={styles.map}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
           initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-        onMapReady={() => console.log(`Coordinate: (${location.coords.latitude}, ${location.coords.longitude})`)}
-
+          onMapReady={() =>
+            console.log(
+              `Coordinate: (${location.latitude}, ${location.longitude})`
+            )
+          }
         >
-          <Marker
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-            title="Current Location"
-          />
+          {activeUsers.map((user, index) => {
+            return <Marker key={index} coordinate={user.coordinates} title={user._id} />;
+          })}
         </MapView>
       ) : (
         <Text>Waiting for location</Text>
@@ -53,12 +43,8 @@ const Map = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    width: '100%',
-    height: '100%',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

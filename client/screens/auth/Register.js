@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -7,19 +6,20 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import React, { useState } from "react";
 import Styles from "../../CommonStyles";
 
 const Register = ({ navigation }) => {
   const [register, setRegister] = useState({
+    name: "",
     email_address: "",
     password: "",
   });
 
   const handleLogin = () => {
-    navigation.navigate("register2", { cred: register });
-    setRegister({
-      email_address: "",
-      password: "",
+    navigation.navigate("register2", {
+      cred: register,
+      setCred: setRegister,
     });
   };
 
@@ -29,13 +29,21 @@ const Register = ({ navigation }) => {
         <Text style={[Styles.bold, styles.title]}>Register</Text>
         <TextInput
           style={styles.input}
+          placeholder="Name"
+          onChangeText={(text) => setRegister({ ...register, name: text })}
+          value={register.name}
+          autoCapitalize="none"
+          autoComplete="off"
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Email Address"
           onChangeText={(text) =>
             setRegister({ ...register, email_address: text })
           }
           value={register.email_address}
           autoCapitalize="none"
-          autoComplete="none"
+          autoComplete="off"
         />
         <TextInput
           style={styles.input}
@@ -43,7 +51,7 @@ const Register = ({ navigation }) => {
           secureTextEntry
           onChangeText={(text) => setRegister({ ...register, password: text })}
           autoCapitalize="none"
-          autoComplete="none"
+          autoComplete="off"
           value={register.password}
         />
         <TouchableOpacity
@@ -53,7 +61,7 @@ const Register = ({ navigation }) => {
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 10 }}
           onPress={() => navigation.navigate("login")}
         >
           <Text
@@ -75,33 +83,26 @@ const styles = StyleSheet.create({
     padding: 40,
     backgroundColor: "#fff",
     flex: 1,
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
+  },
+  title: {
+    fontSize: 60,
+    textAlign: "center",
+    marginBottom: 50,
   },
   input: {
     height: 50,
-    marginBottom: 30,
+    marginBottom: 15,
     paddingHorizontal: 15,
-    borderRadius: 18,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: "#ccc",
-  },
-  buttonContainer: {
-    backgroundColor: "#2980b9",
-    paddingVertical: 15,
-    borderRadius: 5,
   },
   buttonText: {
     color: "#fff",
     textAlign: "center",
     fontFamily: Styles.bold.fontFamily,
     fontSize: 18,
-  },
-  title: {
-    fontSize: 60,
-    textAlign: "center",
-    marginBottom: 50,
   },
 });
 
