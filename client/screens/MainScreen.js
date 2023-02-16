@@ -14,6 +14,7 @@ const MainScreen = () => {
   });
 
   const [location, setLocation] = useState(null);
+  const [User, setUser] = useState({});
 
   socket.on("connect", async () => {
     console.log("connected");
@@ -30,6 +31,7 @@ const MainScreen = () => {
         return console.error("Permission to access location was denied");
       }
       const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      setUser(user);
       const subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
@@ -97,7 +99,9 @@ const MainScreen = () => {
           ),
         }}
       >
-        {(props) => <Map {...props} socket={socket} location={location} />}
+        {(props) => (
+          <Map {...props} socket={socket} User={User} location={location} />
+        )}
       </Tab.Screen>
       <Tab.Screen
         name="SOS"

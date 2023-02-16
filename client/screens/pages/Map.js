@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import MapView, { Circle, Marker } from "react-native-maps";
 
-const Map = ({ socket, location }) => {
+const Map = ({ socket, User, location }) => {
   const [activeUsers, setActiveUsers] = useState([]);
 
   socket.emit("Get_Active_Users", (users) => {
@@ -14,7 +14,13 @@ const Map = ({ socket, location }) => {
   });
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {location !== null ? (
         <MapView
           style={{
@@ -24,10 +30,9 @@ const Map = ({ socket, location }) => {
           region={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
           }}
-          showsUserLocation={true}
           provider="google"
         >
           {activeUsers.map((user, index) => {
@@ -36,11 +41,16 @@ const Map = ({ socket, location }) => {
                 key={index}
                 coordinate={user.coordinates}
                 title={user.user_id}
-                description={user.gender}
+                description={user.name}
+                opacity={user.user_id === User.user_id ? 1 : 0.5}
               />
             );
           })}
-          <Circle center={location} radius={100} />
+          <Circle
+            center={location}
+            radius={500}
+            fillColor={"rgba(0,0,0,0.1)"}
+          />
         </MapView>
       ) : (
         <Text>Waiting for location</Text>
@@ -48,13 +58,5 @@ const Map = ({ socket, location }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default Map;
