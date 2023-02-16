@@ -67,13 +67,10 @@ const SOS = ({ socket, User }) => {
       });
     }
     socket.emit("SOS_button", user_id, emergency_contact, (user_details) => {
-      const message = `I am ${
-        user_details.name
-      } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${
-        user_details.coordinates.latitude
-      },${user_details.coordinates.longitude} and my contact number is ${
-        user_details.phone_number
-      }.\n Send at ${new Date(user_details.time).toLocaleString()}`;
+      const message = `I am ${user_details.name
+        } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${user_details.coordinates.latitude
+        },${user_details.coordinates.longitude} and my contact number is ${user_details.phone_number
+        }.\n Send at ${new Date(user_details.time).toLocaleString()}`;
       SendSMS(emergency_contact, message);
     });
   };
@@ -83,22 +80,10 @@ const SOS = ({ socket, User }) => {
       <View style={styles.container}>
         <View
           style={{
-            padding: 30,
-          }}
-        >
-          <TouchableOpacity
-            style={styles.onlySosButton}
-            onPress={() => triggerCall(User.emergency_contact[0])}
-          >
-            <Text style={styles.onlySosButtonText}>Emergency Call</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
             borderColor: "red",
             borderWidth: 7,
-            borderRadius: 100,
-            padding: 10,
+            borderRadius: 200,
+            padding: 15,
           }}
         >
           <TouchableOpacity style={styles.sosButton} onPress={OnSOS}>
@@ -108,12 +93,19 @@ const SOS = ({ socket, User }) => {
         <View
           style={{
             padding: 30,
+            marginBottom: "10%"
           }}
         >
           <TouchableOpacity style={styles.onlySosButton} onPress={playSound}>
             <Text style={styles.onlySosButtonText}>
-              {isPlaying ? "Stop Sound" : "Play Sound"}
+              {isPlaying ? "Stop Siren" : "Play Siren"}
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.onlySosButton}
+            onPress={() => triggerCall(User.emergency_contact[0])}
+          >
+            <Text style={styles.onlySosButtonText}>Emergency Call</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -124,14 +116,14 @@ const SOS = ({ socket, User }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 100,
   },
   sosButton: {
     backgroundColor: "red",
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
     borderRadius: 200,
     alignItems: "center",
     justifyContent: "center",
@@ -142,22 +134,23 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 30,
+    fontSize: 40,
     fontFamily: Styles.bold.fontFamily,
   },
   onlySosButtonText: {
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: Styles.medium.fontFamily,
   },
   onlySosButton: {
     backgroundColor: "#F0A04B",
     width: 200,
-    height: 100,
+    height: 60,
     borderRadius: 200,
     justifyContent: "center",
+    marginVertical: 10
   },
 });
 
