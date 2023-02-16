@@ -69,7 +69,11 @@ const MainScreen = () => {
           bottom: 30,
           left: 30,
           right: 30,
+          bottom: 30,
+          left: 30,
+          right: 30,
           elevation: 0,
+          backgroundColor: "#FFAACF",
           backgroundColor: "#FFAACF",
           borderRadius: 25,
         },
@@ -89,6 +93,11 @@ const MainScreen = () => {
                 padding: 20,
                 borderRadius: 15,
                 aspectRatio: 1,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -97,6 +106,7 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
+                  // tintColor: focused ? "#fff" : "#000",
                   // tintColor: focused ? "#fff" : "#000",
                 }}
               />
