@@ -17,32 +17,35 @@ const Alerts = ({ socket, User }) => {
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
-      <FlatList
-        data={AlertList}
-        renderItem={({ item }) => {
-          return (
-            item !== null && (
-              <View style={styles.card}>
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <Text style={styles.raisedBy}>Raised By : </Text>
-                  <Text style={styles.rbName}>{item.name}</Text>
+      {AlertList.length === 0 ? (<Text style={styles.silent}>No Alerts</Text>) : (
+        <FlatList
+          data={AlertList}
+          renderItem={({ item }) => {
+            return (
+              item !== null && (
+                <View style={styles.card}>
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={styles.raisedBy}>Raised By : </Text>
+                    <Text style={styles.rbName}>{item.name}</Text>
+                  </View>
+                  <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
+                    Location : {JSON.stringify(item.coordinates)}
+                  </Text>
+                  <Text style={styles.raisedBy}>
+                    Time : {new Date(item.time).toLocaleString()}
+                  </Text>
+                  <TouchableOpacity style={styles.btn}>
+                    <Text style={styles.btnText}>Get Directions</Text>
+                  </TouchableOpacity>
                 </View>
-                <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
-                  Location : {JSON.stringify(item.coordinates)}
-                </Text>
-                <Text style={styles.raisedBy}>
-                  Time : {new Date(item.time).toLocaleString()}
-                </Text>
-                <TouchableOpacity style={styles.btn}>
-                  <Text style={styles.btnText}>Get Directions</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+              )
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
+    </View >
   );
 };
 
@@ -84,4 +87,12 @@ const styles = StyleSheet.create({
   btnText: {
     ...Styles.medium,
   },
+  silent: {
+    ...Styles.medium,
+    fontSize: 20,
+    color: "#aaa",
+    marginTop: 20,
+    textAlign: "center",
+    marginTop: "70%"
+  }
 });
