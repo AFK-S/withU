@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Linking
 } from "react-native";
 import React, { useState } from "react";
 import Styles from "../../CommonStyles";
@@ -15,34 +16,43 @@ const Alerts = ({ socket, User }) => {
     setAlertList(data);
   });
 
+  const GetDirection = (data) => {
+    console.log(data);
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=driving`;
+    Linking.openURL(url);
+  }
+
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
-      <FlatList
-        data={AlertList}
-        renderItem={({ item }) => {
-          return (
-            item !== null && (
-              <View style={styles.card}>
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <Text style={styles.raisedBy}>Raised By : </Text>
-                  <Text style={styles.rbName}>{item.name}</Text>
+      {AlertList.length === 0 ? (<Text style={styles.silent}>No Alerts</Text>) : (
+        <FlatList
+          data={AlertList}
+          renderItem={({ item }) => {
+            return (
+              item !== null && (
+                <View style={styles.card}>
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={styles.raisedBy}>Raised By : </Text>
+                    <Text style={styles.rbName}>{item.name}</Text>
+                  </View>
+                  {/* <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
+                    Location : {JSON.stringify(item.coordinates)}
+                  </Text> */}
+                  <Text style={styles.raisedBy}>
+                    Time : {new Date(item.time).toLocaleString()}
+                  </Text>
+                  <TouchableOpacity style={styles.btn} onPress={() => GetDirection(JSON.stringify(item.coordinates))}>
+                    <Text style={styles.btnText} >Get Directions</Text>
+                  </TouchableOpacity>
                 </View>
-                <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
-                  Location : {JSON.stringify(item.coordinates)}
-                </Text>
-                <Text style={styles.raisedBy}>
-                  Time : {new Date(item.time).toLocaleString()}
-                </Text>
-                <TouchableOpacity style={styles.btn}>
-                  <Text style={styles.btnText}>Get Directions</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          );
-        }}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+              )
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+
+    </View >
   );
 };
 
@@ -70,6 +80,7 @@ const styles = StyleSheet.create({
   raisedBy: {
     ...Styles.medium,
     fontSize: 15,
+    marginBottom: 15
   },
   rbName: {
     ...Styles.bold,
@@ -84,4 +95,12 @@ const styles = StyleSheet.create({
   btnText: {
     ...Styles.medium,
   },
+  silent: {
+    ...Styles.medium,
+    fontSize: 20,
+    color: "#aaa",
+    marginTop: 20,
+    textAlign: "center",
+    marginTop: "70%"
+  }
 });
