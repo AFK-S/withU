@@ -44,18 +44,20 @@ const SOS = (socket) => {
   });
   socket.on("SOS_Accepted", async (user_id) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
-    sos_user[user_id] = {
-      user_id: sos_user[user_id].user_id,
-      isAccepted: true,
-    };
-    fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
-    const { family_members_socket_ids, family_members } = await FamilyMembers(
-      user_id
-    );
-    if (family_members_socket_ids) {
-      socket.to(family_members_socket_ids).emit("SOS_Accepted");
+    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+    for (const sos in Object.keys(sos_user)) {
+      if (sos.user_ids.includes(user_id)) {
+        sos_user[sos.user_id].accepted_list = [
+          ...sos_user[sos.user_id].accepted_list,
+          {
+            user_id: user_id,
+            name: users[user_id].name,
+            phone_number: users[user_id].phone_number,
+          },
+        ];
+      }
     }
-    console.log("SOS Accepted");
+    fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
   });
   socket.on("Get_SOS_details", async (user_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
@@ -69,6 +71,21 @@ const SOS = (socket) => {
       }
     });
     callback(details);
+  });
+  socket.on("Get_SOS_detail", async (sos_user_id, callback) => {
+    const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
+    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+    sos_user[sos_user_id].accepted_list = sos_user[
+      sos_user_id
+    ].accepted_list.map((user) => {
+      if (user) {
+        return {
+          ...user,
+          coordinates: users[user.user_id].coordinates,
+        };
+      }
+    });
+    callback(sos_user[sos_user_id]);
   });
 };
 
