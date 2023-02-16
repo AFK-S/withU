@@ -9,6 +9,10 @@ const Map = ({ socket, location }) => {
     setActiveUsers(users);
   });
 
+  socket.on("Send_Active_Users", (users) => {
+    setActiveUsers(users);
+  });
+
   return (
     <View style={styles.container}>
       {location !== null ? (
@@ -20,9 +24,10 @@ const Map = ({ socket, location }) => {
           initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
           }}
+          showsUserLocation={true}
           provider="google"
         >
           {activeUsers.map((user, index) => {

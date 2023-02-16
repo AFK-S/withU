@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import io from "socket.io-client";
 import * as Location from "expo-location";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Sos from "./pages/Sos";
 import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
@@ -18,7 +18,7 @@ const MainScreen = () => {
   });
 
   socket.on("connect_error", (err) => {
-    console.log(err);
+    console.error(err);
   });
 
   const [location, setLocation] = useState(null);
@@ -29,22 +29,21 @@ const MainScreen = () => {
       return console.error("Permission to access location was denied");
     }
     const { coords } = await Location.getCurrentPositionAsync({});
+    setLocation({
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+    });
     return {
       latitude: coords.latitude,
       longitude: coords.longitude,
     };
   };
 
-  useEffect(() => {
-    (async () => {
-      const coordinate = await GetLocation();
-      const { user_id, gender } = JSON.parse(
-        await AsyncStorage.getItem("user")
-      );
-      socket.emit("Set_Active_User", user_id, gender, coordinate);
-      setLocation(coordinate);
-    })();
-  }, []);
+  (async () => {
+    const coordinate = await GetLocation();
+    const user = await JSON.parse(await AsyncStorage.getItem("user"));
+    socket.emit("Set_Active_User", user, coordinate);
+  })();
 
   const Tab = createBottomTabNavigator();
   return (

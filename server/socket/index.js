@@ -11,8 +11,9 @@ const socket = (http) => {
         if (err) {
           return console.log(err);
         }
-        if (data === "") return;
+        if (!data) return;
         const users = JSON.parse(data);
+        console.log(users);
         io.emit("Send_Active_Users", Object.values(users));
       });
     }
