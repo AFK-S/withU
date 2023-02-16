@@ -1,6 +1,5 @@
 const fs = require("fs");
 const geolib = require("geolib");
-const User = require("../models/User");
 
 const NearbyUsers = async (user_id) => {
   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
@@ -20,23 +19,22 @@ const NearbyUsers = async (user_id) => {
       }
     })
     .sort((a, b) => a.distance - b.distance);
-  const socket_ids = closest_users.map((user) => user.socket_id);
+  const socket_ids = closest_users.map((user) => {
+    if (user) {
+      return user.socket_id;
+    }
+  });
   return socket_ids.slice(1);
 };
 
-const FamilyMembers = async (user_id) => {
-  const user_response = await User.findOne({ _id: user_id });
-  const family_members = await User.find({
-    phone_number: user_response.emergency_contact,
-  });
-  const family_members_user_ids = family_members.map((user) => user._id);
+const FamilyMembers = async (emergency_contact) => {
   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-  const family_members_socket_ids = family_members_user_ids.map((user_id) => {
-    if (users[user_id]) {
-      return users[user_id].socket_id;
+  const family_members_socket_ids = Object.values(users).map((user) => {
+    if (emergency_contact.includes(user.phone_number)) {
+      return user.socket_id;
     }
   });
-  return { family_members_socket_ids, family_members };
+  return family_members_socket_ids;
 };
 
 module.exports = { NearbyUsers, FamilyMembers };
