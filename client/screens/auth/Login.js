@@ -5,6 +5,8 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
@@ -20,7 +22,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.put(
-        "http://192.168.0.110:8000/api/login",
+        "https://FNF001CODE-A-THON.adityarai16.repl.coi/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));
@@ -37,7 +39,9 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>withU</Text>
         <TextInput
@@ -77,7 +81,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -5,6 +5,8 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
@@ -26,7 +28,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.post(
-        "http://192.168.0.110:8000/api/register",
+        "https://FNF001CODE-A-THON.adityarai16.repl.co/api/register",
         {
           name: register.name,
           email_address: register.email_address,
@@ -66,7 +68,9 @@ const Register = ({ route, navigation, setIsLogin }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>
           Tell us more about you :)
@@ -134,7 +138,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

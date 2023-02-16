@@ -5,6 +5,8 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import Styles from "../../CommonStyles";
@@ -24,7 +26,9 @@ const Register = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>Register</Text>
         <TextInput
@@ -74,7 +78,7 @@ const Register = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
