@@ -21,21 +21,23 @@ const Alerts = ({ socket, User }) => {
         data={AlertList}
         renderItem={({ item }) => {
           return (
-            <View style={styles.card}>
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <Text style={styles.raisedBy}>Raised By : </Text>
-                <Text style={styles.rbName}>{item.name}</Text>
+            item !== null && (
+              <View style={styles.card}>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Text style={styles.raisedBy}>Raised By : </Text>
+                  <Text style={styles.rbName}>{item.name}</Text>
+                </View>
+                <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
+                  Location : {JSON.stringify(item.coordinates)}
+                </Text>
+                <Text style={styles.raisedBy}>
+                  Time : {new Date(item.time).toLocaleString()}
+                </Text>
+                <TouchableOpacity style={styles.btn}>
+                  <Text style={styles.btnText}>Get Directions</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
-                Location : {JSON.stringify(item.coordinates)}
-              </Text>
-              <Text style={styles.raisedBy}>
-                Time : {new Date(item.time).toLocaleString()}
-              </Text>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={styles.btnText}>Get Directions</Text>
-              </TouchableOpacity>
-            </View>
+            )
           );
         }}
         showsVerticalScrollIndicator={false}
