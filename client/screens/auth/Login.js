@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -7,26 +6,33 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import Styles from "../../CommonStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from "react";
 import axios from "axios";
+import Styles from "../../CommonStyles";
 
-const LoginForm = ({ navigation, setIsLoggedIn }) => {
+const Login = ({ navigation, setIsLogin, setAlert }) => {
   const [login, setLogin] = useState({
     email_address: "",
     password: "",
   });
 
-  const handleLogin = async () => {
+  const onSubmit = async () => {
     try {
       const { data } = await axios.put(
-        "http://192.168.0.110:8000/api/login",
+        "http://192.168.0.105:8000/api/login",
         login
       );
-      console.log(data);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
       setLogin({ email_address: "", password: "" });
-      setIsLoggedIn(true);
-    } catch (error) {
-      console.log(error);
+      setIsLogin(true);
+    } catch (err) {
+      console.error(err.response.data);
+      setAlert({
+        isAlert: true,
+        type: err.response.data.type,
+        message: err.response.data,
+      });
     }
   };
 
@@ -40,7 +46,7 @@ const LoginForm = ({ navigation, setIsLoggedIn }) => {
           onChangeText={(text) => setLogin({ ...login, email_address: text })}
           value={login.email_address}
           autoCapitalize="none"
-          autoComplete="none"
+          autoComplete="off"
         />
         <TextInput
           style={styles.input}
@@ -48,17 +54,17 @@ const LoginForm = ({ navigation, setIsLoggedIn }) => {
           secureTextEntry
           onChangeText={(text) => setLogin({ ...login, password: text })}
           autoCapitalize="none"
-          autoComplete="none"
+          autoComplete="off"
           value={login.password}
         />
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={onSubmit}
           style={{ ...Styles.button, marginTop: 10 }}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 10 }}
           onPress={() => navigation.navigate("register")}
         >
           <Text
@@ -80,22 +86,20 @@ const styles = StyleSheet.create({
     padding: 40,
     backgroundColor: "#fff",
     flex: 1,
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
+  },
+  title: {
+    fontSize: 60,
+    textAlign: "center",
+    marginBottom: 50,
   },
   input: {
     height: 50,
-    marginBottom: 30,
+    marginBottom: 15,
     paddingHorizontal: 15,
-    borderRadius: 18,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: "#ccc",
-  },
-  buttonContainer: {
-    backgroundColor: "#2980b9",
-    paddingVertical: 15,
-    borderRadius: 5,
   },
   buttonText: {
     color: "#fff",
@@ -103,11 +107,6 @@ const styles = StyleSheet.create({
     fontFamily: Styles.bold.fontFamily,
     fontSize: 18,
   },
-  title: {
-    fontSize: 60,
-    textAlign: "center",
-    marginBottom: 50,
-  },
 });
 
-export default LoginForm;
+export default Login;

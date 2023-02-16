@@ -1,14 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import GetStarted from "./GetStarted";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginForm from "./Login";
-import Sos from "../pages/Sos";
+import React from "react";
+import GetStarted from "./GetStarted";
 import Register from "./Register";
 import Register2 from "./Register2";
-const AuthScreen = ({ setIsLoggedIn }) => {
-  const Stack = createNativeStackNavigator();
+import Login from "./Login";
 
+const AuthScreen = ({ setIsLogin, setAlert }) => {
+  const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
@@ -16,26 +14,23 @@ const AuthScreen = ({ setIsLoggedIn }) => {
         component={GetStarted}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="login" options={{ headerShown: false }}>
-        {(props) => <LoginForm {...props} setIsLoggedIn={setIsLoggedIn} />}
-      </Stack.Screen>
       <Stack.Screen
         name="register"
         component={Register}
         options={{ headerShown: false }}
       />
       <Stack.Screen name="register2" options={{ headerShown: false }}>
-        {(props) => <Register2 {...props} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => (
+          <Register2 {...props} setIsLogin={setIsLogin} setAlert={setAlert} />
+        )}
       </Stack.Screen>
-      {/* <Stack.Screen
-        name="register2"
-        component={Register2}
-        options={{ headerShown: false }}
-      /> */}
+      <Stack.Screen name="login" options={{ headerShown: false }}>
+        {(props) => (
+          <Login {...props} setIsLogin={setIsLogin} setAlert={setAlert} />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };
 
 export default AuthScreen;
-
-const styles = StyleSheet.create({});

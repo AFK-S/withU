@@ -2,15 +2,15 @@ const fs = require("fs");
 const geolib = require("geolib");
 const User = require("../models/User");
 
-const NearbyUsers = async () => {
+const NearbyUsers = async (user_id) => {
   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
   const closest_users = Object.values(users)
     .map((user) => {
       const distance = geolib.getDistance(
-        users[id].coordinates,
+        users[user_id].coordinates,
         user.coordinates
       );
-      if (distance / 1000 <= 50) {
+      if (distance / 1000 <= 5) {
         return {
           socket_id: user.socket_id,
           user_id: user.user_id,
