@@ -5,12 +5,25 @@ const SOS = require("../socket/SOS");
 const socket = (http) => {
   const io = new Server(http);
 
+  fs.watch("json/isActive.json", async (eventType) => {
+    if (eventType === "change") {
+      fs.readFile("./json/isActive.json", "utf8", (err, data) => {
+        if (err) {
+          return console.log(err);
+        }
+        if (data === "") return;
+        const users = JSON.parse(data);
+        io.emit("Send_Active_Users", Object.values(users));
+      });
+    }
+  });
+
   io.on("connection", (socket) => {
     socket.on("Set_Active_User", async (user, coordinates) => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-      users[user_id] = {
+      users[user.user_id] = {
         socket_id: socket.id,
-        user_id: user._id,
+        user_id: user.user_id,
         name: user.name,
         phone_number: user.phone_number,
         gender: user.gender,
