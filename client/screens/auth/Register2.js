@@ -26,7 +26,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.post(
-        "http://192.168.0.105:8000/api/register",
+        "http://192.168.0.110:8000/api/register",
         {
           name: register.name,
           email_address: register.email_address,
