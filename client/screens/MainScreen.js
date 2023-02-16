@@ -71,15 +71,12 @@ const MainScreen = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
-          bottom: 50,
-          left: 20,
-          right: 20,
+          bottom: 30,
+          left: 30,
+          right: 30,
           elevation: 0,
-          backgroundColor: "#FA198B",
-          borderWidth: 3,
-          borderColor: "#FA198B",
+          backgroundColor: "#FFAACF",
           borderRadius: 25,
-          height: 75,
         },
       }}
     >
@@ -92,7 +89,11 @@ const MainScreen = () => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -101,7 +102,7 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
+                  // tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
@@ -121,7 +122,11 @@ const MainScreen = () => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -130,7 +135,6 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
@@ -140,7 +144,7 @@ const MainScreen = () => {
         {(props) => (
           <Sos {...props} socket={socket} User={User} location={location} />
         )}
-      </Tab.Screen>
+      </Tab.Screen >
       <Tab.Screen
         name="ALERTS"
         options={{
@@ -149,7 +153,11 @@ const MainScreen = () => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -158,7 +166,7 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
+                  // tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
@@ -169,7 +177,7 @@ const MainScreen = () => {
           <Alerts {...props} socket={socket} Alert={Alert} User={User} />
         )}
       </Tab.Screen>
-    </Tab.Navigator>
+    </Tab.Navigator >
   );
 };
 
