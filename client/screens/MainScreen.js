@@ -9,7 +9,7 @@ import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
 
 const MainScreen = () => {
-  const socket = io("http://192.168.0.105:8000", {
+  const socket = io("https://FNF001CODE-A-THON.adityarai16.repl.co", {
     transports: ["websocket"],
   });
 
