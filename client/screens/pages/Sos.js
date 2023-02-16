@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
@@ -38,7 +39,10 @@ const Sos = ({ socket, location }) => {
     await sound.playAsync();
   }
 
-  const OnSOS = () => {};
+  const OnSOS = async () => {
+    const { user_id } = JSON.parse(await AsyncStorage.getItem("user"));
+    socket.emit("SOS_button", user_id);
+  };
 
   useEffect(() => {
     return sound
@@ -60,7 +64,7 @@ const Sos = ({ socket, location }) => {
             padding: 10,
           }}
         >
-          <TouchableOpacity style={styles.sosButton} onPress={playSound}>
+          <TouchableOpacity style={styles.sosButton} onPress={OnSOS}>
             <Text style={styles.buttonText}>SOS</Text>
           </TouchableOpacity>
         </View>
