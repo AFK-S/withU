@@ -114,7 +114,7 @@ const MainScreen = () => {
           ),
         }}
       >
-        {(props) => <Map {...props} socket={socket} User={User} />}
+        {(props) => <Map {...props} socket={socket} User={User} location={location} />}
       </Tab.Screen>
       <Tab.Screen
         name="SOS"
