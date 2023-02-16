@@ -29,7 +29,7 @@ const NearbyUsers = async (user_id) => {
       return user.socket_id;
     }
   });
-  return [user_ids.slice(1), socket_ids.slice(1)];
+  return [user_ids, socket_ids];
 };
 
 const FamilyMembers = async (emergency_contact) => {

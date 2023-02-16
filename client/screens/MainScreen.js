@@ -114,7 +114,9 @@ const MainScreen = () => {
           ),
         }}
       >
-        {(props) => <Map {...props} socket={socket} User={User} location={location} />}
+        {(props) => (
+          <Map {...props} socket={socket} User={User} location={location} />
+        )}
       </Tab.Screen>
       <Tab.Screen
         name="SOS"
@@ -147,7 +149,7 @@ const MainScreen = () => {
         {(props) => (
           <Sos {...props} socket={socket} User={User} location={location} />
         )}
-      </Tab.Screen >
+      </Tab.Screen>
       <Tab.Screen
         name="ALERTS"
         options={{
@@ -178,7 +180,7 @@ const MainScreen = () => {
       >
         {(props) => <Alerts {...props} socket={socket} User={User} />}
       </Tab.Screen>
-    </Tab.Navigator >
+    </Tab.Navigator>
   );
 };
 
