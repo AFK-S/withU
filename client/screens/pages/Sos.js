@@ -6,56 +6,93 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
+import call from "react-native-phone-call";
 
-const Sos = ({ socket, location }) => {
+const SOS = ({ socket, User }) => {
   const [sound, setSound] = useState();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isSOS, setIsSOS] = useState(false);
 
-  const sendSMS = () => {
-    const { latitude, longitude } = location;
-    const phoneNumber = ["+919619691591", "+918169645464"];
-    const message = `I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-
-    SMS.sendSMSAsync(phoneNumber, message)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  async function playSound() {
-    console.log("Loading Sound");
+  const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
       require("../../assets/sos.mp3")
     );
     setSound(sound);
-    sendSMS();
-    console.log("Playing Sound");
-    await sound.playAsync();
-  }
-
-  const OnSOS = async () => {
-    const { user_id } = JSON.parse(await AsyncStorage.getItem("user"));
-    socket.emit("SOS_button", user_id);
+    if (isPlaying) {
+      sound.stopAsync();
+    } else {
+      await sound.setIsLoopingAsync(true);
+      await sound.playAsync();
+    }
+    setIsPlaying(!isPlaying);
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    });
   };
 
   useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
+    return sound ? () => sound.unloadAsync() : undefined;
   }, [sound]);
+
+  const SendSMS = (emergency_contact, message) => {
+    SMS.sendSMSAsync(emergency_contact, message).catch((err) =>
+      console.error(err)
+    );
+  };
+
+  const triggerCall = (phone_number) => {
+    if (phone_number.length != 10) {
+      return console.error("Invalid Number");
+    }
+    call({
+      number: phone_number,
+      prompt: true,
+    }).catch(console.error);
+  };
+
+  const OnSOS = async () => {
+    setIsSOS(!isSOS);
+    const { user_id, emergency_contact } = User;
+    if (isSOS) {
+      return socket.emit("SOS_Cancel", user_id, (user_details) => {
+        const message = `I am ${user_details.name} and I am not in danger anymore.`;
+        SendSMS(emergency_contact, message);
+      });
+    }
+    socket.emit("SOS_button", user_id, emergency_contact, (user_details) => {
+      const message = `I am ${
+        user_details.name
+      } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${
+        user_details.coordinates.latitude
+      },${user_details.coordinates.longitude} and my contact number is ${
+        user_details.phone_number
+      }.\n Send at ${new Date(user_details.time).toLocaleString()}`;
+      SendSMS(emergency_contact, message);
+    });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
+        <View
+          style={{
+            padding: 30,
+          }}
+        >
+          <TouchableOpacity
+            style={styles.onlySosButton}
+            onPress={() => triggerCall(User.emergency_contact[0])}
+          >
+            <Text style={styles.onlySosButtonText}>Emergency Call</Text>
+          </TouchableOpacity>
+        </View>
         <View
           style={{
             borderColor: "red",
@@ -65,7 +102,18 @@ const Sos = ({ socket, location }) => {
           }}
         >
           <TouchableOpacity style={styles.sosButton} onPress={OnSOS}>
-            <Text style={styles.buttonText}>SOS</Text>
+            <Text style={styles.buttonText}>{isSOS ? "Cancel" : "SOS"}</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            padding: 30,
+          }}
+        >
+          <TouchableOpacity style={styles.onlySosButton} onPress={playSound}>
+            <Text style={styles.onlySosButtonText}>
+              {isPlaying ? "Stop Sound" : "Play Sound"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -78,6 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 100,
   },
   sosButton: {
     backgroundColor: "red",
@@ -96,6 +145,20 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: Styles.bold.fontFamily,
   },
+  onlySosButtonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 20,
+    fontFamily: Styles.medium.fontFamily,
+  },
+  onlySosButton: {
+    backgroundColor: "#F0A04B",
+    width: 200,
+    height: 100,
+    borderRadius: 200,
+    justifyContent: "center",
+  },
 });
 
-export default Sos;
+export default SOS;

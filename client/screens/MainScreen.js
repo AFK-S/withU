@@ -24,6 +24,10 @@ const MainScreen = () => {
     console.log(err);
   });
 
+  socket.on("SOS_Send", (details) => {
+    console.log(details);
+  });
+
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -62,15 +66,16 @@ const MainScreen = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
-          bottom: 50,
-          left: 20,
-          right: 20,
+          bottom: 30,
+          left: 30,
+          right: 30,
+          bottom: 30,
+          left: 30,
+          right: 30,
           elevation: 0,
-          backgroundColor: "#FA198B",
-          borderWidth: 3,
-          borderColor: "#FA198B",
+          backgroundColor: "#FFAACF",
+          backgroundColor: "#FFAACF",
           borderRadius: 25,
-          height: 75,
         },
       }}
     >
@@ -83,7 +88,16 @@ const MainScreen = () => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -92,16 +106,15 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
+                  // tintColor: focused ? "#fff" : "#000",
+                  // tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
           ),
         }}
       >
-        {(props) => (
-          <Map {...props} socket={socket} User={User} location={location} />
-        )}
+        {(props) => <Map {...props} socket={socket} User={User} />}
       </Tab.Screen>
       <Tab.Screen
         name="SOS"
@@ -112,7 +125,11 @@ const MainScreen = () => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -121,25 +138,29 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
           ),
         }}
       >
-        {(props) => <Sos {...props} socket={socket} location={location} />}
-      </Tab.Screen>
+        {(props) => (
+          <Sos {...props} socket={socket} User={User} location={location} />
+        )}
+      </Tab.Screen >
       <Tab.Screen
         name="ALERTS"
-        component={Alerts}
         options={{
           tabBarIcon: ({ focused }) => (
             <View
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 10,
+                top: Platform.OS === "android" ? 0 : 15,
+                backgroundColor: focused ? "#fff" : "transparent",
+                padding: 20,
+                borderRadius: 15,
+                aspectRatio: 1,
               }}
             >
               <Image
@@ -148,14 +169,16 @@ const MainScreen = () => {
                 style={{
                   width: 35,
                   height: 35,
-                  tintColor: focused ? "#fff" : "#000",
+                  // tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
           ),
         }}
-      />
-    </Tab.Navigator>
+      >
+        {(props) => <Alerts {...props} socket={socket} User={User} />}
+      </Tab.Screen>
+    </Tab.Navigator >
   );
 };
 

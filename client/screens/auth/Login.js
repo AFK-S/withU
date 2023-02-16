@@ -22,7 +22,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.put(
-        "https://FNF001CODE-A-THON.adityarai16.repl.coi/api/login",
+        "https://FNF001CODE-A-THON.adityarai16.repl.co/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));

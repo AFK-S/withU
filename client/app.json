@@ -29,7 +29,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "AUDIO_BACKGROUND_MODE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
