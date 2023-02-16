@@ -2,20 +2,18 @@ const fs = require("fs");
 const { NearbyUsers, FamilyMembers } = require("../functions");
 
 const SOS = (socket) => {
-  socket.on("SOS_button", async (user_id, user) => {
-    socket.join(user_id);
+  socket.on("SOS_button", async (user_id) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
     sos_user[user_id] = {
-      socket_id: socket.id,
       user_id: user_id,
-      user: user,
+      isAccepted: false,
     };
     fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
-    const nearby_users_socket_ids = await NearbyUsers();
+    const nearby_users_socket_ids = await NearbyUsers(user_id);
     if (nearby_users_socket_ids) {
       socket
         .to(nearby_users_socket_ids)
-        .emit("SOS_Nearby_Users", `SOS from ${user}`);
+        .emit("SOS_Nearby_Users", `SOS from ${user_id}`);
     }
     const { family_members_socket_ids, family_members } = await FamilyMembers(
       user_id
@@ -23,7 +21,7 @@ const SOS = (socket) => {
     if (family_members_socket_ids) {
       socket
         .to(family_members_socket_ids)
-        .emit("SOS_Family_Members", `SOS from ${user}`);
+        .emit("SOS_Family_Members", `SOS from ${user_id}`);
     }
     console.log("SOS button pressed and sent to nearby users");
   });
@@ -48,11 +46,8 @@ const SOS = (socket) => {
   socket.on("SOS_Accepted", async (user_id) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
     sos_user[user_id] = {
-      socket_id: sos_user[user_id].socket.id,
       user_id: sos_user[user_id].user_id,
-      user: sos_user[user_id].user,
-      accepted: true,
-      person: socket.id,
+      isAccepted: true,
     };
     fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
     const { family_members_socket_ids, family_members } = await FamilyMembers(

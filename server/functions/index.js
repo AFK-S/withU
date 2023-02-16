@@ -10,7 +10,7 @@ const NearbyUsers = async (user_id) => {
         users[user_id].coordinates,
         user.coordinates
       );
-      if (distance / 1000 <= 50) {
+      if (distance / 1000 <= 5) {
         return {
           socket_id: user.socket_id,
           user_id: user.user_id,
