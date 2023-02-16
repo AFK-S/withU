@@ -6,12 +6,14 @@ const socket = (http) => {
   const io = new Server(http);
 
   io.on("connection", (socket) => {
-    socket.on("Set_Active_User", async (user_id, gender, coordinates) => {
+    socket.on("Set_Active_User", async (user, coordinates) => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
       users[user_id] = {
         socket_id: socket.id,
-        user_id: user_id,
-        gender: gender,
+        user_id: user._id,
+        name: user.name,
+        phone_number: user.phone_number,
+        gender: user.gender,
         coordinates: coordinates,
       };
       fs.writeFileSync("./json/isActive.json", JSON.stringify(users));

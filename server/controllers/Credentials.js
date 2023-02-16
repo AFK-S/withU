@@ -27,7 +27,10 @@ const Register = async (req, res) => {
     });
     return res.json({
       user_id: response._id,
+      name: response.name,
+      phone_number: response.phone_number,
       gender: response.gender,
+      emergency_contact: response.emergency_contact,
     });
   } catch (err) {
     console.error(err);
@@ -55,7 +58,10 @@ const Login = async (req, res) => {
     }
     return res.json({
       user_id: response._id,
+      name: response.name,
+      phone_number: response.phone_number,
       gender: response.gender,
+      emergency_contact: response.emergency_contact,
     });
   } catch (err) {
     console.error(err);

@@ -18,8 +18,12 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const user = await AsyncStorage.getItem("user");
-      const { user_id, gender } = JSON.parse(user);
-      if (user === null && user_id.length !== 24 && gender) {
+      if (user === null) {
+        return setIsLogin(false);
+      }
+      const { user_id, name, phone_number, gender, emergency_contact } =
+        JSON.parse(user);
+      if (!(user_id && name && phone_number && gender && emergency_contact)) {
         return setIsLogin(false);
       }
       setIsLogin(true);
