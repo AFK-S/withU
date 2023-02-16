@@ -24,7 +24,7 @@ const Alerts = ({ socket, User }) => {
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
-      {AlertList.length === 0 ? (<Text style={styles.silent}>No Alerts</Text>) : (
+      {AlertList.length === 0 || AlertList[0] === null ? (<Text style={styles.silent}>No Alerts</Text>) : (
         <FlatList
           data={AlertList}
           renderItem={({ item }) => {
@@ -35,9 +35,9 @@ const Alerts = ({ socket, User }) => {
                     <Text style={styles.raisedBy}>Raised By : </Text>
                     <Text style={styles.rbName}>{item.name}</Text>
                   </View>
-                  {/* <Text style={{ ...styles.raisedBy, marginVertical: 10 }}>
-                    Location : {JSON.stringify(item.coordinates)}
-                  </Text> */}
+                  <Text style={{ ...styles.raisedBy, marginVertical: 15 }}>
+                    Phone Number : {item.phone_number}
+                  </Text>
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.time).toLocaleString()}
                   </Text>
@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
   raisedBy: {
     ...Styles.medium,
     fontSize: 15,
-    marginBottom: 15
   },
   rbName: {
     ...Styles.bold,
+    textTransform: "capitalize",
   },
   btn: {
     backgroundColor: "#FFAACF",
