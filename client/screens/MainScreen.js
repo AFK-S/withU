@@ -15,7 +15,6 @@ const MainScreen = () => {
 
   const [location, setLocation] = useState(null);
   const [User, setUser] = useState({});
-  const [Alert, setAlert] = useState([]);
 
   socket.on("connect", async () => {
     console.log("connected");
@@ -25,12 +24,8 @@ const MainScreen = () => {
     console.log(err);
   });
 
-  socket.on("SOS_Nearby_Users", (details) => {
-    setAlert([...Alert, details]);
-  });
-
-  socket.on("SOS_Family_Members", (details) => {
-    setAlert([...Alert, details]);
+  socket.on("SOS_Send", (details) => {
+    console.log(details);
   });
 
   useEffect(() => {
@@ -108,9 +103,7 @@ const MainScreen = () => {
           ),
         }}
       >
-        {(props) => (
-          <Map {...props} socket={socket} User={User} location={location} />
-        )}
+        {(props) => <Map {...props} socket={socket} User={User} />}
       </Tab.Screen>
       <Tab.Screen
         name="SOS"
@@ -165,9 +158,7 @@ const MainScreen = () => {
           ),
         }}
       >
-        {(props) => (
-          <Alerts {...props} socket={socket} Alert={Alert} User={User} />
-        )}
+        {(props) => <Alerts {...props} socket={socket} User={User} />}
       </Tab.Screen>
     </Tab.Navigator>
   );

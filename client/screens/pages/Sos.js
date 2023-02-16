@@ -9,6 +9,7 @@ import {
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
+import call from "react-native-phone-call";
 
 const SOS = ({ socket, User }) => {
   const [sound, setSound] = useState();
@@ -46,23 +47,24 @@ const SOS = ({ socket, User }) => {
     );
   };
 
+  const triggerCall = (phone_number) => {
+    if (phone_number.length != 10) {
+      return console.error("Invalid Number");
+    }
+    call({
+      number: phone_number,
+      prompt: true,
+    }).catch(console.error);
+  };
+
   const OnSOS = async () => {
     setIsSOS(!isSOS);
     const { user_id, emergency_contact } = User;
     if (isSOS) {
-      return socket.emit(
-        "SOS_Cancel",
-        user_id,
-        emergency_contact,
-        (user_details) => {
-          const message = `I am ${
-            user_details.name
-          } and I am not in danger anymore./n Send at ${new Date(
-            user_details.time
-          ).toLocaleString()}`;
-          SendSMS(emergency_contact, message);
-        }
-      );
+      return socket.emit("SOS_Cancel", user_id, (user_details) => {
+        const message = `I am ${user_details.name} and I am not in danger anymore.`;
+        SendSMS(emergency_contact, message);
+      });
     }
     socket.emit("SOS_button", user_id, emergency_contact, (user_details) => {
       const message = `I am ${
@@ -71,7 +73,7 @@ const SOS = ({ socket, User }) => {
         user_details.coordinates.latitude
       },${user_details.coordinates.longitude} and my contact number is ${
         user_details.phone_number
-      }./n Send at ${new Date(user_details.time).toLocaleString()}`;
+      }.\n Send at ${new Date(user_details.time).toLocaleString()}`;
       SendSMS(emergency_contact, message);
     });
   };
@@ -86,7 +88,7 @@ const SOS = ({ socket, User }) => {
         >
           <TouchableOpacity
             style={styles.onlySosButton}
-            // onPress={}
+            onPress={() => triggerCall(User.emergency_contact[0])}
           >
             <Text style={styles.onlySosButtonText}>Emergency Call</Text>
           </TouchableOpacity>

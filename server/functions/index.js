@@ -19,22 +19,32 @@ const NearbyUsers = async (user_id) => {
       }
     })
     .sort((a, b) => a.distance - b.distance);
+  const user_ids = closest_users.map((user) => {
+    if (user) {
+      return user.user_id;
+    }
+  });
   const socket_ids = closest_users.map((user) => {
     if (user) {
       return user.socket_id;
     }
   });
-  return socket_ids.slice(1);
+  return [user_ids.slice(1), socket_ids.slice(1)];
 };
 
 const FamilyMembers = async (emergency_contact) => {
   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-  const family_members_socket_ids = Object.values(users).map((user) => {
+  const user_ids = Object.values(users).map((user) => {
+    if (emergency_contact.includes(user.phone_number)) {
+      return user.user_id;
+    }
+  });
+  const socket_ids = Object.values(users).map((user) => {
     if (emergency_contact.includes(user.phone_number)) {
       return user.socket_id;
     }
   });
-  return family_members_socket_ids;
+  return [user_ids, socket_ids];
 };
 
 module.exports = { NearbyUsers, FamilyMembers };

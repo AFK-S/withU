@@ -5,44 +5,20 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Styles from "../../CommonStyles";
 
-const Alerts = ({ socket, Alert, User, location }) => {
-  const alertList = [
-    {
-      raisedBy: "XYZ",
-      location:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi, illum?",
-      time: "12 : 00 : 30, 12/12/2020",
-    },
-    {
-      raisedBy: "XYZ",
-      location:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi, illum?",
-      time: "12 : 00 : 30, 12/12/2020",
-    },
-    {
-      raisedBy: "XYZ",
-      location:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Commodi, illum?",
-      time: "12 : 00 : 30, 12/12/2020",
-    },
-    {
-      raisedBy: "XYZ",
-      location: "XYZ",
-      time: "XYZ",
-    },
-    {
-      raisedBy: "XYZ",
-      location: "XYZ",
-      time: "XYZ",
-    },
-  ];
+const Alerts = ({ socket, User }) => {
+  const [AlertList, setAlertList] = useState([]);
+
+  socket.emit("Get_SOS_details", User.user_id, (data) => {
+    setAlertList(data);
+  });
+
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
       <FlatList
-        data={Alert}
+        data={AlertList}
         renderItem={({ item }) => {
           return (
             <View style={styles.card}>

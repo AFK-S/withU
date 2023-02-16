@@ -4,34 +4,32 @@ const { NearbyUsers, FamilyMembers } = require("../functions");
 const SOS = (socket) => {
   socket.on("SOS_button", async (user_id, emergency_contact, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
+    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+    const nearby_users = await NearbyUsers(user_id);
+    const family_members = await FamilyMembers(emergency_contact);
     sos_user[user_id] = {
       user_id: user_id,
-      isAccepted: false,
-      isCancelled: false,
+      name: users[user_id].name,
+      phone_number: users[user_id].phone_number,
+      user_ids: [...nearby_users[0], ...family_members[0]],
       time: Date.now(),
     };
     fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
-    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
     const user_details = {
       user_id: user_id,
-      name: users[user_id].name,
+      name: sos_user[user_id].name,
       coordinates: users[user_id].coordinates,
-      phone_number: users[user_id].phone_number,
+      phone_number: sos_user[user_id].phone_number,
       time: sos_user[user_id].time,
     };
-    const nearby_users_socket_ids = await NearbyUsers(user_id);
-    if (nearby_users_socket_ids) {
-      socket.to(nearby_users_socket_ids).emit("SOS_Nearby_Users", user_details);
-    }
-    const family_members_socket_ids = await FamilyMembers(emergency_contact);
-    if (family_members_socket_ids) {
+    if (nearby_users[1] && family_members[1]) {
       socket
-        .to(family_members_socket_ids)
-        .emit("SOS_Family_Members", user_details);
+        .to([...nearby_users[1], ...family_members[1]])
+        .emit("SOS_Send", user_details);
     }
     callback(user_details);
   });
-  socket.on("SOS_Cancel", async (user_id, emergency_contact, callback) => {
+  socket.on("SOS_Cancel", async (user_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
     if (sos_user[user_id]) {
       delete sos_user[user_id];
@@ -41,17 +39,7 @@ const SOS = (socket) => {
     const user_details = {
       user_id: user_id,
       name: users[user_id].name,
-      isCancelled: true,
-      time: Date.now(),
     };
-    const nearby_users_socket_ids = await NearbyUsers(user_id);
-    if (nearby_users_socket_ids) {
-      socket.to(nearby_users_socket_ids).emit("SOS_Cancelled", user_details);
-    }
-    const family_members_socket_ids = await FamilyMembers(emergency_contact);
-    if (family_members_socket_ids) {
-      socket.to(family_members_socket_ids).emit("SOS_Cancelled", user_details);
-    }
     callback(user_details);
   });
   socket.on("SOS_Accepted", async (user_id) => {
@@ -69,9 +57,18 @@ const SOS = (socket) => {
     }
     console.log("SOS Accepted");
   });
-  socket.on("SOS_details", async (user_id, callback) => {
+  socket.on("Get_SOS_details", async (user_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
-    callback(sos_user[user_id]);
+    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+    const details = Object.values(sos_user).map((user) => {
+      if (user.user_ids.includes(user_id)) {
+        return {
+          ...user,
+          coordinates: users[user.user_id].coordinates,
+        };
+      }
+    });
+    callback(details);
   });
 };
 
