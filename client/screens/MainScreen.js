@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import io from "socket.io-client";
 import * as Location from "expo-location";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sos from "./pages/Sos";
 import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
@@ -13,37 +13,44 @@ const MainScreen = () => {
     transports: ["websocket"],
   });
 
-  socket.on("connect", () => {
-    console.log("Connected");
+  const [location, setLocation] = useState(null);
+
+  socket.on("connect", async () => {
+    console.log("connected");
   });
 
   socket.on("connect_error", (err) => {
-    console.error(err);
+    console.log(err);
   });
 
-  const [location, setLocation] = useState(null);
-
-  const GetLocation = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      return console.error("Permission to access location was denied");
-    }
-    const { coords } = await Location.getCurrentPositionAsync({});
-    setLocation({
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    });
-    return {
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    };
-  };
-
-  (async () => {
-    const coordinate = await GetLocation();
-    const user = await JSON.parse(await AsyncStorage.getItem("user"));
-    socket.emit("Set_Active_User", user, coordinate);
-  })();
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return console.error("Permission to access location was denied");
+      }
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      const subscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 20,
+        },
+        ({ coords }) => {
+          setLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+          socket.emit("Set_Active_User", user, {
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+          console.log("location updated");
+        }
+      );
+      return () => subscription.remove();
+    })();
+  }, []);
 
   const Tab = createBottomTabNavigator();
   return (

@@ -21,7 +21,7 @@ const Map = ({ socket, location }) => {
             width: "100%",
             height: "100%",
           }}
-          initialRegion={{
+          region={{
             latitude: location.latitude,
             longitude: location.longitude,
             latitudeDelta: 0.005,

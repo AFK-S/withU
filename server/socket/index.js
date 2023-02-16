@@ -13,7 +13,6 @@ const socket = (http) => {
         }
         if (!data) return;
         const users = JSON.parse(data);
-        console.log(users);
         io.emit("Send_Active_Users", Object.values(users));
       });
     }
