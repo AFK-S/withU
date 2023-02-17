@@ -220,7 +220,7 @@ const MainScreen = ({ setIsLogin }) => {
               }}
             >
               <Image
-                source={require('../assets/icons/map.png')}
+                source={require('../assets/icons/police.png')}
                 resizeMode="contain"
                 style={{
                   width: 35,
