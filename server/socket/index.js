@@ -50,16 +50,16 @@ const socket = (http) => {
         })
       },
     )
-    // socket.on("disconnect", async () => {
-    //   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-    //   for (const user_id in users) {
-    //     if (users[user_id].socket_id === socket.id) {
-    //       delete users[user_id];
-    //       fs.writeFileSync("./json/isActive.json", JSON.stringify(users));
-    //       break;
-    //     }
-    //   }
-    // });
+    socket.on('disconnect', async () => {
+      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+      for (const user_id in users) {
+        if (users[user_id].socket_id === socket.id) {
+          delete users[user_id]
+          fs.writeFileSync('./json/isActive.json', JSON.stringify(users))
+          break
+        }
+      }
+    })
   })
 }
 

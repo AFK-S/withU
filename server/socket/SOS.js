@@ -11,7 +11,7 @@ const SOS = (socket) => {
       user_id: user_id,
       name: users[user_id].name,
       phone_number: users[user_id].phone_number,
-      user_ids: [...nearby_users[0], ...family_members[0]],
+      user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
       time: Date.now(),
     }
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
