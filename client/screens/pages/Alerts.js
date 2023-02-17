@@ -17,7 +17,6 @@ const Alerts = ({ navigation, socket, User }) => {
   })
 
   const GetDirection = (user_id) => {
-    socket.emit('SOS_Accepted', user_id, User.user_id)
     // navigation.navigate('MAP', {
     //   user_id: user_id,
     // })
@@ -48,7 +47,7 @@ const Alerts = ({ navigation, socket, User }) => {
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.time).toLocaleString()}
                   </Text>
-                  <Text style={styles.rbName}>Accepted By</Text>
+                  {item.accepted_list && <Text style={styles.rbName}>Accepted By</Text>}
                   {item.accepted_list && (
                     <FlatList
                       data={item.accepted_list}
@@ -98,6 +97,16 @@ const Alerts = ({ navigation, socket, User }) => {
                       onPress={() => GetDirection(item.user_id)}
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
+                    </TouchableOpacity>
+                  )}
+                  {(User.user_id !== item.user_id && item.accepted_list.includes(User.user_ids))&& (
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => {
+                        socket.emit('SOS_Accepted', item.user_id, User.user_id)
+                      }}
+                    >
+                      <Text style={styles.btnText}>Agree to help!</Text>
                     </TouchableOpacity>
                   )}
                 </View>
