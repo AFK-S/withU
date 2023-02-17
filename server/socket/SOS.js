@@ -66,18 +66,10 @@ const SOS = (socket) => {
     })
     callback(details)
   })
-  // socket.on('Get_SOS_detail', async (sos_user_id, callback) => {
-  //   const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-  //   const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-  //   sos_user[sos_user_id].accepted_list = sos_user[
-  //     sos_user_id
-  //   ].accepted_list.map((user) => {
-  //     if (user) {
-  //       return user
-  //     }
-  //   })
-  //   callback(sos_user[sos_user_id])
-  // })
+  socket.on('Get_SOS_detail', async (sos_user_id, callback) => {
+    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
+    callback(sos_user[sos_user_id] ? true : false)
+  })
 }
 
 module.exports = SOS

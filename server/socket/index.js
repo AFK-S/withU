@@ -36,17 +36,20 @@ const socket = (http) => {
       callback(Object.values(users))
     })
     SOS(socket)
-    socket.on('Get_Location', async (user_id) => {
+    socket.on('Get_Location', async (user_id, callback) => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
       callback(users[user_id].coordinates)
     })
-    socket.on('Get_Direction_Location', async (sos_user_id, person_user_id) => {
-      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-      callback({
-        source: users[sos_user_id].coordinates,
-        destination: users[person_user_id].coordinates,
-      })
-    })
+    socket.on(
+      'Get_Direction_Location',
+      async (sos_user_id, person_user_id, callback) => {
+        const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+        callback({
+          source: users[sos_user_id].coordinates,
+          destination: users[person_user_id].coordinates,
+        })
+      },
+    )
     // socket.on("disconnect", async () => {
     //   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
     //   for (const user_id in users) {
