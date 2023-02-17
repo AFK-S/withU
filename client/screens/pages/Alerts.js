@@ -9,7 +9,7 @@ import {
 import React, { useState } from 'react'
 import Styles from '../../CommonStyles'
 
-const Alerts = ({ socket, User }) => {
+const Alerts = ({ navigation, socket, User }) => {
   const [AlertList, setAlertList] = useState([])
 
   socket.emit('Get_SOS_details', User.user_id, (data) => {
@@ -18,6 +18,9 @@ const Alerts = ({ socket, User }) => {
 
   const GetDirection = (user_id) => {
     socket.emit('SOS_Accepted', user_id, User.user_id)
+    // navigation.navigate('MAP', {
+    //   user_id: user_id,
+    // })
     socket.emit('Get_Location', user_id, async (location) => {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
       Linking.openURL(url)
