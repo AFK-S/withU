@@ -5,8 +5,10 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Image
+  Image,
+  Alert
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
@@ -18,9 +20,11 @@ const SOS = ({ socket, User, setIsLogin }) => {
   const [isSOS, setIsSOS] = useState(false)
 
   const Logout = async () => {
-    await AsyncStorage.removeItem('user')
-    setIsLogin(false)
+      
+      await AsyncStorage.removeItem('user')
+      setIsLogin(false)
   }
+  
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
@@ -88,7 +92,7 @@ const SOS = ({ socket, User, setIsLogin }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.logoutDiv}>
-        <TouchableOpacity style={styles.logout}>
+        <TouchableOpacity style={styles.logout} onPress={Logout}>
           <Image
             source={require('../../assets/logout-icon.png')}
             resizeMode="contain"
