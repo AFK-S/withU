@@ -42,21 +42,21 @@ const SOS = (socket) => {
     }
     callback(user_details)
   })
-  socket.on('SOS_Accepted', async (user_id) => {
+  socket.on('SOS_Accepted', async (sos_user_id, user_id) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-    for (const sos in Object.keys(sos_user)) {
-      if (sos.user_ids.includes(user_id)) {
-        sos_user[sos.user_id].accepted_list = [
-          ...sos_user[sos.user_id].accepted_list,
-          {
-            user_id: user_id,
-            name: users[user_id].name,
-            phone_number: users[user_id].phone_number,
-          },
-        ]
-      }
+    if (!sos_user[sos_user_id]) {
+      return
     }
+    sos_user[sos_user_id].accepted_list = [
+      ...sos_user[sos_user_id].accepted_list,
+      {
+        user_id: user_id,
+        name: users[user_id].name,
+        phone_number: users[user_id].phone_number,
+      },
+    ]
+
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
   })
   socket.on('Get_SOS_details', async (user_id, callback) => {
