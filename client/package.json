@@ -20,6 +20,7 @@
     "expo-app-loading": "^2.1.1",
     "expo-av": "^13.0.2",
     "expo-location": "^15.0.1",
+    "expo-notifications": "^0.17.0",
     "expo-permissions": "^14.0.0",
     "expo-sms": "^11.0.0",
     "expo-status-bar": "~1.4.2",
@@ -32,6 +33,7 @@
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-web": "~0.18.9",
+    "react-native-webview": "^11.26.1",
     "socket.io-client": "^4.6.0"
   },
   "devDependencies": {
