@@ -5,12 +5,12 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Audio } from 'expo-av'
-import Styles from '../../CommonStyles'
-import * as SMS from 'expo-sms'
-import call from 'react-native-phone-call'
+  Image
+} from "react-native";
+import { Audio } from "expo-av";
+import Styles from "../../CommonStyles";
+import * as SMS from "expo-sms";
+import call from "react-native-phone-call";
 
 const SOS = ({ socket, User, setIsLogin }) => {
   const [sound, setSound] = useState()
@@ -77,19 +77,28 @@ const SOS = ({ socket, User, setIsLogin }) => {
       })
     }
     socket.emit('SOS_button', user_id, emergency_contact, (user_details) => {
-      const message = `I am ${
-        user_details.name
-      } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${
-        user_details.coordinates.latitude
-      },${user_details.coordinates.longitude} and my contact number is ${
-        user_details.phone_number
-      }.\n Send at ${new Date(user_details.time).toLocaleString()}`
+      const message = `I am ${user_details.name
+        } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${user_details.coordinates.latitude
+        },${user_details.coordinates.longitude} and my contact number is ${user_details.phone_number
+        }.\n Send at ${new Date(user_details.time).toLocaleString()}`
       SendSMS(emergency_contact, message)
     })
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.logoutDiv}>
+        <TouchableOpacity style={styles.logout}>
+          <Image
+            source={require('../../assets/logout-icon.png')}
+            resizeMode="contain"
+            style={{
+              width: 25,
+              height: 25
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <View
           style={{
@@ -165,6 +174,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 10,
   },
-})
+  logoutDiv: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    paddingHorizontal: 30
+  },
+  logout: {
+    backgroundColor: "#FFAACF",
+    padding: 15,
+    borderRadius: 100,
+
+  },
+
+});
 
 export default SOS
