@@ -16,8 +16,13 @@ const Alerts = ({ navigation, socket, User }) => {
     setAlertList(data)
   })
 
-  const GetDirection = (user_id) => {
-    socket.emit('SOS_Accepted', user_id, User.user_id)
+  const GetDirection = (user_id, user_list = []) => {
+    const list = user_list.filter((user) => {
+      return user.user_id === User.user_id
+    })
+    if (list.length === 0) {
+      socket.emit('SOS_Accepted', user_id, User.user_id)
+    }
     // navigation.navigate('MAP', {
     //   user_id: user_id,
     // })
@@ -97,7 +102,9 @@ const Alerts = ({ navigation, socket, User }) => {
                   {User.user_id !== item.user_id && (
                     <TouchableOpacity
                       style={styles.btn}
-                      onPress={() => GetDirection(item.user_id)}
+                      onPress={() =>
+                        GetDirection(item.user_id, item.accepted_list)
+                      }
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>

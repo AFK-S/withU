@@ -51,11 +51,6 @@ const SOS = (socket) => {
     if (!sos_user[sos_user_id].accepted_list) {
       sos_user[sos_user_id].accepted_list = []
     }
-    for (const data in sos_user[sos_user_id].accepted_list) {
-      if (data.user_id === user_id) {
-        return
-      }
-    }
     sos_user[sos_user_id].accepted_list = [
       ...sos_user[sos_user_id].accepted_list,
       {
