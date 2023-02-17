@@ -18,7 +18,7 @@ const Alerts = ({ socket, User }) => {
 
   const GetDirection = (user_id) => {
     socket.emit('Get_Location', user_id, async (location) => {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walk`
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
       Linking.openURL(url)
     })
   }

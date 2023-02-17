@@ -60,7 +60,7 @@ export default function App() {
       <StatusBar barStyle={'dark-content'} />
       <NavigationContainer>
         {isLogin ? (
-          <MainScreen />
+          <MainScreen setIsLogin={setIsLogin} />
         ) : (
           <Auth setIsLogin={setIsLogin} setAlert={setAlert} />
         )}
