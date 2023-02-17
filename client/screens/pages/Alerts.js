@@ -61,6 +61,7 @@ const Alerts = ({ navigation, socket, User }) => {
                               borderRadius: 15,
                               elevation: 5,
                               shadowColor: '#000',
+                              marginVertical: 5,
                               shadowOffset: {
                                 width: 0,
                                 height: 2,
