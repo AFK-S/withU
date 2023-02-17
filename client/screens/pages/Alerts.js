@@ -42,18 +42,63 @@ const Alerts = ({ navigation, socket, User }) => {
                     <Text style={styles.raisedBy}>Raised By : </Text>
                     <Text style={styles.rbName}>{item.name}</Text>
                   </View>
-                  <Text style={{ ...styles.raisedBy, marginVertical: 15 }}>
+                  <Text style={{ ...styles.raisedBy }}>
                     Phone Number : {item.phone_number}
                   </Text>
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.time).toLocaleString()}
                   </Text>
-                  <TouchableOpacity
-                    style={styles.btn}
-                    onPress={() => GetDirection(item.user_id)}
-                  >
-                    <Text style={styles.btnText}>Get Directions</Text>
-                  </TouchableOpacity>
+                  <Text style={styles.rbName}>Accepted By</Text>
+                  {item.accepted_list && (
+                    <FlatList
+                      data={item.accepted_list}
+                      renderItem={(user) => {
+                        return (
+                          <View
+                            style={{
+                              backgroundColor: '#fff',
+                              padding: 20,
+                              borderRadius: 15,
+                              elevation: 5,
+                              shadowColor: '#000',
+                              shadowOffset: {
+                                width: 0,
+                                height: 2,
+                              },
+                            }}
+                          >
+                            <View
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                              }}
+                            >
+                              <Text style={styles.raisedBy}>Person : </Text>
+                              <Text style={styles.rbName}>
+                                {user.item.name}
+                              </Text>
+                            </View>
+                            <Text
+                              style={{
+                                ...styles.raisedBy,
+                              }}
+                            >
+                              Phone Number : {user.item.phone_number}
+                            </Text>
+                          </View>
+                        )
+                      }}
+                      showsVerticalScrollIndicator={false}
+                    />
+                  )}
+                  {User.user_id !== item.user_id && (
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => GetDirection(item.user_id)}
+                    >
+                      <Text style={styles.btnText}>Get Directions</Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               )
             )
