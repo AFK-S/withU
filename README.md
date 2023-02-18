@@ -31,6 +31,8 @@ The Help tab has a Map View that displays the nearby Hospitals and Police Statio
 
 - User-friendly: The app is developed using React Native, which is known for creating user-friendly interfaces. 
 
+- Community building: Since the app also sends alerts to users within the community, it promotes trust and a level of comfort for everyone around. It ultimately benefits the community’s Safety and peace as a whole.
+
 
 
 ## Developed by
