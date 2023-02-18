@@ -2,8 +2,22 @@ import MapView, { Circle, Marker } from 'react-native-maps'
 import React, { useState, useEffect } from 'react'
 import { View, Text } from 'react-native'
 
-const Map = ({ socket, User, location }) => {
+const Map = ({ route, socket, User, location }) => {
   const [activeUsers, setActiveUsers] = useState([])
+  const [source, setSource] = useState({})
+  const [destination, setDestination] = useState({})
+
+  // if (route.params.user_id) {
+  //   socket.emit(
+  //     'Get_Direction_Location',
+  //     User.user_id,
+  //     route.params.user_id,
+  //     (location) => {
+  //       setSource(location.source)
+  //       setDestination(location.destination)
+  //     },
+  //   )
+  // }
 
   useEffect(() => {
     socket.emit('Get_Active_Users', (users) => {

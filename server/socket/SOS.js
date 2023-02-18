@@ -48,7 +48,9 @@ const SOS = (socket) => {
     if (!sos_user[sos_user_id]) {
       return
     }
-    sos_user[sos_user_id].accepted_list = []
+    if (!sos_user[sos_user_id].accepted_list) {
+      sos_user[sos_user_id].accepted_list = []
+    }
     sos_user[sos_user_id].accepted_list = [
       ...sos_user[sos_user_id].accepted_list,
       {
