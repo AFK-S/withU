@@ -22,7 +22,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.put(
-        "https://FNF001CODE-A-THON.adityarai16.repl.co/api/login",
+        "https://withU.adityarai16.repl.co/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));
@@ -40,8 +40,9 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>withU</Text>
         <TextInput

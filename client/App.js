@@ -1,25 +1,25 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { NavigationContainer } from '@react-navigation/native'
-import { StatusBar } from 'react-native'
-import { useFonts } from 'expo-font'
-import React, { useState, useEffect } from 'react'
-import AppLoading from 'expo-app-loading'
-import Auth from './screens/auth/AuthScreen'
-import MainScreen from './screens/MainScreen'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "react-native";
+import { useFonts } from "expo-font";
+import React, { useState, useEffect } from "react";
+import AppLoading from "expo-app-loading";
+import Auth from "./screens/auth/AuthScreen";
+import MainScreen from "./screens/MainScreen";
 
 export default function App() {
-  const [isLogin, setIsLogin] = useState(false)
+  const [isLogin, setIsLogin] = useState(true);
   const [Alert, setAlert] = useState({
     isAlert: false,
-    type: '',
-    message: '',
-  })
+    type: "",
+    message: "",
+  });
 
   useEffect(() => {
-    ;(async () => {
-      const user = await AsyncStorage.getItem('user')
+    (async () => {
+      const user = await AsyncStorage.getItem("user");
       if (user === null) {
-        return setIsLogin(false)
+        return setIsLogin(false);
       }
       const {
         user_id,
@@ -28,7 +28,7 @@ export default function App() {
         gender,
         emergency_contact,
         password,
-      } = JSON.parse(user)
+      } = JSON.parse(user);
       if (
         !(
           user_id &&
@@ -39,25 +39,25 @@ export default function App() {
           password
         )
       ) {
-        return setIsLogin(false)
+        return setIsLogin(false);
       }
-      setIsLogin(true)
-    })()
-  }, [isLogin])
+      setIsLogin(true);
+    })();
+  }, [isLogin]);
 
   const [fontsLoaded] = useFonts({
-    'Poppins-Bold': require('./assets/Fonts/Poppins-Bold.ttf'),
-    'Poppins-Thin': require('.//assets/Fonts/Poppins-Thin.ttf'),
-    'Poppins-Medium': require('.//assets/Fonts/Poppins-Medium.ttf'),
-  })
+    "Poppins-Bold": require("./assets/Fonts/Poppins-Bold.ttf"),
+    "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),
+    "Poppins-Medium": require(".//assets/Fonts/Poppins-Medium.ttf"),
+  });
 
   if (!fontsLoaded) {
-    return <AppLoading />
+    return <AppLoading />;
   }
 
   return (
     <>
-      <StatusBar barStyle={'dark-content'} />
+      <StatusBar barStyle={"dark-content"} />
       <NavigationContainer>
         {isLogin ? (
           <MainScreen setIsLogin={setIsLogin} />
@@ -66,5 +66,5 @@ export default function App() {
         )}
       </NavigationContainer>
     </>
-  )
+  );
 }
