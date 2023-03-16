@@ -1,6 +1,8 @@
 const { Server } = require('socket.io')
 const fs = require('fs')
-const SOS = require('../socket/SOS')
+const SOSSocket = require('../socket/SOS')
+const ActiveSocket = require('../socket/Active')
+const UserSchema = require('../models/User')
 
 const socket = (http) => {
   const io = new Server(http)
@@ -19,23 +21,21 @@ const socket = (http) => {
   })
 
   io.on('connection', (socket) => {
-    socket.on('Set_Active_User', async (user, coordinates) => {
-      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-      users[user.user_id] = {
-        socket_id: socket.id,
-        user_id: user.user_id,
-        name: user.name,
-        phone_number: user.phone_number,
-        gender: user.gender,
-        coordinates: coordinates,
+    socket.on('Set_User_ID', (user_id) => {
+      socket.user_id = user_id
+    })
+    socket.on('Get_User_Details', async (user_id, callback) => {
+      const user_detail = await UserSchema.findById(user_id).lean()
+      if (user_response === null) {
+        callback('Invalid Request')
+        return
       }
-      fs.writeFileSync('./json/isActive.json', JSON.stringify(users))
+      callback(user_detail)
     })
-    socket.on('Get_Active_Users', async (callback) => {
-      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-      callback(Object.values(users))
-    })
-    SOS(socket)
+    ActiveSocket(socket)
+    SOSSocket(socket)
+    // done
+    // get password
     socket.on('Get_Location', async (user_id, callback) => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
       callback(users[user_id].coordinates)
