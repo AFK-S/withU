@@ -2,25 +2,12 @@ import MapView, { Circle, Marker } from 'react-native-maps'
 import React, { useState, useEffect } from 'react'
 import { View, Text } from 'react-native'
 
-const Map = ({ route, socket, User, location }) => {
+const Map = ({ socket, User, location }) => {
   const [activeUsers, setActiveUsers] = useState([])
-  const [source, setSource] = useState({})
-  const [destination, setDestination] = useState({})
-
-  // if (route.params.user_id) {
-  //   socket.emit(
-  //     'Get_Direction_Location',
-  //     User.user_id,
-  //     route.params.user_id,
-  //     (location) => {
-  //       setSource(location.source)
-  //       setDestination(location.destination)
-  //     },
-  //   )
-  // }
 
   useEffect(() => {
-    socket.emit('Get_Active_Users', (users) => {
+    socket.emit('Get_Meter_Active_Users', (users) => {
+      console.log(users)
       setActiveUsers(users)
     })
   }, [])
@@ -55,8 +42,8 @@ const Map = ({ route, socket, User, location }) => {
             return (
               <Marker
                 key={index}
-                coordinate={user.coordinates}
-                title={user.name}
+                // coordinate={user.coordinates || { latitude: 0, longitude: 0 }}
+                // title={user.name}
                 opacity={user.user_id === User.user_id ? 1 : 0.5}
               />
             )

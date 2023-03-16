@@ -9,14 +9,8 @@ const socket = (http) => {
 
   fs.watch('json/isActive.json', async (eventType) => {
     if (eventType === 'change') {
-      fs.readFile('./json/isActive.json', 'utf8', (err, data) => {
-        if (err) {
-          return console.log(err)
-        }
-        if (!data) return
-        const users = JSON.parse(data)
-        io.emit('Send_Active_Users', Object.values(users))
-      })
+      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+      io.emit('Send_Active_Users', Object.values(users))
     }
   })
 
