@@ -1,18 +1,14 @@
 import "./App.css";
-import LoginForm from "./pages/LoginForm";
-import Dashboard from "./pages/Dashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import Auth from "./pages/auth/Auth";
+import MainScreens from "./pages/MainScreen/MainScreens";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LoginForm />} />
-          <Route path="dash" element={<Dashboard />} />
-          <Route path="*" element={<Dashboard />} />
-        </Routes>
-      </BrowserRouter>
+      <BrowserRouter>{isLoggedIn ? <MainScreens /> : <Auth />}</BrowserRouter>
     </div>
   );
 }

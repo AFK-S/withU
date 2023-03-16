@@ -2,7 +2,7 @@ import { useForm } from "@mantine/form";
 import { TextInput, Button, Box } from "@mantine/core";
 import { PasswordInput } from "@mantine/core";
 
-const LoginForm = () => {
+const Login = () => {
   const form = useForm({
     initialValues: { name: "", password: "" },
     validate: {
@@ -32,4 +32,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;
