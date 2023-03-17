@@ -71,6 +71,12 @@ const SOS = (io, socket) => {
     callback(user_response.name)
   })
   socket.on('SOS_Accepted_Commity', async (sos_user_id, callback) => {
+    const sos_response = await SOSSchema.findOne({
+      owner_id: sos_user_id,
+    })
+    if (sos_response !== null) {
+      return
+    }
     try {
       await SOSSchema.findOneAndUpdate(
         {
@@ -94,35 +100,6 @@ const SOS = (io, socket) => {
     }
     sos_user[sos_user_id].accepted_list = [
       ...sos_user[sos_user_id].accepted_commity_list,
-      socket.user_id,
-    ]
-    fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
-    io.emit('Refetch_SOS_Details')
-  })
-  socket.on('SOS_Accepted_Officials', async (sos_user_id, callback) => {
-    try {
-      await SOSSchema.findOneAndUpdate(
-        {
-          owner_id: socket.user_id,
-        },
-        {
-          status: 'accepted',
-        },
-      )
-    } catch (error) {
-      callback(error)
-      return
-    }
-    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-    if (!sos_user[sos_user_id]) {
-      callback('Invalid Request')
-      return
-    }
-    if (!sos_user[sos_user_id].accepted_list) {
-      sos_user[sos_user_id].accepted_officials_list = []
-    }
-    sos_user[sos_user_id].accepted_list = [
-      ...sos_user[sos_user_id].accepted_officials_list,
       socket.user_id,
     ]
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
