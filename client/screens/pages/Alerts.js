@@ -6,27 +6,43 @@ import {
   FlatList,
   Linking,
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Styles from '../../CommonStyles'
 
-const Alerts = ({ navigation, socket, User }) => {
+const Alerts = ({ socket, User }) => {
   const [AlertList, setAlertList] = useState([])
 
-  socket.emit('Get_SOS_details', User.user_id, (data) => {
-    setAlertList(data)
+  useEffect(() => {
+    if (socket.connected) {
+      socket.emit('Get_SOS_details', (data) => {
+        setAlertList(data)
+      })
+    }
+  }, [socket.connected])
+
+  socket.on('Refetch_SOS_Details', () => {
+    socket.emit('Get_SOS_details', (data) => {
+      setAlertList(data)
+    })
   })
 
   const GetDirection = (user_id, user_list = []) => {
+    if (!socket.connected) {
+      alert('Please Connect to Internet')
+      return
+    }
     const list = user_list.filter((user) => {
       return user.user_id === User.user_id
     })
     if (list.length === 0) {
-      socket.emit('SOS_Accepted', user_id, User.user_id)
+      socket.emit('SOS_Accepted_Commity', user_id, (err) => {
+        if (err) {
+          alert(err)
+        }
+        return
+      })
     }
-    // navigation.navigate('MAP', {
-    //   user_id: user_id,
-    // })
-    socket.emit('Get_Location', user_id, async (location) => {
+    socket.emit('Get_SOS_Location', user_id, async (location) => {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
       Linking.openURL(url)
     })

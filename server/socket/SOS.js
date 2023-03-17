@@ -89,31 +89,9 @@ const SOS = (io, socket) => {
     const owner_ids = sos_details_list.map((sos) => {
       return sos.owner_id
     })
-    const accepted_commity_list = sos_details_list.map((sos) => {
-      return sos.accepted_commity_list
+    const sos_detail = await UserSchema.find({
+      _id: { $in: owner_ids },
     })
-    console.log(owner_ids)
-    console.log(accepted_commity_list)
-    const sos_detail = await UserSchema.aggregate([
-      {
-        $match: {
-          _id: { $in: owner_ids },
-        },
-      },
-      {
-        $lookup: {
-          from: 'users',
-          pipeline: [
-            {
-              $match: {
-                _id: { $in: accepted_commity_list },
-              },
-            },
-          ],
-          as: 'accepted_commity_list',
-        },
-      },
-    ])
     callback(sos_detail)
   })
 }
