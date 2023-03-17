@@ -133,13 +133,30 @@ const SOS = (io, socket) => {
     const sos_details_list = Object.values(sos_user).filter((user) => {
       return user.user_ids.includes(socket.user_id)
     })
-    const owner_ids = sos_details_list.map((sos) => {
-      return sos.owner_id
+    const sos_ids = sos_details_list.map((sos) => {
+      return sos.sos_id
     })
-    const sos_detail = await UserSchema.find({
-      _id: { $in: owner_ids },
-    }).lean()
-    callback(sos_detail)
+    const sos_response = await SOSSchema.aggregate([
+      {
+        _id: {
+          $toString: '$_id',
+        },
+      },
+      {
+        $match: {
+          _id: { $in: sos_ids },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'owner_id',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+    ])
+    callback(sos_response[0])
   })
   socket.on('Get_SOS_Accepted_List', async (sos_owner_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
