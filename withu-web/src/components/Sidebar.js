@@ -12,15 +12,10 @@ import {
 import {
   IconChartInfographic,
   IconSos,
-  IconKey,
   IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
   IconUserCircle,
   IconLogout,
 } from "@tabler/icons-react";
-import { MantineLogo } from "@mantine/ds";
 import { NavLink } from "react-router-dom";
 import LightDark from "../pages/MainScreen/LightDark";
 
@@ -96,7 +91,7 @@ const useStyles = createStyles((theme) => ({
 const data = [
   { link: "/sos", label: "SOS", icon: IconSos },
   { link: "/statistics", label: "Statistics", icon: IconChartInfographic },
-  { link: "/ss", label: "Active Users", icon: IconUserCircle },
+  { link: "/profile", label: "Profile", icon: IconUserCircle },
   { link: "/we", label: "Other Settings", icon: IconSettings },
 ];
 
