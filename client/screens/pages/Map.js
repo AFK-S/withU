@@ -5,11 +5,11 @@ import { View, Text } from 'react-native'
 const Map = ({ socket, User, location }) => {
   const [activeUsers, setActiveUsers] = useState([])
 
-  useEffect(() => {
+  if (socket.connected) {
     socket.emit('Get_Meter_Active_Users', (users) => {
       setActiveUsers(users)
     })
-  }, [])
+  }
 
   socket.on('Send_Active_Users', (users) => {
     setActiveUsers(users)

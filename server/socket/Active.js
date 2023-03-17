@@ -5,7 +5,7 @@ const geolib = require('geolib')
 const Active = (socket) => {
   socket.on('Set_Active_User', async (coordinates) => {
     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-    if (!users[socket.user_id]) {
+    if (!socket.user_id) {
       return
     }
     users[socket.user_id] = {

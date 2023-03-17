@@ -28,20 +28,21 @@ const MainScreen = ({ setIsLogin }) => {
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
+  const [isSOS, setIsSOS] = useState(false)
 
   socket.on('connect', async () => {
     const { user_id } = await JSON.parse(await AsyncStorage.getItem('user'))
     socket.emit('Set_User_ID', user_id)
     console.log('connected')
+    socket.emit('Is_SOS', (boolean) => setIsSOS(boolean))
   })
 
   socket.on('connect_error', (err) => {
     console.log(err)
   })
 
-  socket.on('SOS_Send', async (details) => {
+  socket.on('Send_Notification', async (details) => {
     await schedulePushNotification(details)
-    console.log(details)
   })
 
   useEffect(() => {
@@ -173,6 +174,8 @@ const MainScreen = ({ setIsLogin }) => {
             User={User}
             location={location}
             setIsLogin={setIsLogin}
+            isSOS={isSOS}
+            setIsSOS={setIsSOS}
           />
         )}
       </Tab.Screen>

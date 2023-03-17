@@ -6,25 +6,22 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  Alert
-} from "react-native";
+  Alert,
+} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Audio } from "expo-av";
-import Styles from "../../CommonStyles";
-import * as SMS from "expo-sms";
-import call from "react-native-phone-call";
+import { Audio } from 'expo-av'
+import Styles from '../../CommonStyles'
+import * as SMS from 'expo-sms'
+import call from 'react-native-phone-call'
 
-const SOS = ({ socket, User, setIsLogin }) => {
+const SOS = ({ socket, User, setIsLogin, isSOS, setIsSOS }) => {
   const [sound, setSound] = useState()
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isSOS, setIsSOS] = useState(false)
 
   const Logout = async () => {
-      
-      await AsyncStorage.removeItem('user')
-      setIsLogin(false)
+    await AsyncStorage.removeItem('user')
+    setIsLogin(false)
   }
-  
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
@@ -47,10 +44,6 @@ const SOS = ({ socket, User, setIsLogin }) => {
     })
   }
 
-  socket.emit('Get_SOS_detail', User.user_id, (boolean) => {
-    setIsSOS(boolean)
-  })
-
   useEffect(() => {
     return sound ? () => sound.unloadAsync() : undefined
   }, [sound])
@@ -72,23 +65,28 @@ const SOS = ({ socket, User, setIsLogin }) => {
   }
 
   const OnSOS = async () => {
+    if (!socket.connected) {
+      return
+    }
     setIsSOS(!isSOS)
-    const { user_id, emergency_contact, password } = User
+    const { emergency_contact, password } = User
     if (isSOS) {
-      return socket.emit('SOS_Cancel', user_id, (user_details) => {
-        const message = `I am ${user_details.name} and I am not in danger anymore.`
+      return socket.emit('SOS_Cancel', (user_name) => {
+        const message = `I am ${user_name} and I am not in danger anymore.`
         SendSMS(emergency_contact, message)
       })
     }
-    socket.emit('SOS_button', user_id, emergency_contact, (user_details) => {
-      const message = `I am ${user_details.name
-        } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${user_details.coordinates.latitude
-        },${user_details.coordinates.longitude} and my contact number is ${user_details.phone_number
-        }.\n Send at ${new Date(user_details.time).toLocaleString()}`
+    socket.emit('On_SOS', (user_details) => {
+      const message = `I am ${
+        user_details.name
+      } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${
+        user_details.coordinates.latitude
+      },${user_details.coordinates.longitude} and my contact number is ${
+        user_details.phone_number
+      }.\n Send at ${new Date(user_details.time).toLocaleString()}`
       SendSMS(emergency_contact, message)
     })
   }
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.logoutDiv}>
@@ -98,7 +96,7 @@ const SOS = ({ socket, User, setIsLogin }) => {
             resizeMode="contain"
             style={{
               width: 25,
-              height: 25
+              height: 25,
             }}
           />
         </TouchableOpacity>
@@ -179,18 +177,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   logoutDiv: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    paddingHorizontal: 30
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    paddingHorizontal: 30,
   },
   logout: {
-    backgroundColor: "#FFAACF",
+    backgroundColor: '#FFAACF',
     padding: 15,
     borderRadius: 100,
-
   },
-
-});
+})
 
 export default SOS
