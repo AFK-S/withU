@@ -17,8 +17,15 @@ import { NavLink } from "react-router-dom";
 
 const Register = () => {
   const form = useForm({
-    initialValues: { branch: "", password: "", latitude: "", longitude: "" },
+    initialValues: {
+      userName: "",
+      branch: "",
+      password: "",
+      latitude: "",
+      longitude: "",
+    },
     validate: {
+      userName: (value) => (value.length < 3 ? "Enter valid Username" : null),
       branch: (value) => (value.length < 3 ? "Enter valid branch" : null),
       password: (value) =>
         value.length < 8 ? "Enter valid password (min length : 8)" : null,
@@ -31,7 +38,6 @@ const Register = () => {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords);
       form.setFieldValue("latitude", position.coords.latitude);
       form.setFieldValue("longitude", position.coords.longitude);
     });
@@ -65,6 +71,14 @@ const Register = () => {
             })}
           >
             <TextInput
+              label="Username"
+              placeholder="Username"
+              {...form.getInputProps("userName")}
+              radius="md"
+              withAsterisk
+            />
+            <TextInput
+              mt={15}
               label="Branch Name"
               placeholder="Branch Name"
               {...form.getInputProps("branch")}

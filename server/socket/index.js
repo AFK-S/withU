@@ -27,13 +27,13 @@ const socket = (http) => {
       callback(user_detail)
     })
     ActiveSocket(socket)
-    SOSSocket(socket)
-    // done
-    // get password
-    socket.on('Get_Location', async (user_id, callback) => {
+    SOSSocket(io, socket)
+    socket.on('Get_SOS_Location', async (user_id, callback) => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
       callback(users[user_id].coordinates)
     })
+    // done
+    // get password
     socket.on(
       'Get_Direction_Location',
       async (sos_user_id, person_user_id, callback) => {

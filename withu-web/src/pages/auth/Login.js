@@ -3,12 +3,10 @@ import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
-  Text,
   Paper,
   Group,
   Button,
-  Divider,
-  Checkbox,
+  Title,
   Anchor,
   Stack,
   Container,
@@ -31,55 +29,78 @@ export function Login() {
   });
 
   return (
-    <Container size={500} my={200}>
-      <Paper radius="md" p="xl" withBorder>
-        <Text size="lg" weight={600} align="center">
-          Welcome to withU
-        </Text>
+    <div
+      style={{
+        backgroundColor: "#e5e5e5",
+        display: "flex",
+        minHeight: "100vh",
+        alignItems: "center",
+      }}
+    >
+      <Container size={500} my={200} radius="xl">
+        <Title
+          align="center"
+          mb={30}
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 800,
+          })}
+        >
+          Login into withU Admin
+        </Title>
+        <Paper radius="md" p="xl" withBorder>
+          <form onSubmit={form.onSubmit((val) => console.log(val))}>
+            <Stack>
+              <TextInput
+                my={10}
+                required
+                label="Username"
+                placeholder="Username here"
+                value={form.values.userName}
+                onChange={(event) =>
+                  form.setFieldValue("userName", event.currentTarget.value)
+                }
+                error={form.errors.userName && "Invalid userName"}
+                radius="md"
+              />
 
-        <form onSubmit={form.onSubmit((val) => console.log(val))}>
-          <Stack>
-            <TextInput
-              required
-              label="User Name"
-              placeholder="Usernmame here"
-              value={form.values.userName}
-              onChange={(event) =>
-                form.setFieldValue("userName", event.currentTarget.value)
-              }
-              error={form.errors.userName && "Invalid userName"}
-              radius="md"
-            />
+              <PasswordInput
+                required
+                label="Password"
+                placeholder="Your password"
+                value={form.values.password}
+                onChange={(event) =>
+                  form.setFieldValue("password", event.currentTarget.value)
+                }
+                error={
+                  form.errors.password &&
+                  "Password should include at least 8 characters"
+                }
+                radius="md"
+              />
+            </Stack>
 
-            <PasswordInput
-              required
-              label="Password"
-              placeholder="Your password"
-              value={form.values.password}
-              onChange={(event) =>
-                form.setFieldValue("password", event.currentTarget.value)
-              }
-              error={
-                form.errors.password &&
-                "Password should include at least 8 characters"
-              }
-              radius="md"
-            />
-          </Stack>
-
-          <Group position="apart" mt="xl">
-            <NavLink to="/register">
-              <Anchor component="button" type="button" color="dimmed" size="xs">
-                Don't have an account? Register
-              </Anchor>
-            </NavLink>
-            <Button type="submit" radius="xl" color={"pink"}>
-              Login
-            </Button>
-          </Group>
-        </form>
-      </Paper>
-    </Container>
+            <Group position="apart" mt={30}>
+              <Button type="submit" radius="md" fullWidth color={"pink"}>
+                Login
+              </Button>
+              <NavLink to="/register">
+                <Anchor
+                  component="button"
+                  type="button"
+                  color="dimmed"
+                  size="xs"
+                  align="center"
+                  fullWidth
+                >
+                  Don't have an account? Register
+                </Anchor>
+              </NavLink>
+            </Group>
+          </form>
+        </Paper>
+      </Container>
+    </div>
   );
 }
 
