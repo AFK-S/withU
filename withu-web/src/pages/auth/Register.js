@@ -10,17 +10,22 @@ import {
   Container,
   Group,
   Button,
+  NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { NavLink } from "react-router-dom";
 
 const Register = () => {
   const form = useForm({
-    initialValues: { branch: "", password: "" },
+    initialValues: { branch: "", password: "", latitude: "", longitude: "" },
     validate: {
       branch: (value) => (value.length < 3 ? "Enter valid branch" : null),
       password: (value) =>
         value.length < 8 ? "Enter valid password (min length : 8)" : null,
+      latitude: (value) =>
+        value.toString().length < 3 ? "Enter valid latitude" : null,
+      longitude: (value) =>
+        value.toString().length < 3 ? "Enter valid latitude" : null,
     },
   });
   return (
@@ -45,12 +50,17 @@ const Register = () => {
         </Title>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <form onSubmit={form.onSubmit(console.log)}>
+          <form
+            onSubmit={form.onSubmit((values) => {
+              console.log(values);
+            })}
+          >
             <TextInput
               label="Branch Name"
               placeholder="Branch Name"
               {...form.getInputProps("branch")}
               radius="md"
+              withAsterisk
             />
             <PasswordInput
               label="Password"
@@ -58,7 +68,25 @@ const Register = () => {
               {...form.getInputProps("password")}
               radius="md"
               mt={15}
+              withAsterisk
             />
+            <Group mt={15}>
+              <NumberInput
+                fullWidth
+                placeholder="Latitude"
+                label="Latitude"
+                {...form.getInputProps("latitude")}
+                withAsterisk
+                required
+              />
+              <NumberInput
+                placeholder="Longitude"
+                label="Longitude"
+                {...form.getInputProps("longitude")}
+                withAsterisk
+                required
+              />
+            </Group>
             <Button type="submit" fullWidth mt="xl" radius="md" color={"pink"}>
               Register
             </Button>
