@@ -5,12 +5,17 @@ import {
   TouchableOpacity,
   FlatList,
   Linking,
+  Modal,
+  Image,
+  SafeAreaView,
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Styles from '../../CommonStyles'
 
 const Alerts = ({ socket, User }) => {
   const [AlertList, setAlertList] = useState([])
+  const [modalVisible, setModalVisible] = useState(false)
+  const [acceptedList, setAcceptedList] = useState([])
 
   useEffect(() => {
     if (socket.connected) {
@@ -26,22 +31,12 @@ const Alerts = ({ socket, User }) => {
     })
   })
 
-  const GetDirection = (user_id, user_list = []) => {
+  const GetDirection = (user_id, sos_user_id) => {
     if (!socket.connected) {
       alert('Please Connect to Internet')
       return
     }
-    const list = user_list.filter((user) => {
-      return user.user_id === User.user_id
-    })
-    if (list.length === 0) {
-      socket.emit('SOS_Accepted_Commity', user_id, (err) => {
-        if (err) {
-          alert(err)
-        }
-        return
-      })
-    }
+    socket.emit('SOS_Accepted_Commity', sos_user_id)
     socket.emit('Get_SOS_Location', user_id, async (location) => {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
       Linking.openURL(url)
@@ -118,13 +113,117 @@ const Alerts = ({ socket, User }) => {
                   {User.user_id !== item.user._id && (
                     <TouchableOpacity
                       style={styles.btn}
-                      onPress={() =>
-                        GetDirection(item.user._id, item.accepted_list)
-                      }
+                      onPress={() => GetDirection(item.user._id, item.owner_id)}
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>
                   )}
+                  <TouchableOpacity
+                    style={styles.btn}
+                    onPress={() => {
+                      socket.emit(
+                        'Get_SOS_Accepted_List',
+                        item.owner_id,
+                        (data) => {
+                          setAcceptedList(data)
+                          setModalVisible(true)
+                        },
+                      )
+                    }}
+                  >
+                    <Text style={styles.btnText}>Accepted Users</Text>
+                  </TouchableOpacity>
+                  <SafeAreaView>
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={modalVisible}
+                      onRequestClose={() => setModalVisible(false)}
+                    >
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          paddingHorizontal: 20,
+                          backgroundColor: '#00000080',
+                        }}
+                      >
+                        <View
+                          style={{
+                            backgroundColor: '#fff',
+                            padding: 20,
+                            borderRadius: 15,
+                            elevation: 5,
+                            shadowColor: '#c6c6c678',
+                            marginVertical: 5,
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
+                          }}
+                        >
+                          <View
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <Text style={styles.modal_head}>Accepted User</Text>
+                            <TouchableOpacity
+                              onPress={() => setModalVisible(false)}
+                            >
+                              <Image
+                                source={require('../../assets/icons/close.png')}
+                                resizeMode="contain"
+                                style={{
+                                  width: 16,
+                                  height: 16,
+                                  alignSelf: 'flex-end',
+                                }}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                          {acceptedList.length !== 0 ? (
+                            <FlatList
+                              data={acceptedList}
+                              renderItem={(user) => {
+                                return (
+                                  <View>
+                                    <View
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                      }}
+                                    >
+                                      <Text style={styles.raisedBy}>
+                                        Person :{' '}
+                                      </Text>
+                                      <Text style={styles.rbName}>
+                                        {user.item.name}
+                                      </Text>
+                                    </View>
+                                    <Text
+                                      style={{
+                                        ...styles.raisedBy,
+                                      }}
+                                    >
+                                      Phone Number : {user.item.phone_number}
+                                    </Text>
+                                  </View>
+                                )
+                              }}
+                              showsVerticalScrollIndicator={false}
+                            />
+                          ) : (
+                            <Text style={{ ...Styles.medium, fontSize: 15 }}>
+                              No Accepted User
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </Modal>
+                  </SafeAreaView>
                 </View>
               )
             )
@@ -182,5 +281,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
     marginTop: '70%',
+  },
+  modal_head: {
+    ...Styles.medium,
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 20,
   },
 })
