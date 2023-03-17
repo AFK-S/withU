@@ -1,30 +1,36 @@
-import './App.css'
-import { BrowserRouter } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import Auth from './pages/auth/Auth'
-import MainScreens from './pages/MainScreen/MainScreens'
-import { useLocalSineProvider, ColorSchemeProvider, Paper } from '@mantine/core'
-import { useCookies } from 'react-cookie'
+import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Auth from "./pages/auth/Auth";
+import MainScreens from "./pages/MainScreen/MainScreens";
+import {
+  useLocalSineProvider,
+  ColorSchemeProvider,
+  Paper,
+  MantineProvider,
+} from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
+import { useCookies } from "react-cookie";
 
 function App() {
-  const [cookies] = useCookies(['user_id'])
-  const [isLogin, setIsLogin] = useState(true)
+  const [cookies] = useCookies(["user_id"]);
+  const [isLogin, setIsLogin] = useState(true);
   const [colorScheme, setColorScheme] = useLocalStorage(
-    'mantine-color-scheme',
+    "mantine-color-scheme",
     {
-      defaultValue: 'light',
+      defaultValue: "light",
       getInitialValueInEffect: true,
-    },
-  )
+    }
+  );
 
   useEffect(() => {
-    setIsLogin(cookies.user_id ? true : false)
-  }, [isLogin, cookies.user_id])
+    setIsLogin(cookies.user_id ? true : false);
+  }, [isLogin, cookies.user_id]);
 
   const toggleColorScheme = () => {
-    console.log(colorScheme)
-    setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')
-  }
+    console.log(colorScheme);
+    setColorScheme(colorScheme === "dark" ? "light" : "dark");
+  };
   return (
     <div className="App">
       <ColorSchemeProvider
@@ -44,7 +50,7 @@ function App() {
         </MantineProvider>
       </ColorSchemeProvider>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
