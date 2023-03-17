@@ -1,0 +1,8 @@
+.sidebar .active {
+    background-color: pink;
+    color: #000;
+}
+
+.sidebar .active svg {
+    color: #000;
+}
