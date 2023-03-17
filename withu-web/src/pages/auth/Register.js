@@ -15,8 +15,10 @@ import { useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Register = ({ setIsLogin }) => {
+  const [cookies, setCookie] = useCookies(["user_id"]);
   const form = useForm({
     initialValues: {
       name: "",
@@ -79,7 +81,7 @@ const Register = ({ setIsLogin }) => {
                     },
                   }
                 );
-                console.log(data);
+                setCookie("user_id", data, { path: "/" });
                 form.reset();
                 setIsLogin(true);
               } catch (error) {

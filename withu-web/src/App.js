@@ -14,7 +14,7 @@ import { useCookies } from "react-cookie";
 
 function App() {
   const [cookies] = useCookies(["user_id"]);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [colorScheme, setColorScheme] = useLocalStorage(
     "mantine-color-scheme",
     {
