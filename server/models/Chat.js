@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const { Schema, connection } = require('mongoose')
 
-const Chat = new mongoose.Schema(
+const Chat = new Schema(
   {
     sos_id: {
       type: String,

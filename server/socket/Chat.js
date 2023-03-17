@@ -1,4 +1,4 @@
-const ChatSchema = require('../models/ChatSchema')
+const ChatSchema = require('../models/Chat')
 
 const Chat = (socket) => {
   socket.on('join-room', async (sos_id, user_name) => {
