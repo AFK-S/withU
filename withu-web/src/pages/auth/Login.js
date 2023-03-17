@@ -1,5 +1,5 @@
-import { useToggle, upperFirst } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { useToggle, upperFirst } from '@mantine/hooks'
+import { useForm } from '@mantine/form'
 import {
   TextInput,
   PasswordInput,
@@ -10,31 +10,31 @@ import {
   Anchor,
   Stack,
   Container,
-} from "@mantine/core";
-import { NavLink } from "react-router-dom";
+} from '@mantine/core'
+import { NavLink } from 'react-router-dom'
+import axios from 'axios'
 
-export function Login() {
+export function Login({ setIsLogin }) {
   const form = useForm({
     initialValues: {
-      userName: "",
-      password: "",
+      name: '',
+      password: '',
     },
-
     validate: {
       password: (val) =>
         val.length <= 6
-          ? "Password should include at least 6 characters"
+          ? 'Password should include at least 6 characters'
           : null,
     },
-  });
+  })
 
   return (
     <div
       style={{
-        backgroundColor: "#e5e5e5",
-        display: "flex",
-        minHeight: "100vh",
-        alignItems: "center",
+        backgroundColor: '#e5e5e5',
+        display: 'flex',
+        minHeight: '100vh',
+        alignItems: 'center',
       }}
     >
       <Container size={500} my={200} radius="xl">
@@ -49,18 +49,32 @@ export function Login() {
           Login into withU Admin
         </Title>
         <Paper radius="md" p="xl" withBorder>
-          <form onSubmit={form.onSubmit((val) => console.log(val))}>
+          <form
+            onSubmit={form.onSubmit(async (val) => {
+              try {
+                const { data } = await axios.put(
+                  'https://withU.adityarai16.repl.co/api/police/login',
+                  val,
+                )
+                console.log(data)
+                form.reset()
+                setIsLogin(true)
+              } catch (error) {
+                console.log(error.response.data)
+              }
+            })}
+          >
             <Stack>
               <TextInput
                 my={10}
                 required
                 label="Username"
                 placeholder="Username here"
-                value={form.values.userName}
+                value={form.values.name}
                 onChange={(event) =>
-                  form.setFieldValue("userName", event.currentTarget.value)
+                  form.setFieldValue('name', event.currentTarget.value)
                 }
-                error={form.errors.userName && "Invalid userName"}
+                error={form.errors.name && 'Invalid userName'}
                 radius="md"
               />
 
@@ -70,18 +84,18 @@ export function Login() {
                 placeholder="Your password"
                 value={form.values.password}
                 onChange={(event) =>
-                  form.setFieldValue("password", event.currentTarget.value)
+                  form.setFieldValue('password', event.currentTarget.value)
                 }
                 error={
                   form.errors.password &&
-                  "Password should include at least 8 characters"
+                  'Password should include at least 8 characters'
                 }
                 radius="md"
               />
             </Stack>
 
             <Group position="apart" mt={30}>
-              <Button type="submit" radius="md" fullWidth color={"pink"}>
+              <Button type="submit" radius="md" fullWidth color={'pink'}>
                 Login
               </Button>
               <NavLink to="/register">
@@ -101,7 +115,7 @@ export function Login() {
         </Paper>
       </Container>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

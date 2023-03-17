@@ -51,7 +51,7 @@ router.put(
 router.post(
   '/police/register',
   body('name').not().isEmpty().withMessage('Name is required'),
-  body('brnach_name').not().isEmpty().withMessage('Branch Name is required'),
+  body('branch_name').not().isEmpty().withMessage('Branch Name is required'),
   body('password')
     .not()
     .isEmpty()
