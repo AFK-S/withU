@@ -2,7 +2,6 @@ import React from "react";
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
@@ -12,6 +11,7 @@ import {
   Button,
   NumberInput,
 } from "@mantine/core";
+import { useEffect } from "react";
 import { useForm } from "@mantine/form";
 import { NavLink } from "react-router-dom";
 
@@ -28,6 +28,15 @@ const Register = () => {
         value.toString().length < 3 ? "Enter valid latitude" : null,
     },
   });
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position.coords);
+      form.setFieldValue("latitude", position.coords.latitude);
+      form.setFieldValue("longitude", position.coords.longitude);
+    });
+  }, []);
+
   return (
     <div
       className="conatiner"
@@ -72,7 +81,8 @@ const Register = () => {
             />
             <Group mt={15}>
               <NumberInput
-                fullWidth
+                disabled
+                precision={8}
                 placeholder="Latitude"
                 label="Latitude"
                 {...form.getInputProps("latitude")}
@@ -80,6 +90,8 @@ const Register = () => {
                 required
               />
               <NumberInput
+                disabled
+                precision={8}
                 placeholder="Longitude"
                 label="Longitude"
                 {...form.getInputProps("longitude")}
