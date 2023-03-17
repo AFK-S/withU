@@ -129,7 +129,6 @@ const MainScreen = ({ setIsLogin }) => {
                 style={{
                   width: 35,
                   height: 35,
-                  // tintColor: focused ? "#fff" : "#000",
                 }}
               />
             </View>
