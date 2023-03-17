@@ -1,6 +1,7 @@
 const fs = require('fs')
 const { NearbyUsers, FamilyMembers } = require('../functions')
 const UserSchema = require('../models/User')
+const SOSSchema = require('../models/SOS')
 
 const SOS = (io, socket) => {
   socket.on('Is_SOS', async (callback) => {
@@ -17,17 +18,26 @@ const SOS = (io, socket) => {
     }
     const nearby_users = await NearbyUsers(socket)
     const family_members = await FamilyMembers(socket, callback)
+    let SOS_response
+    try {
+      SOS_response = await SOSSchema.create({
+        owner_id: socket.user_id,
+        coordinates: users[socket.user_id].coordinates,
+      })
+    } catch (error) {
+      callback(error)
+      return
+    }
     sos_user[socket.user_id] = {
-      owner_id: socket.user_id,
+      sos_id: SOS_response._id,
       user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
-      time: Date.now(),
     }
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
     const user_detail = {
-      user_id: socket.user_id,
+      user_id: SOS_response.owner_id,
       name: user_response.name,
-      coordinates: users[socket.user_id].coordinates,
-      time: sos_user[socket.user_id].time,
+      coordinates: SOS_response.coordinates,
+      time: SOS_response.createdAt,
     }
     if (nearby_users[1] && family_members[1]) {
       socket
@@ -36,20 +46,44 @@ const SOS = (io, socket) => {
     }
     io.emit('Refetch_SOS_Details')
     callback(user_detail)
-    // add to database sos
   })
   socket.on('SOS_Cancel', async (callback) => {
+    try {
+      await SOSSchema.findOneAndUpdate(
+        {
+          owner_id: socket.user_id,
+        },
+        {
+          status: 'resolved',
+        },
+      )
+    } catch (error) {
+      callback(error)
+      return
+    }
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     if (sos_user[socket.user_id]) {
       delete sos_user[socket.user_id]
       fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
     }
-    const user_response = await UserSchema.findById(socket.user_id).lean()
-    // active the sos from database
     io.emit('Refetch_SOS_Details')
+    const user_response = await UserSchema.findById(socket.user_id).lean()
     callback(user_response.name)
   })
   socket.on('SOS_Accepted_Commity', async (sos_user_id, callback) => {
+    try {
+      await SOSSchema.findOneAndUpdate(
+        {
+          owner_id: socket.user_id,
+        },
+        {
+          status: 'accepted',
+        },
+      )
+    } catch (error) {
+      callback(error)
+      return
+    }
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     if (!sos_user[sos_user_id]) {
       callback('Invalid Request')
@@ -66,6 +100,19 @@ const SOS = (io, socket) => {
     io.emit('Refetch_SOS_Details')
   })
   socket.on('SOS_Accepted_Officials', async (sos_user_id, callback) => {
+    try {
+      await SOSSchema.findOneAndUpdate(
+        {
+          owner_id: socket.user_id,
+        },
+        {
+          status: 'accepted',
+        },
+      )
+    } catch (error) {
+      callback(error)
+      return
+    }
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     if (!sos_user[sos_user_id]) {
       callback('Invalid Request')
@@ -91,8 +138,16 @@ const SOS = (io, socket) => {
     })
     const sos_detail = await UserSchema.find({
       _id: { $in: owner_ids },
-    })
+    }).lean()
     callback(sos_detail)
+  })
+  socket.on('Get_SOS_Accepted_List', async (sos_owner_id, callback) => {
+    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
+    const get_commity_list = sos_user[sos_owner_id].accepted_commity_list
+    const sos_accepted_detail = await UserSchema.find({
+      _id: { $in: get_commity_list },
+    }).lean()
+    callback(sos_accepted_detail)
   })
 }
 
