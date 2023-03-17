@@ -71,11 +71,11 @@ const SOS = (io, socket) => {
     callback(user_response.name)
   })
   socket.on('SOS_Accepted_Commity', async (sos_user_id) => {
-    const sos_response = await SOSSchema.findOne({
-      owner_id: sos_user_id,
-      status: 'accepted',
-    })
-    if (sos_response !== null) {
+    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
+    if (!sos_user[sos_user_id].accepted_commity_list) {
+      sos_user[sos_user_id].accepted_commity_list = []
+    }
+    if (sos_user[sos_user_id].accepted_commity_list.includes(socket.user_id)) {
       return
     }
     await SOSSchema.findOneAndUpdate(
@@ -87,10 +87,6 @@ const SOS = (io, socket) => {
         status: 'accepted',
       },
     )
-    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-    if (!sos_user[sos_user_id].accepted_commity_list) {
-      sos_user[sos_user_id].accepted_commity_list = []
-    }
     sos_user[sos_user_id].accepted_commity_list = [
       ...sos_user[sos_user_id].accepted_commity_list,
       socket.user_id,
