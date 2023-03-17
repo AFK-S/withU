@@ -61,18 +61,18 @@ const Alerts = ({ socket, User }) => {
                 <View style={styles.card}>
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <Text style={styles.raisedBy}>Raised By : </Text>
-                    <Text style={styles.rbName}>{item.name}</Text>
+                    <Text style={styles.rbName}>{item.user.name}</Text>
                   </View>
                   <Text style={{ ...styles.raisedBy }}>
-                    Phone Number : {item.phone_number}
+                    Phone Number : {item.user.phone_number}
                   </Text>
                   <Text style={styles.raisedBy}>
-                    Time : {new Date(item.time).toLocaleString()}
+                    Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
-                  {item.accepted_list && (
+                  {/* {item.accepted_list && (
                     <Text style={styles.rbName}>Accepted By</Text>
-                  )}
-                  {item.accepted_list && (
+                  )} */}
+                  {/* {item.accepted_list && (
                     <FlatList
                       data={item.accepted_list}
                       renderItem={(user) => {
@@ -114,12 +114,12 @@ const Alerts = ({ socket, User }) => {
                       }}
                       showsVerticalScrollIndicator={false}
                     />
-                  )}
-                  {User.user_id !== item.user_id && (
+                  )} */}
+                  {User.user_id !== item.user._id && (
                     <TouchableOpacity
                       style={styles.btn}
                       onPress={() =>
-                        GetDirection(item.user_id, item.accepted_list)
+                        GetDirection(item.user._id, item.accepted_list)
                       }
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
