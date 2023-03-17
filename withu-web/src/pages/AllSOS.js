@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Avatar,
@@ -24,17 +24,18 @@ const AllSOS = () => {
   const [sosList, setSosList] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
 
-  socket.on("connect", async () => {
-    console.log("connected");
-    socket.emit("Get_SOS_Officials", cookies.user_id, (data) => {
-      console.log(data);
-      setSosList(data);
+  useEffect(() => {
+    socket.on("connect", async () => {
+      console.log("connected");
+      socket.emit("Get_SOS_Officials", cookies.user_id);
     });
-  });
+  }, []);
   socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details", cookies.user_id, (data) => {
-      setSosList(data);
-    });
+    socket.emit("Get_SOS_details", cookies.user_id);
+  });
+
+  socket.on("Pass_Officials_SOS_Details", (data) => {
+    setSosList(data);
   });
 
   socket.on("connect_error", (err) => {

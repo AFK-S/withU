@@ -30,7 +30,7 @@ const SOS = (io, socket) => {
     fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
     io.emit("Refetch_SOS_Details");
   });
-  socket.on("Get_SOS_Officials", async (user_id, callback) => {
+  socket.on("Get_SOS_Officials", async (user_id) => {
     const officer_response = await PoliceSchema.findById(user_id);
     if (officer_response === null) {
       return;
@@ -38,17 +38,46 @@ const SOS = (io, socket) => {
     const sos_response = await SOSSchema.find({
       status: { $in: ["pending", "accepted"] },
     }).lean();
-    const closest_users_sos = sos_response.map((sos) => {
+    const closest_users_sos_id = sos_response.map((sos) => {
       const distance = geolib.getDistance(
         officer_response.coordinates,
         sos.coordinates
       );
-      if (distance / 1000 <= METER_RADIUS) return sos.owner_id;
+      if (distance / 1000 <= METER_RADIUS) return sos._id;
     });
-    const user_detail = await UserSchema.find({
-      _id: { $in: closest_users_sos },
-    }).lean();
-    callback(user_detail);
+    const sos_details = await SOSSchema.aggregate([
+      {
+        $addFields: {
+          id: {
+            $toString: "$_id",
+          },
+        },
+      },
+      {
+        $match: {
+          id: { $in: closest_users_sos_id },
+        },
+      },
+      {
+        $addFields: {
+          owner_id: {
+            $toObjectId: "$owner_id",
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+    ]);
+    socket.emit("Pass_Officials_SOS_Details", sos_details);
   });
 };
 
