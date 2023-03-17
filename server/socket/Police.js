@@ -41,8 +41,7 @@ const SOS = (io, socket) => {
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
     io.emit('Refetch_SOS_Details')
   })
-  socket.on('Get_SOS_Officials', async (callback) => {
-    const { user_id } = req.cookies
+  socket.on('Get_SOS_Officials', async (user_id, callback) => {
     const officer_response = await PoliceSchema.findById(user_id)
     const sos_response = await SOSSchema.find().lean()
     const closest_users_sos = await sos_response.map((sos) => {

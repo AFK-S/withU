@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Styles from '../../CommonStyles'
+import Chatroom from './Chatroom'
 
 const Alerts = ({ socket, User }) => {
   const [AlertList, setAlertList] = useState([])
@@ -72,6 +73,7 @@ const Alerts = ({ socket, User }) => {
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>
                   )}
+                  <Chatroom />
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={() => {
@@ -143,7 +145,11 @@ const Alerts = ({ socket, User }) => {
                               data={acceptedList}
                               renderItem={(user) => {
                                 return (
-                                  <View>
+                                  <View
+                                    style={{
+                                      marginBottom: 10,
+                                    }}
+                                  >
                                     <View
                                       style={{
                                         display: 'flex',

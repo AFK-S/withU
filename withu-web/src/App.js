@@ -1,16 +1,16 @@
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import Auth from "./pages/auth/Auth";
-import MainScreens from "./pages/MainScreen/MainScreens";
+import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
+import Auth from './pages/auth/Auth'
+import MainScreens from './pages/MainScreen/MainScreens'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   return (
     <div className="App">
       <BrowserRouter>{isLoggedIn ? <MainScreens /> : <Auth />}</BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
