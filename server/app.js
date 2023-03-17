@@ -26,7 +26,6 @@ app.use(cors())
 app.use(cookieParser())
 
 app.use('/api', require('./routes/Credentials'))
-app.use('/api', require('./routes/Police'))
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
