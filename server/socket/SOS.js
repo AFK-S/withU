@@ -70,7 +70,7 @@ const SOS = (io, socket) => {
     const user_response = await UserSchema.findById(socket.user_id).lean()
     callback(user_response.name)
   })
-  socket.on('SOS_Accepted_Commity', async (sos_user_id, callback) => {
+  socket.on('SOS_Accepted_Commity', async (sos_user_id) => {
     const sos_response = await SOSSchema.findOne({
       owner_id: sos_user_id,
       status: 'accepted',
@@ -81,6 +81,7 @@ const SOS = (io, socket) => {
     await SOSSchema.findOneAndUpdate(
       {
         owner_id: sos_user_id,
+        status: 'pending',
       },
       {
         status: 'accepted',
