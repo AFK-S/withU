@@ -2,7 +2,7 @@ const fs = require('fs')
 const { NearbyUsers, FamilyMembers } = require('../functions')
 const UserSchema = require('../models/User')
 
-const SOS = (socket) => {
+const SOS = (io, socket) => {
   socket.on('Is_SOS', async (callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     callback(sos_user[socket.user_id] ? true : false)
@@ -34,6 +34,7 @@ const SOS = (socket) => {
         .to([...new Set([...nearby_users[1], ...family_members[1]])])
         .emit('Send_Notification', user_detail)
     }
+    io.emit('Refetch_SOS_Details')
     callback(user_detail)
     // add to database sos
   })
@@ -45,7 +46,7 @@ const SOS = (socket) => {
     }
     const user_response = await UserSchema.findById(socket.user_id).lean()
     // active the sos from database
-    socket.emit('Refetch_SOS_Details', true)
+    io.emit('Refetch_SOS_Details')
     callback(user_response.name)
   })
   socket.on('SOS_Accepted_Commity', async (sos_user_id, callback) => {
@@ -62,7 +63,7 @@ const SOS = (socket) => {
       socket.user_id,
     ]
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
-    socket.emit('Refetch_SOS_Details', true)
+    io.emit('Refetch_SOS_Details')
   })
   socket.on('SOS_Accepted_Officials', async (sos_user_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
@@ -78,18 +79,42 @@ const SOS = (socket) => {
       socket.user_id,
     ]
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
-    socket.emit('Refetch_SOS_Details', true)
+    io.emit('Refetch_SOS_Details')
   })
   socket.on('Get_SOS_details', async (callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-    const sos_details = Object.values(sos_user).filter((user) => {
+    const sos_details_list = Object.values(sos_user).filter((user) => {
       return user.user_ids.includes(socket.user_id)
     })
-    const owner_ids = sos_details.map((sos) => sos.owner_id)
-    const user_detail = await UserSchema.find({
-      _id: owner_ids,
+    const owner_ids = sos_details_list.map((sos) => {
+      return sos.owner_id
     })
-    callback(user_detail)
+    const accepted_commity_list = sos_details_list.map((sos) => {
+      return sos.accepted_commity_list
+    })
+    console.log(owner_ids)
+    console.log(accepted_commity_list)
+    const sos_detail = await UserSchema.aggregate([
+      {
+        $match: {
+          _id: { $in: owner_ids },
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          pipeline: [
+            {
+              $match: {
+                _id: { $in: accepted_commity_list },
+              },
+            },
+          ],
+          as: 'accepted_commity_list',
+        },
+      },
+    ])
+    callback(sos_detail)
   })
 }
 
