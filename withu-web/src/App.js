@@ -5,7 +5,7 @@ import Auth from "./pages/auth/Auth";
 import MainScreens from "./pages/MainScreen/MainScreens";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     <div className="App">
       <BrowserRouter>{isLoggedIn ? <MainScreens /> : <Auth />}</BrowserRouter>
