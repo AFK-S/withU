@@ -2,6 +2,7 @@ const fs = require("fs");
 const { NearbyUsers, FamilyMembers } = require("../functions");
 const UserSchema = require("../models/User");
 const SOSSchema = require("../models/SOS");
+const PoliceSchema = require("../models/Police");
 
 const SOS = (io, socket) => {
   socket.on("Is_SOS", async (callback) => {
@@ -141,6 +142,10 @@ const SOS = (io, socket) => {
     const get_commity_list = sos_user[sos_owner_id].accepted_commity_list;
     const sos_accepted_detail = await UserSchema.find({
       _id: { $in: get_commity_list },
+    }).lean();
+    const get_official_list = sos_user[sos_owner_id].accepted_officials_list;
+    const sos_accepted_officials_detail = await PoliceSchema.find({
+      _id: { $in: get_official_list },
     }).lean();
     callback(sos_accepted_detail);
   });

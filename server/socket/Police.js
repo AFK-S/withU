@@ -47,15 +47,8 @@ const SOS = (io, socket) => {
     });
     const sos_details = await SOSSchema.aggregate([
       {
-        $addFields: {
-          id: {
-            $toString: "$_id",
-          },
-        },
-      },
-      {
         $match: {
-          id: { $in: closest_users_sos_id },
+          _id: { $in: closest_users_sos_id },
         },
       },
       {

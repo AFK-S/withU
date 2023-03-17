@@ -42,26 +42,6 @@ const AllSOS = () => {
     console.log(err);
   });
 
-  const data = [
-    {
-      name: "Name1",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-    {
-      name: "Name2",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-    {
-      name: "Name3",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-  ];
   const GetDirection = (user_id, sos_user_id) => {
     if (!socket.connected) {
       alert("Please Connect to Internet");
@@ -76,8 +56,8 @@ const AllSOS = () => {
   return (
     <div>
       <Grid gutterXl={30}>
-        {data.map((item) => {
-          const { name, phone, location, time } = item;
+        {sosList.map((item) => {
+          const { name, phone_number } = item.user;
 
           return (
             <Grid.Col span={4}>
@@ -87,17 +67,18 @@ const AllSOS = () => {
                     <IconShield />
                   </div>
                   <Badge color="pink" p={5}>
-                    {time}
+                    {item.createdAt}
                   </Badge>
                 </Group>
                 <Text fz="lg" fw={500} mt="lg">
                   {name}
                 </Text>
                 <Text fz="sm" c="dimmed" mt={5}>
-                  {phone}
+                  {phone_number}
                 </Text>
                 <Text c="dimmed" fz="sm" mt="md">
-                  Location: {location}
+                  Location: {item.coordinates.latitude},
+                  {item.coordinates.longitude}
                 </Text>
                 <Group mt={15} spacing="xl" grow>
                   <Button
