@@ -21,6 +21,7 @@ const AllSOS = () => {
   })
 
   const [sosList, setSosList] = useState([])
+  const [acceptedList, setAcceptedList] = useState([])
 
   socket.on('connect', async () => {
     console.log('connected')
@@ -64,10 +65,10 @@ const AllSOS = () => {
       alert('Please Connect to Internet')
       return
     }
-    socket.emit('SOS_Accepted_Commity', sos_user_id)
+    socket.emit('SOS_Accepted_Officials', cookies.user_id, sos_user_id)
     socket.emit('Get_SOS_Location', user_id, async (location) => {
+      console.log(location)
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
-      Linking.openURL(url)
     })
   }
   return (
@@ -87,22 +88,36 @@ const AllSOS = () => {
                     {time}
                   </Badge>
                 </Group>
-
                 <Text fz="lg" fw={500} mt="lg">
                   {name}
                 </Text>
                 <Text fz="sm" c="dimmed" mt={5}>
                   {phone}
                 </Text>
-
                 <Text c="dimmed" fz="sm" mt="md">
                   Location: {location}
                 </Text>
                 <Group mt={15} spacing="xl" grow>
-                  <Button size={'xs'} variant="outline">
+                  <Button
+                    size={'xs'}
+                    variant="outline"
+                    onClick={() => GetDirection(item.user._id, item.owner_id)}
+                  >
                     Get Location
                   </Button>
-                  <Button color={'pink'} size={'xs'}>
+                  <Button
+                    color={'pink'}
+                    size={'xs'}
+                    onClick={() => {
+                      socket.emit(
+                        'Get_SOS_Accepted_List',
+                        item.owner_id,
+                        (data) => {
+                          setAcceptedList(data)
+                        },
+                      )
+                    }}
+                  >
                     Accepted Users
                   </Button>
                 </Group>
