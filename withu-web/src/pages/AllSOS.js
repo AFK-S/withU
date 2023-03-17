@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Card,
   Avatar,
@@ -9,73 +9,74 @@ import {
   ActionIcon,
   Grid,
   Button,
-} from '@mantine/core'
-import { IconShield } from '@tabler/icons-react'
-import io from 'socket.io-client'
-import { useCookies } from 'react-cookie'
+} from "@mantine/core";
+import { IconShield } from "@tabler/icons-react";
+import io from "socket.io-client";
+import { useCookies } from "react-cookie";
 
+import AlertModal from "../components/AlertModal";
 const AllSOS = () => {
-  const [cookies] = useCookies(['user_id'])
-  const socket = io('https://withU.adityarai16.repl.co', {
-    transports: ['websocket'],
-  })
+  const [cookies] = useCookies(["user_id"]);
+  const socket = io("https://withU.adityarai16.repl.co", {
+    transports: ["websocket"],
+  });
 
-  const [sosList, setSosList] = useState([])
-  const [acceptedList, setAcceptedList] = useState([])
+  const [sosList, setSosList] = useState([]);
+  const [acceptedList, setAcceptedList] = useState([]);
 
-  socket.on('connect', async () => {
-    console.log('connected')
-    socket.emit('Get_SOS_Officials', cookies.user_id, (data) => {
-      console.log(data)
-      setSosList(data)
-    })
-  })
-  socket.on('Refetch_SOS_Details', () => {
-    socket.emit('Get_SOS_details', cookies.user_id, (data) => {
-      setSosList(data)
-    })
-  })
+  socket.on("connect", async () => {
+    console.log("connected");
+    socket.emit("Get_SOS_Officials", cookies.user_id, (data) => {
+      console.log(data);
+      setSosList(data);
+    });
+  });
+  socket.on("Refetch_SOS_Details", () => {
+    socket.emit("Get_SOS_details", cookies.user_id, (data) => {
+      setSosList(data);
+    });
+  });
 
-  socket.on('connect_error', (err) => {
-    console.log(err)
-  })
+  socket.on("connect_error", (err) => {
+    console.log(err);
+  });
 
   const data = [
     {
-      name: 'Name1',
-      phone: '1234567890',
-      location: 'Location1',
-      time: '11:00:23 AM',
+      name: "Name1",
+      phone: "1234567890",
+      location: "Location1",
+      time: "11:00:23 AM",
     },
     {
-      name: 'Name2',
-      phone: '1234567890',
-      location: 'Location1',
-      time: '11:00:23 AM',
+      name: "Name2",
+      phone: "1234567890",
+      location: "Location1",
+      time: "11:00:23 AM",
     },
     {
-      name: 'Name3',
-      phone: '1234567890',
-      location: 'Location1',
-      time: '11:00:23 AM',
+      name: "Name3",
+      phone: "1234567890",
+      location: "Location1",
+      time: "11:00:23 AM",
     },
-  ]
+  ];
   const GetDirection = (user_id, sos_user_id) => {
     if (!socket.connected) {
-      alert('Please Connect to Internet')
-      return
+      alert("Please Connect to Internet");
+      return;
     }
-    socket.emit('SOS_Accepted_Officials', cookies.user_id, sos_user_id)
-    socket.emit('Get_SOS_Location', user_id, async (location) => {
-      console.log(location)
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
-    })
-  }
+    socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_user_id);
+    socket.emit("Get_SOS_Location", user_id, async (location) => {
+      console.log(location);
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+    });
+  };
   return (
     <div>
       <Grid gutterXl={30}>
         {data.map((item) => {
-          const { name, phone, location, time } = item
+          const { name, phone, location, time } = item;
 
           return (
             <Grid.Col span={4}>
@@ -99,23 +100,23 @@ const AllSOS = () => {
                 </Text>
                 <Group mt={15} spacing="xl" grow>
                   <Button
-                    size={'xs'}
+                    size={"xs"}
                     variant="outline"
                     onClick={() => GetDirection(item.user._id, item.owner_id)}
                   >
                     Get Location
                   </Button>
                   <Button
-                    color={'pink'}
-                    size={'xs'}
+                    color={"pink"}
+                    size={"xs"}
                     onClick={() => {
                       socket.emit(
-                        'Get_SOS_Accepted_List',
+                        "Get_SOS_Accepted_List",
                         item.owner_id,
                         (data) => {
-                          setAcceptedList(data)
-                        },
-                      )
+                          setAcceptedList(data);
+                        }
+                      );
                     }}
                   >
                     Accepted Users
@@ -123,11 +124,11 @@ const AllSOS = () => {
                 </Group>
               </Card>
             </Grid.Col>
-          )
+          );
         })}
       </Grid>
     </div>
-  )
-}
+  );
+};
 
-export default AllSOS
+export default AllSOS;

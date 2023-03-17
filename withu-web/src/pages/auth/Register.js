@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   TextInput,
   PasswordInput,
@@ -10,49 +10,48 @@ import {
   Group,
   Button,
   NumberInput,
-} from '@mantine/core'
-import { useEffect } from 'react'
-import { useForm } from '@mantine/form'
-import { NavLink } from 'react-router-dom'
-import axios from 'axios'
+} from "@mantine/core";
+import { useEffect } from "react";
+import { useForm } from "@mantine/form";
+import { NavLink } from "react-router-dom";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Register = ({ setIsLogin }) => {
+  const [cookies, setCookie] = useCookies(["user_id"]);
   const form = useForm({
     initialValues: {
-      name: '',
-      branch_name: '',
-      password: '',
-      latitude: '',
-      longitude: '',
+      name: "",
+      branch_name: "",
+      password: "",
+      latitude: "",
+      longitude: "",
     },
     validate: {
-      userName: (value) => (value.length < 3 ? 'Enter valid Username' : null),
-      branch: (value) => (value.length < 3 ? 'Enter valid branch' : null),
+      userName: (value) => (value ? "Enter valid Username" : null),
+      branch: (value) => (value ? "Enter valid branch" : null),
       password: (value) =>
-        value.length < 8 ? 'Enter valid password (min length : 8)' : null,
-      latitude: (value) =>
-        value.toString().length < 3 ? 'Enter valid latitude' : null,
-      longitude: (value) =>
-        value.toString().length < 3 ? 'Enter valid latitude' : null,
+        value.length < 8 ? "Enter valid password (min length : 8)" : null,
+      latitude: (value) => (!value ? "Enter valid latitude" : null),
+      longitude: (value) => (!value ? "Enter valid latitude" : null),
     },
-  })
+  });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log('hi')
-      form.setFieldValue('latitude', position.coords.latitude)
-      form.setFieldValue('longitude', position.coords.longitude)
-    })
-  }, [])
+      form.setFieldValue("latitude", position.coords.latitude);
+      form.setFieldValue("longitude", position.coords.longitude);
+    });
+  }, []);
 
   return (
     <div
       className="conatiner"
       style={{
-        backgroundColor: '#e5e5e5',
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
+        backgroundColor: "#e5e5e5",
+        display: "flex",
+        minHeight: "100vh",
+        alignItems: "center",
       }}
     >
       <Container size={520} my={40}>
@@ -70,8 +69,8 @@ const Register = ({ setIsLogin }) => {
           <form
             onSubmit={form.onSubmit(async (values) => {
               try {
-                const { data } = await axios.put(
-                  'https://withU.adityarai16.repl.co/api/police/register',
+                const { data } = await axios.post(
+                  "https://withU.adityarai16.repl.co/api/police/register",
                   {
                     name: values.name,
                     branch_name: values.branch_name,
@@ -80,20 +79,20 @@ const Register = ({ setIsLogin }) => {
                       latitude: values.latitude,
                       longitude: values.longitude,
                     },
-                  },
-                )
-                console.log(data)
-                form.reset()
-                setIsLogin(true)
+                  }
+                );
+                setCookie("user_id", data, { path: "/" });
+                form.reset();
+                setIsLogin(true);
               } catch (error) {
-                console.log(error.response.data)
+                console.log(error.response.data);
               }
             })}
           >
             <TextInput
               label="Username"
               placeholder="Username"
-              {...form.getInputProps('name')}
+              {...form.getInputProps("name")}
               radius="md"
               withAsterisk
             />
@@ -101,14 +100,14 @@ const Register = ({ setIsLogin }) => {
               mt={15}
               label="Branch Name"
               placeholder="Branch Name"
-              {...form.getInputProps('branch_name')}
+              {...form.getInputProps("branch_name")}
               radius="md"
               withAsterisk
             />
             <PasswordInput
               label="Password"
               placeholder="Password"
-              {...form.getInputProps('password')}
+              {...form.getInputProps("password")}
               radius="md"
               mt={15}
               withAsterisk
@@ -119,7 +118,7 @@ const Register = ({ setIsLogin }) => {
                 precision={8}
                 placeholder="Latitude"
                 label="Latitude"
-                {...form.getInputProps('latitude')}
+                {...form.getInputProps("latitude")}
                 withAsterisk
                 required
               />
@@ -128,12 +127,12 @@ const Register = ({ setIsLogin }) => {
                 precision={8}
                 placeholder="Longitude"
                 label="Longitude"
-                {...form.getInputProps('longitude')}
+                {...form.getInputProps("longitude")}
                 withAsterisk
                 required
               />
             </Group>
-            <Button type="submit" fullWidth mt="xl" radius="md" color={'pink'}>
+            <Button type="submit" fullWidth mt="xl" radius="md" color={"pink"}>
               Register
             </Button>
           </form>
@@ -148,7 +147,7 @@ const Register = ({ setIsLogin }) => {
         </Paper>
       </Container>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
