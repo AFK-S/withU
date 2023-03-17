@@ -4,6 +4,7 @@ import Sidebar from "../../components/Sidebar";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AllSOS from "../AllSOS";
 import Statistics from "../Statistics";
+import Profile from "./Profile";
 
 const Dashboard = () => {
   return (
@@ -16,6 +17,7 @@ const Dashboard = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/sos" />} />
             <Route path="/sos" element={<AllSOS />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/statistics" element={<Statistics />} />
           </Routes>
         </Grid.Col>
