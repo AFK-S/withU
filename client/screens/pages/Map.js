@@ -4,11 +4,19 @@ import { View, Text } from 'react-native'
 
 const Map = ({ socket, User, location }) => {
   const [activeUsers, setActiveUsers] = useState([])
+  const [Police, setPolice] = useState([])
+  const [SOS, setSOS] = useState([])
 
   useEffect(() => {
     if (socket.connected) {
       socket.emit('Get_Meter_Active_Users', (users) => {
         setActiveUsers(users)
+      })
+      socket.emit('Get_Police', (police) => {
+        setPolice(police)
+      })
+      socket.emit('Get_SOS', (sos) => {
+        setSOS(sos)
       })
     }
   }, [location])
@@ -45,6 +53,26 @@ const Map = ({ socket, User, location }) => {
                 key={index}
                 coordinate={user.coordinates}
                 opacity={user.user_id === User.user_id ? 1 : 0.6}
+              />
+            )
+          })}
+          {Police.map((police, index) => {
+            return (
+              <Marker
+                key={index}
+                title={police.branch_name}
+                coordinate={police.coordinates}
+                pinColor={'black'}
+              />
+            )
+          })}
+          {SOS.map((sos, index) => {
+            return (
+              <Circle
+                center={sos.coordinates}
+                radius={50}
+                fillColor={'rgba(255,0,0,0.2)'}
+                key={index}
               />
             )
           })}
