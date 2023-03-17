@@ -64,52 +64,6 @@ const Alerts = ({ socket, User }) => {
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
-                  {/* {item.accepted_list && (
-                    <Text style={styles.rbName}>Accepted By</Text>
-                  )} */}
-                  {/* {item.accepted_list && (
-                    <FlatList
-                      data={item.accepted_list}
-                      renderItem={(user) => {
-                        return (
-                          <View
-                            style={{
-                              backgroundColor: '#fff',
-                              padding: 20,
-                              borderRadius: 15,
-                              elevation: 5,
-                              shadowColor: '#000',
-                              marginVertical: 5,
-                              shadowOffset: {
-                                width: 0,
-                                height: 2,
-                              },
-                            }}
-                          >
-                            <View
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                              }}
-                            >
-                              <Text style={styles.raisedBy}>Person : </Text>
-                              <Text style={styles.rbName}>
-                                {user.item.name}
-                              </Text>
-                            </View>
-                            <Text
-                              style={{
-                                ...styles.raisedBy,
-                              }}
-                            >
-                              Phone Number : {user.item.phone_number}
-                            </Text>
-                          </View>
-                        )
-                      }}
-                      showsVerticalScrollIndicator={false}
-                    />
-                  )} */}
                   {User.user_id !== item.user._id && (
                     <TouchableOpacity
                       style={styles.btn}
