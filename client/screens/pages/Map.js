@@ -7,7 +7,6 @@ const Map = ({ socket, User, location }) => {
 
   useEffect(() => {
     socket.emit('Get_Meter_Active_Users', (users) => {
-      console.log(users)
       setActiveUsers(users)
     })
   }, [])
@@ -42,9 +41,8 @@ const Map = ({ socket, User, location }) => {
             return (
               <Marker
                 key={index}
-                // coordinate={user.coordinates || { latitude: 0, longitude: 0 }}
-                // title={user.name}
-                opacity={user.user_id === User.user_id ? 1 : 0.5}
+                coordinate={user.coordinates}
+                opacity={user.user_id === User.user_id ? 1 : 0.6}
               />
             )
           })}
