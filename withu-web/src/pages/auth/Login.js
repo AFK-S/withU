@@ -14,7 +14,7 @@ import {
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 
-export function Login() {
+export function Login({ setIsLogin }) {
   const form = useForm({
     initialValues: {
       name: '',
@@ -58,6 +58,7 @@ export function Login() {
                 )
                 console.log(data)
                 form.reset()
+                setIsLogin(true)
               } catch (error) {
                 console.log(error.response.data)
               }

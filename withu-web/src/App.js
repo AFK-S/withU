@@ -1,13 +1,14 @@
 import './App.css'
 import { BrowserRouter } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Auth from './pages/auth/Auth'
 import MainScreens from './pages/MainScreen/MainScreens'
-import { useLocalStorage } from '@mantine/hooks'
-import { MantineProvider, ColorSchemeProvider, Paper } from '@mantine/core'
+import { useLocalSineProvider, ColorSchemeProvider, Paper } from '@mantine/core'
+import { useCookies } from 'react-cookie'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [cookies] = useCookies(['user_id'])
+  const [isLogin, setIsLogin] = useState(true)
   const [colorScheme, setColorScheme] = useLocalStorage(
     'mantine-color-scheme',
     {
@@ -15,6 +16,10 @@ function App() {
       getInitialValueInEffect: true,
     },
   )
+
+  useEffect(() => {
+    setIsLogin(cookies.user_id ? true : false)
+  }, [isLogin, cookies.user_id])
 
   const toggleColorScheme = () => {
     console.log(colorScheme)
@@ -29,7 +34,11 @@ function App() {
         <MantineProvider theme={{ colorScheme }}>
           <Paper padding="xl" shadow="md">
             <BrowserRouter>
-              {isLoggedIn ? <MainScreens /> : <Auth />}
+              {isLogin ? (
+                <MainScreens setIsLogin={setIsLogin} />
+              ) : (
+                <Auth setIsLogin={setIsLogin} />
+              )}
             </BrowserRouter>
           </Paper>
         </MantineProvider>

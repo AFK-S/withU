@@ -16,7 +16,7 @@ import { useForm } from '@mantine/form'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 
-const Register = () => {
+const Register = ({ setIsLogin }) => {
   const form = useForm({
     initialValues: {
       name: '',
@@ -84,10 +84,10 @@ const Register = () => {
                 )
                 console.log(data)
                 form.reset()
+                setIsLogin(true)
               } catch (error) {
                 console.log(error.response.data)
               }
-              console.log(values)
             })}
           >
             <TextInput
