@@ -16,17 +16,13 @@ import {
 import { NavLink } from "react-router-dom";
 
 export function Login() {
-  const [type, toggle] = useToggle(["login", "register"]);
   const form = useForm({
     initialValues: {
-      email: "",
-      name: "",
+      userName: "",
       password: "",
-      terms: true,
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
       password: (val) =>
         val.length <= 6
           ? "Password should include at least 6 characters"
@@ -41,29 +37,17 @@ export function Login() {
           Welcome to withU
         </Text>
 
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form onSubmit={form.onSubmit((val) => console.log(val))}>
           <Stack>
-            {type === "register" && (
-              <TextInput
-                label="Name"
-                placeholder="Your name"
-                value={form.values.name}
-                onChange={(event) =>
-                  form.setFieldValue("name", event.currentTarget.value)
-                }
-                radius="md"
-              />
-            )}
-
             <TextInput
               required
-              label="Email"
-              placeholder="hello@hello.com"
-              value={form.values.email}
+              label="User Name"
+              placeholder="Usernmame here"
+              value={form.values.userName}
               onChange={(event) =>
-                form.setFieldValue("email", event.currentTarget.value)
+                form.setFieldValue("userName", event.currentTarget.value)
               }
-              error={form.errors.email && "Invalid email"}
+              error={form.errors.userName && "Invalid userName"}
               radius="md"
             />
 
@@ -81,35 +65,17 @@ export function Login() {
               }
               radius="md"
             />
-
-            {type === "register" && (
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) =>
-                  form.setFieldValue("terms", event.currentTarget.checked)
-                }
-              />
-            )}
           </Stack>
 
           <Group position="apart" mt="xl">
-            <Anchor
-              component="button"
-              type="button"
-              color="dimmed"
-              onClick={() => toggle()}
-              size="xs"
-            >
-              {type === "register"
-                ? "Already have an account? Login"
-                : "Don't have an account? Register"}
-            </Anchor>
-            <NavLink to="/dashboard">
-              <Button type="submit" radius="xl" color={"pink"}>
-                {upperFirst(type)}
-              </Button>
+            <NavLink to="/register">
+              <Anchor component="button" type="button" color="dimmed" size="xs">
+                Don't have an account? Register
+              </Anchor>
             </NavLink>
+            <Button type="submit" radius="xl" color={"pink"}>
+              Login
+            </Button>
           </Group>
         </form>
       </Paper>
