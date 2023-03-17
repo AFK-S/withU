@@ -20,16 +20,16 @@ const Alerts = ({ socket, User }) => {
 
   useEffect(() => {
     if (socket.connected) {
-      socket.emit("Get_SOS_details", (data) => {
-        setAlertList(data);
-      });
+      socket.emit("Get_SOS_details");
     }
   }, [socket.connected]);
 
   socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details", (data) => {
-      setAlertList(data);
-    });
+    socket.emit("Get_SOS_details");
+  });
+
+  socket.on("Pass_SOS_Details", (data) => {
+    setAlertList(data);
   });
 
   const GetDirection = (user_id, sos_user_id) => {
