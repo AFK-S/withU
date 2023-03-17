@@ -8,6 +8,7 @@ import {
   Group,
   ActionIcon,
   Grid,
+  Button,
 } from '@mantine/core'
 import { IconShield } from '@tabler/icons-react'
 import io from 'socket.io-client'
@@ -97,6 +98,14 @@ const AllSOS = () => {
                 <Text c="dimmed" fz="sm" mt="md">
                   Location: {location}
                 </Text>
+                <Group mt={15} spacing="xl" grow>
+                  <Button size={'xs'} variant="outline">
+                    Get Location
+                  </Button>
+                  <Button color={'pink'} size={'xs'}>
+                    Accepted Users
+                  </Button>
+                </Group>
               </Card>
             </Grid.Col>
           )

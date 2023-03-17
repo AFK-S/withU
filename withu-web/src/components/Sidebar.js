@@ -22,6 +22,7 @@ import {
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
 import { NavLink } from "react-router-dom";
+import LightDark from "../pages/MainScreen/LightDark";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -123,6 +124,7 @@ const Sidebar = () => {
       <Navbar.Section grow>
         <Group className={classes.header} position="apart">
           <Title order={2}>withU</Title>
+          <LightDark />
         </Group>
         {links}
       </Navbar.Section>
