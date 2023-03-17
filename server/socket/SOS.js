@@ -9,47 +9,44 @@ const SOS = (socket) => {
   })
   socket.on('On_SOS', async (callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-    const nearby_users = await NearbyUsers()
-    const family_members = await FamilyMembers(callback)
+    const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+    const user_response = await UserSchema.findById(socket.user_id).lean()
+    if (user_response === null) {
+      callback('Invalid Request')
+      return
+    }
+    const nearby_users = await NearbyUsers(socket)
+    const family_members = await FamilyMembers(socket, callback)
     sos_user[socket.user_id] = {
       owner_id: socket.user_id,
       user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
       time: Date.now(),
     }
     fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
+    const user_detail = {
+      user_id: socket.user_id,
+      name: user_response.name,
+      coordinates: users[socket.user_id].coordinates,
+      time: sos_user[socket.user_id].time,
+    }
     if (nearby_users[1] && family_members[1]) {
-      const user_response = await UserSchema.findById(socket.user_id).lean()
-      if (user_response === null) {
-        callback('Invalid Request')
-        return
-      }
       socket
         .to([...new Set([...nearby_users[1], ...family_members[1]])])
-        .emit('SOS_Detail_Active_Users', {
-          user_id: socket.user_id,
-          name: user_response.name,
-          time: sos_user[socket.user_id].time,
-        })
+        .emit('Send_Notification', user_detail)
     }
+    callback(user_detail)
     // add to database sos
   })
-  socket.on('SOS_Before_Timer_Cancel', async () => {
+  socket.on('SOS_Cancel', async (callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
     if (sos_user[socket.user_id]) {
       delete sos_user[socket.user_id]
       fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
     }
-    // remove from database sos
-    socket.emit('Refetch_SOS_Details', true)
-  })
-  socket.on('SOS_After_Timer_Cancel', async () => {
-    const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
-    if (sos_user[socket.user_id]) {
-      delete sos_user[socket.user_id]
-      fs.writeFileSync('./json/isSOS.json', JSON.stringify(sos_user))
-    }
+    const user_response = await UserSchema.findById(socket.user_id).lean()
     // active the sos from database
     socket.emit('Refetch_SOS_Details', true)
+    callback(user_response.name)
   })
   socket.on('SOS_Accepted_Commity', async (sos_user_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
@@ -88,9 +85,7 @@ const SOS = (socket) => {
     const sos_details = Object.values(sos_user).filter((user) => {
       return user.user_ids.includes(socket.user_id)
     })
-    const owner_ids = sos_details.map((sos) => {
-      return sos.owner_id
-    })
+    const owner_ids = sos_details.map((sos) => sos.owner_id)
     const user_detail = await UserSchema.find({
       _id: owner_ids,
     })
