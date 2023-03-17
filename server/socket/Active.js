@@ -16,6 +16,9 @@ const Active = (socket) => {
     fs.writeFileSync('./json/isActive.json', JSON.stringify(users))
   })
   socket.on('Get_Meter_Active_Users', async (callback) => {
+    if (!socket.user_id) {
+      return
+    }
     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
     const closest_users = Object.values(users)
       .map((user) => {

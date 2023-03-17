@@ -10,13 +10,13 @@ import Alerts from './pages/Alerts'
 import Help from './pages/Help'
 import * as Notifications from 'expo-notifications'
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-})
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: true,
+//     shouldSetBadge: false,
+//   }),
+// })
 const MainScreen = ({ setIsLogin }) => {
   const socket = io('https://withU.adityarai16.repl.co', {
     transports: ['websocket'],
@@ -42,22 +42,23 @@ const MainScreen = ({ setIsLogin }) => {
   })
 
   socket.on('Send_Notification', async (details) => {
-    await schedulePushNotification(details)
+    console.log('notification received')
+    // await schedulePushNotification(details)
   })
 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-    notificationListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        setNotification(notification)
-      },
-    )
-    responseListener.current = Notifications.addNotificationResponseReceivedListener()
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current)
-      Notifications.removeNotificationSubscription(responseListener.current)
-    }
-  }, [])
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+  //   notificationListener.current = Notifications.addNotificationReceivedListener(
+  //     (notification) => {
+  //       setNotification(notification)
+  //     },
+  //   )
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener()
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notificationListener.current)
+  //     Notifications.removeNotificationSubscription(responseListener.current)
+  //   }
+  // }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -243,25 +244,25 @@ const MainScreen = ({ setIsLogin }) => {
   )
 }
 
-async function schedulePushNotification(details) {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'I am in danger',
-      body: `Sent by ${details.name}`,
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  })
-}
+// async function schedulePushNotification(details) {
+//   await Notifications.scheduleNotificationAsync({
+//     content: {
+//       title: 'I am in danger',
+//       body: `Sent by ${details.name}`,
+//       data: { data: 'goes here' },
+//     },
+//     trigger: { seconds: 2 },
+//   })
+// }
 
-async function registerForPushNotificationsAsync() {
-  const { status } = await Notifications.requestPermissionsAsync()
-  if (status !== 'granted') {
-    console.log('Failed to get push token for push notification!')
-    return
-  }
-  const token = (await Notifications.getExpoPushTokenAsync()).data
-  return token
-}
+// async function registerForPushNotificationsAsync() {
+//   const { status } = await Notifications.requestPermissionsAsync()
+//   if (status !== 'granted') {
+//     console.log('Failed to get push token for push notification!')
+//     return
+//   }
+//   const token = (await Notifications.getExpoPushTokenAsync()).data
+//   return token
+// }
 
 export default MainScreen
