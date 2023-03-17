@@ -138,8 +138,10 @@ const SOS = (io, socket) => {
     })
     const sos_response = await SOSSchema.aggregate([
       {
-        _id: {
-          $toString: '$_id',
+        $addFields: {
+          id: {
+            $toString: '$_id',
+          },
         },
       },
       {
@@ -156,7 +158,7 @@ const SOS = (io, socket) => {
         },
       },
     ])
-    callback(sos_response[0])
+    callback(sos_response)
   })
   socket.on('Get_SOS_Accepted_List', async (sos_owner_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync('./json/isSOS.json'))
