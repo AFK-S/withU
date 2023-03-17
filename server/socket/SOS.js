@@ -146,7 +146,14 @@ const SOS = (io, socket) => {
       },
       {
         $match: {
-          _id: { $in: sos_ids },
+          id: { $in: sos_ids },
+        },
+      },
+      {
+        $addFields: {
+          owner_id: {
+            $toObjectId: '$owner_id',
+          },
         },
       },
       {
@@ -156,6 +163,9 @@ const SOS = (io, socket) => {
           foreignField: '_id',
           as: 'user',
         },
+      },
+      {
+        $unwind: '$user',
       },
     ])
     callback(sos_response)
