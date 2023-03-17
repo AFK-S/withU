@@ -11,6 +11,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconShield } from "@tabler/icons-react";
+import AlertModal from "../components/AlertModal";
 const AllSOS = () => {
   const data = [
     {
@@ -64,9 +65,7 @@ const AllSOS = () => {
                   <Button size={"xs"} variant="outline">
                     Get Location
                   </Button>
-                  <Button color={"pink"} size={"xs"}>
-                    Accepted Users
-                  </Button>
+                  <AlertModal />
                 </Group>
               </Card>
             </Grid.Col>
