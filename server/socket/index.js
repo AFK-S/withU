@@ -3,20 +3,15 @@ const fs = require('fs')
 const SOSSocket = require('../socket/SOS')
 const ActiveSocket = require('../socket/Active')
 const UserSchema = require('../models/User')
+const PoliceSocket = require('../socket/Police')
 
 const socket = (http) => {
   const io = new Server(http)
 
   fs.watch('json/isActive.json', async (eventType) => {
     if (eventType === 'change') {
-      fs.readFile('./json/isActive.json', 'utf8', (err, data) => {
-        if (err) {
-          return console.log(err)
-        }
-        if (!data) return
-        const users = JSON.parse(data)
-        io.emit('Send_Active_Users', Object.values(users))
-      })
+      const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+      io.emit('Send_Active_Users', Object.values(users))
     }
   })
 
@@ -33,23 +28,22 @@ const socket = (http) => {
       callback(user_detail)
     })
     ActiveSocket(socket)
-    SOSSocket(socket)
-    // done
-    // get password
-    socket.on('Get_Location', async (user_id, callback) => {
+    SOSSocket(io, socket)
+    PoliceSocket(io, socket)
+    socket.on('Get_SOS_Location', async (user_id, callback) => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
       callback(users[user_id].coordinates)
     })
-    socket.on(
-      'Get_Direction_Location',
-      async (sos_user_id, person_user_id, callback) => {
-        const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
-        callback({
-          source: users[sos_user_id].coordinates,
-          destination: users[person_user_id].coordinates,
-        })
-      },
-    )
+    // socket.on(
+    //   'Get_Direction_Location',
+    //   async (sos_user_id, person_user_id, callback) => {
+    //     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+    //     callback({
+    //       source: users[sos_user_id].coordinates,
+    //       destination: users[person_user_id].coordinates,
+    //     })
+    //   },
+    // )
     socket.on('disconnect', async () => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
       for (const user_id in users) {

@@ -1,9 +1,9 @@
 const fs = require('fs')
 const geolib = require('geolib')
-const { METER_RADIUS } = '../config'
+const { METER_RADIUS } = require('../config')
 const UserSchema = require('../models/User')
 
-const NearbyUsers = async () => {
+const NearbyUsers = async (socket) => {
   const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
   const closest_users = Object.values(users)
     .map((user) => {
@@ -30,7 +30,7 @@ const NearbyUsers = async () => {
   return [user_ids, socket_ids]
 }
 
-const FamilyMembers = async (callback) => {
+const FamilyMembers = async (socket, callback) => {
   const user_response = await UserSchema.findById(socket.user_id).lean()
   if (user_response === null) {
     callback('Invalid Request')
@@ -38,7 +38,8 @@ const FamilyMembers = async (callback) => {
   }
   const user_ids = await UserSchema.find({
     phone_number: user_response.emergency_contact,
-  }).distint('_id')
+  }).distinct('_id')
+  console.log(user_ids)
   const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
   const socket_ids = Object.values(users).map((user) => {
     if (user_ids.includes(user.user_id)) return user.socket_id

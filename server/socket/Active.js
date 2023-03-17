@@ -1,8 +1,13 @@
-const { METER_RADIUS } = '../config'
+const { METER_RADIUS } = require('../config')
+const fs = require('fs')
+const geolib = require('geolib')
 
 const Active = (socket) => {
-  socket.on('Set_Active_Users', async (coordinates) => {
+  socket.on('Set_Active_User', async (coordinates) => {
     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+    if (!socket.user_id) {
+      return
+    }
     users[socket.user_id] = {
       socket_id: socket.id,
       user_id: socket.user_id,
@@ -11,6 +16,9 @@ const Active = (socket) => {
     fs.writeFileSync('./json/isActive.json', JSON.stringify(users))
   })
   socket.on('Get_Meter_Active_Users', async (callback) => {
+    if (!socket.user_id) {
+      return
+    }
     const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
     const closest_users = Object.values(users)
       .map((user) => {
