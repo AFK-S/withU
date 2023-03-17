@@ -3,12 +3,10 @@ import { useForm } from "@mantine/form";
 import {
   TextInput,
   PasswordInput,
-  Text,
   Paper,
   Group,
   Button,
-  Divider,
-  Checkbox,
+  Title,
   Anchor,
   Stack,
   Container,
@@ -39,12 +37,18 @@ export function Login() {
         alignItems: "center",
       }}
     >
-      <Container size={500} my={200}>
-        <Paper radius="md" p="xl" withBorder style={{ widt: "30vw" }}>
-          <Text size="xl" weight={600} align="center" my={15} px={80}>
-            Welcome to withU Admin
-          </Text>
-
+      <Container size={500} my={200} radius="xl">
+        <Title
+          align="center"
+          mb={30}
+          sx={(theme) => ({
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            fontWeight: 800,
+          })}
+        >
+          Login into withU Admin
+        </Title>
+        <Paper radius="md" p="xl" withBorder>
           <form onSubmit={form.onSubmit((val) => console.log(val))}>
             <Stack>
               <TextInput
@@ -77,7 +81,7 @@ export function Login() {
             </Stack>
 
             <Group position="apart" mt={30}>
-              <Button type="submit" radius="xl" fullWidth color={"pink"}>
+              <Button type="submit" radius="md" fullWidth color={"pink"}>
                 Login
               </Button>
               <NavLink to="/register">
