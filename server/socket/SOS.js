@@ -153,7 +153,7 @@ const SOS = (io, socket) => {
     const sos_accepted_officials_detail = await PoliceSchema.find({
       _id: { $in: get_official_list },
     }).lean();
-    callback(sos_accepted_detail);
+    callback(sos_accepted_detail, sos_accepted_officials_detail);
   });
   socket.on("Get_SOS", async (callback) => {
     const sos_response = await SOSSchema.find().lean();
