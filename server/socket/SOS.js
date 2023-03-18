@@ -139,10 +139,16 @@ const SOS = (io, socket) => {
   });
   socket.on("Get_SOS_Accepted_List", async (sos_owner_id, callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
+    if (!sos_user[sos_owner_id].accepted_commity_list) {
+      sos_user[sos_owner_id].accepted_commity_list = [];
+    }
     const get_commity_list = sos_user[sos_owner_id].accepted_commity_list;
     const sos_accepted_detail = await UserSchema.find({
       _id: { $in: get_commity_list },
     }).lean();
+    if (!sos_user[sos_owner_id].accepted_officials_list) {
+      sos_user[sos_owner_id].accepted_officials_list = [];
+    }
     const get_official_list = sos_user[sos_owner_id].accepted_officials_list;
     const sos_accepted_officials_detail = await PoliceSchema.find({
       _id: { $in: get_official_list },
