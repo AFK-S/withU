@@ -155,6 +155,10 @@ const SOS = (io, socket) => {
     }).lean();
     callback(sos_accepted_detail);
   });
+  socket.on("Get_SOS", async (callback) => {
+    const sos_response = await SOSSchema.find().lean();
+    callback(sos_response);
+  });
 };
 
 module.exports = SOS;

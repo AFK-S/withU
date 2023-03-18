@@ -23,6 +23,7 @@ const AllSOS = () => {
 
   const [sosList, setSosList] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
+  const [location, setLocation] = useState([]);
 
   useEffect(() => {
     socket.on("connect", async () => {
@@ -49,8 +50,10 @@ const AllSOS = () => {
     }
     socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_user_id);
     socket.emit("Get_SOS_Location", user_id, async (location) => {
+      setLocation(location);
       console.log(location);
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+      window.open(url, "_blank");
     });
   };
   return (
@@ -88,21 +91,7 @@ const AllSOS = () => {
                   >
                     Get Location
                   </Button>
-                  <Button
-                    color={"pink"}
-                    size={"xs"}
-                    onClick={() => {
-                      socket.emit(
-                        "Get_SOS_Accepted_List",
-                        item.owner_id,
-                        (data) => {
-                          setAcceptedList(data);
-                        }
-                      );
-                    }}
-                  >
-                    Accepted Users
-                  </Button>
+                  <AlertModal socket={socket} owner_id={item.owner_id} />
                 </Group>
               </Card>
             </Grid.Col>

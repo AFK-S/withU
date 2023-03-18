@@ -1,10 +1,12 @@
 import { useDisclosure } from "@mantine/hooks";
 import { Modal, Group, Button, Text, Table } from "@mantine/core";
 
-import React from "react";
+import React, { useState } from "react";
 
-function AlertModal() {
+function AlertModal({ socket, owner_id }) {
   const [opened, { open, close }] = useDisclosure(false);
+  const [acceptedList, setAcceptedList] = useState([]);
+
   const data = [
     {
       name: "Name1",
@@ -19,6 +21,7 @@ function AlertModal() {
       phone: "1234567890",
     },
   ];
+
   return (
     <div>
       <Modal opened={opened} onClose={close} centered radius={"lg"}>
@@ -27,29 +30,33 @@ function AlertModal() {
         </Text>
         {data.map((item) => {
           const { name, phone } = item;
-          <tr key={data.name}>
+          <tr>
+            <td>{data.name}</td>
             <td>{data.phone}</td>
           </tr>;
+
           return (
-            <Table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Phone</th>
-                </tr>
-              </thead>
-            </Table>
-            // <div>
-            //   <Text fz={"sm"}>Name : {name}</Text>
-            //   <Text fz={"sm"}>Phone : {phone}</Text>
-            //   <hr></hr>
-            // </div>
+            <div>
+              <Text fz={"sm"}>Name : {name}</Text>
+              <Text fz={"sm"}>Phone : {phone}</Text>
+              <hr></hr>
+            </div>
           );
         })}
       </Modal>
 
       <Group position="center">
-        <Button onClick={open} color={"pink"} size={"xs"}>
+        <Button
+          onClick={() => {
+            socket.emit("Get_SOS_Accepted_List", owner_id, (data) => {
+              console.log(data);
+              setAcceptedList(data);
+              open();
+            });
+          }}
+          color={"pink"}
+          size={"xs"}
+        >
           Accepted Users
         </Button>
       </Group>
