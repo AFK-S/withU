@@ -91,21 +91,7 @@ const AllSOS = () => {
                   >
                     Get Location
                   </Button>
-                  <Button
-                    color={"pink"}
-                    size={"xs"}
-                    onClick={() => {
-                      socket.emit(
-                        "Get_SOS_Accepted_List",
-                        item.owner_id,
-                        (data) => {
-                          setAcceptedList(data);
-                        }
-                      );
-                    }}
-                  >
-                    Accepted Users
-                  </Button>
+                  <AlertModal socket={socket} owner_id={item.owner_id} />
                 </Group>
               </Card>
             </Grid.Col>
