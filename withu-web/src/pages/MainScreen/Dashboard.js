@@ -6,12 +6,12 @@ import AllSOS from "../AllSOS";
 import Statistics from "../Statistics";
 import Profile from "./Profile";
 
-const Dashboard = () => {
+const Dashboard = ({ setIsLogin }) => {
   return (
     <div>
       <Grid>
         <Grid.Col span={3}>
-          <Sidebar />
+          <Sidebar setIsLogin={setIsLogin} />
         </Grid.Col>
         <Grid.Col span={9} p={40}>
           <Routes>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Avatar,
@@ -23,44 +23,26 @@ const AllSOS = () => {
 
   const [sosList, setSosList] = useState([]);
   const [acceptedList, setAcceptedList] = useState([]);
+  const [location, setLocation] = useState([]);
 
-  socket.on("connect", async () => {
-    console.log("connected");
-    socket.emit("Get_SOS_Officials", cookies.user_id, (data) => {
-      console.log(data);
-      setSosList(data);
+  useEffect(() => {
+    socket.on("connect", async () => {
+      console.log("connected");
+      socket.emit("Get_SOS_Officials", cookies.user_id);
     });
-  });
+  }, []);
   socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details", cookies.user_id, (data) => {
-      setSosList(data);
-    });
+    socket.emit("Get_SOS_details", cookies.user_id);
+  });
+
+  socket.on("Pass_Officials_SOS_Details", (data) => {
+    setSosList(data);
   });
 
   socket.on("connect_error", (err) => {
     console.log(err);
   });
 
-  const data = [
-    {
-      name: "Name1",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-    {
-      name: "Name2",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-    {
-      name: "Name3",
-      phone: "1234567890",
-      location: "Location1",
-      time: "11:00:23 AM",
-    },
-  ];
   const GetDirection = (user_id, sos_user_id) => {
     if (!socket.connected) {
       alert("Please Connect to Internet");
@@ -68,15 +50,17 @@ const AllSOS = () => {
     }
     socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_user_id);
     socket.emit("Get_SOS_Location", user_id, async (location) => {
+      setLocation(location);
       console.log(location);
       const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+      window.open(url, "_blank");
     });
   };
   return (
     <div>
       <Grid gutterXl={30}>
-        {data.map((item) => {
-          const { name, phone, location, time } = item;
+        {sosList.map((item) => {
+          const { name, phone_number } = item.user;
 
           return (
             <Grid.Col span={4}>
@@ -86,17 +70,18 @@ const AllSOS = () => {
                     <IconShield />
                   </div>
                   <Badge color="pink" p={5}>
-                    {time}
+                    {item.createdAt}
                   </Badge>
                 </Group>
                 <Text fz="lg" fw={500} mt="lg">
                   {name}
                 </Text>
                 <Text fz="sm" c="dimmed" mt={5}>
-                  {phone}
+                  {phone_number}
                 </Text>
                 <Text c="dimmed" fz="sm" mt="md">
-                  Location: {location}
+                  Location: {item.coordinates.latitude},
+                  {item.coordinates.longitude}
                 </Text>
                 <Group mt={15} spacing="xl" grow>
                   <Button
@@ -106,21 +91,7 @@ const AllSOS = () => {
                   >
                     Get Location
                   </Button>
-                  <Button
-                    color={"pink"}
-                    size={"xs"}
-                    onClick={() => {
-                      socket.emit(
-                        "Get_SOS_Accepted_List",
-                        item.owner_id,
-                        (data) => {
-                          setAcceptedList(data);
-                        }
-                      );
-                    }}
-                  >
-                    Accepted Users
-                  </Button>
+                  <AlertModal socket={socket} owner_id={item.owner_id} />
                 </Group>
               </Card>
             </Grid.Col>

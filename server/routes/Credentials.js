@@ -4,7 +4,7 @@ const { Register, Login } = require('../controllers/Credentials')
 const {
   Register: PoliceRegister,
   Login: PoliceLogin,
-} = require('../controllers/Credentials')
+} = require('../controllers/Police')
 const router = express.Router()
 
 router.post(

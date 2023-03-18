@@ -18,6 +18,7 @@ import {
 } from "@tabler/icons-react";
 import { NavLink } from "react-router-dom";
 import LightDark from "../pages/MainScreen/LightDark";
+import { useCookies } from "react-cookie";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -90,13 +91,14 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   { link: "/sos", label: "SOS", icon: IconSos },
-  { link: "/statistics", label: "Statistics", icon: IconChartInfographic },
-  { link: "/profile", label: "Profile", icon: IconUserCircle },
-  { link: "/we", label: "Other Settings", icon: IconSettings },
+  // { link: "/statistics", label: "Statistics", icon: IconChartInfographic },
+  // { link: "/profile", label: "Profile", icon: IconUserCircle },
+  // { link: "/we", label: "Other Settings", icon: IconSettings },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ setIsLogin }) => {
   const { classes, cx } = useStyles();
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   const links = data.map((item) => (
     <NavLink
@@ -129,7 +131,11 @@ const Sidebar = () => {
         <a
           href="#"
           className={classes.link}
-          onClick={(event) => event.preventDefault()}
+          onClick={(event) => {
+            event.preventDefault();
+            removeCookie("user_id");
+            setIsLogin(false);
+          }}
         >
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>

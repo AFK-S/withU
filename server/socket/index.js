@@ -4,6 +4,7 @@ const SOSSocket = require('../socket/SOS')
 const ActiveSocket = require('../socket/Active')
 const UserSchema = require('../models/User')
 const PoliceSocket = require('../socket/Police')
+const ChatSocket = require('../socket/Chat')
 
 const socket = (http) => {
   const io = new Server(http)
@@ -30,8 +31,12 @@ const socket = (http) => {
     ActiveSocket(socket)
     SOSSocket(io, socket)
     PoliceSocket(io, socket)
+    ChatSocket(io, socket)
     socket.on('Get_SOS_Location', async (user_id, callback) => {
       const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+      if (users[user_id] === undefined) {
+        return
+      }
       callback(users[user_id].coordinates)
     })
     // socket.on(
