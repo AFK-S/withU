@@ -8,41 +8,41 @@ import {
   Modal,
   Image,
   SafeAreaView,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import Styles from "../../CommonStyles";
+} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import Styles from '../../CommonStyles'
 // import Chatroom from './Chatroom'
 
 const Alerts = ({ socket, User }) => {
-  const [AlertList, setAlertList] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [acceptedList, setAcceptedList] = useState([]);
+  const [AlertList, setAlertList] = useState([])
+  const [modalVisible, setModalVisible] = useState(false)
+  const [acceptedList, setAcceptedList] = useState([])
 
   useEffect(() => {
     if (socket.connected) {
-      socket.emit("Get_SOS_details");
+      socket.emit('Get_SOS_details')
     }
-  }, [socket.connected]);
+  }, [socket.connected])
 
-  socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details");
-  });
+  socket.on('Refetch_SOS_Details', () => {
+    socket.emit('Get_SOS_details')
+  })
 
-  socket.on("Pass_SOS_Details", (data) => {
-    setAlertList(data);
-  });
+  socket.on('Pass_SOS_Details', (data) => {
+    setAlertList(data)
+  })
 
   const GetDirection = (user_id, sos_user_id) => {
     if (!socket.connected) {
-      alert("Please Connect to Internet");
-      return;
+      alert('Please Connect to Internet')
+      return
     }
-    socket.emit("SOS_Accepted_Commity", sos_user_id);
-    socket.emit("Get_SOS_Location", user_id, async (location) => {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
-      Linking.openURL(url);
-    });
-  };
+    socket.emit('SOS_Accepted_Commity', sos_user_id)
+    socket.emit('Get_SOS_Location', user_id, async (location) => {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
+      Linking.openURL(url)
+    })
+  }
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
@@ -55,7 +55,7 @@ const Alerts = ({ socket, User }) => {
             return (
               item !== null && (
                 <View style={styles.card}>
-                  <View style={{ display: "flex", flexDirection: "row" }}>
+                  <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <Text style={styles.raisedBy}>Raised By : </Text>
                     <Text style={styles.rbName}>{item.user.name}</Text>
                   </View>
@@ -73,18 +73,22 @@ const Alerts = ({ socket, User }) => {
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>
                   )}
-                  {/* <Chatroom /> */}
+                  {/* <Chatroom
+                    socket={socket}
+                    sos_id={item._id}
+                    user_name={item.user.name}
+                  /> */}
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={() => {
                       socket.emit(
-                        "Get_SOS_Accepted_List",
+                        'Get_SOS_Accepted_List',
                         item.owner_id,
                         (data) => {
-                          setAcceptedList(data);
-                          setModalVisible(true);
-                        }
-                      );
+                          setAcceptedList(data)
+                          setModalVisible(true)
+                        },
+                      )
                     }}
                   >
                     <Text style={styles.btnText}>Accepted Users</Text>
@@ -99,18 +103,18 @@ const Alerts = ({ socket, User }) => {
                       <View
                         style={{
                           flex: 1,
-                          justifyContent: "center",
+                          justifyContent: 'center',
                           paddingHorizontal: 20,
-                          backgroundColor: "#00000080",
+                          backgroundColor: '#00000080',
                         }}
                       >
                         <View
                           style={{
-                            backgroundColor: "#fff",
+                            backgroundColor: '#fff',
                             padding: 20,
                             borderRadius: 15,
                             elevation: 5,
-                            shadowColor: "#c6c6c678",
+                            shadowColor: '#c6c6c678',
                             marginVertical: 5,
                             shadowOffset: {
                               width: 0,
@@ -120,22 +124,23 @@ const Alerts = ({ socket, User }) => {
                         >
                           <View
                             style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Text style={styles.modal_head}>Accepted User</Text>
                             <TouchableOpacity
+                              style={{ padding: 15, paddingTop: 0 }}
                               onPress={() => setModalVisible(false)}
                             >
                               <Image
-                                source={require("../../assets/icons/close.png")}
+                                source={require('../../assets/icons/close.png')}
                                 resizeMode="contain"
                                 style={{
                                   width: 16,
                                   height: 16,
-                                  alignSelf: "flex-end",
+                                  alignSelf: 'flex-end',
                                 }}
                               />
                             </TouchableOpacity>
@@ -152,12 +157,12 @@ const Alerts = ({ socket, User }) => {
                                   >
                                     <View
                                       style={{
-                                        display: "flex",
-                                        flexDirection: "row",
+                                        display: 'flex',
+                                        flexDirection: 'row',
                                       }}
                                     >
                                       <Text style={styles.raisedBy}>
-                                        Person :{" "}
+                                        Person :{' '}
                                       </Text>
                                       <Text style={styles.rbName}>
                                         {user.item.name}
@@ -171,7 +176,7 @@ const Alerts = ({ socket, User }) => {
                                       Phone Number : {user.item.phone_number}
                                     </Text>
                                   </View>
-                                );
+                                )
                               }}
                               showsVerticalScrollIndicator={false}
                             />
@@ -186,16 +191,16 @@ const Alerts = ({ socket, User }) => {
                   </SafeAreaView>
                 </View>
               )
-            );
+            )
           }}
           showsVerticalScrollIndicator={false}
         />
       )}
     </View>
-  );
-};
+  )
+}
 
-export default Alerts;
+export default Alerts
 
 const styles = StyleSheet.create({
   title: {
@@ -204,12 +209,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
     marginTop: 20,
     elevation: 5,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -222,14 +227,14 @@ const styles = StyleSheet.create({
   },
   rbName: {
     ...Styles.bold,
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
   btn: {
-    backgroundColor: "#FFAACF",
+    backgroundColor: '#FFAACF',
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   btnText: {
     ...Styles.medium,
@@ -237,15 +242,15 @@ const styles = StyleSheet.create({
   silent: {
     ...Styles.medium,
     fontSize: 20,
-    color: "#aaa",
+    color: '#aaa',
     marginTop: 20,
-    textAlign: "center",
-    marginTop: "70%",
+    textAlign: 'center',
+    marginTop: '70%',
   },
   modal_head: {
     ...Styles.medium,
     fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 20,
   },
-});
+})
