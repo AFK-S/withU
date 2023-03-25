@@ -65,7 +65,7 @@ export const SocketProvider = ({ children }) => {
   const [location, setLocation] = useState(null);
   const [isSOS, setIsSOS] = useState(false);
 
-  const socket = io("http://192.168.0.105:8000", {
+  const socket = io("https://withu.adityarai16.repl.co/", {
     transports: ["websocket"],
   });
 

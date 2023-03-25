@@ -31,7 +31,7 @@ const Register = ({ route, navigation }) => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "http://192.168.0.110:8000/api/register",
+        "https://withu.adityarai16.repl.co/api/register",
         {
           name: register.name,
           email_address: register.email_address,

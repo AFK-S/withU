@@ -25,7 +25,7 @@ const Login = ({ navigation }) => {
     setLoading(true);
     try {
       const { data } = await axios.put(
-        "http://192.168.0.105:8000/api/login",
+        "https://withu.adityarai16.repl.co/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));
