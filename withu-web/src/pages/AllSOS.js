@@ -1,38 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Avatar,
-  Text,
-  Progress,
-  Badge,
-  Group,
-  ActionIcon,
-  Grid,
-  Button,
-} from "@mantine/core";
+import React, { useState } from "react";
+import { Card, Text, Badge, Group, Grid, Button } from "@mantine/core";
 import { IconShield } from "@tabler/icons-react";
 import io from "socket.io-client";
 import { useCookies } from "react-cookie";
-
 import AlertModal from "../components/AlertModal";
+
 const AllSOS = () => {
   const [cookies] = useCookies(["user_id"]);
   const socket = io("http://192.168.0.110:8000", {
     transports: ["websocket"],
   });
-
   const [sosList, setSosList] = useState([]);
-  const [acceptedList, setAcceptedList] = useState([]);
-  const [location, setLocation] = useState([]);
 
-  useEffect(() => {
-    socket.on("connect", async () => {
-      console.log("connected");
-      socket.emit("Get_SOS_Officials", cookies.user_id);
-    });
-  }, []);
-  socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details", cookies.user_id);
+  socket.on("connect", async () => {
+    console.log("connected");
+    socket.emit("Get_SOS_Officials", cookies.user_id);
   });
 
   socket.on("Pass_Officials_SOS_Details", (data) => {
@@ -43,16 +25,16 @@ const AllSOS = () => {
     console.log(err);
   });
 
-  const GetDirection = (user_id, sos_user_id) => {
+  const GetDirection = (user_id, sos_id) => {
     if (!socket.connected) {
-      alert("Please Connect to Internet");
-      return;
+      return alert("Please Connect to Internet");
     }
-    socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_user_id);
-    socket.emit("Get_SOS_Location", user_id, async (location) => {
-      setLocation(location);
-      console.log(location);
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+    socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_id);
+    socket.emit("Get_SOS_Location", user_id, async (data) => {
+      if (data.err) {
+        return alert(data.err);
+      }
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
       window.open(url, "_blank");
     });
   };
@@ -87,7 +69,7 @@ const AllSOS = () => {
                   <Button
                     size={"xs"}
                     variant="outline"
-                    onClick={() => GetDirection(item.user._id, item.owner_id)}
+                    onClick={() => GetDirection(item.user._id, item._id)}
                   >
                     Get Location
                   </Button>
