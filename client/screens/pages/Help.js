@@ -1,23 +1,23 @@
-import { StyleSheet, Text, View ,SafeAreaView} from 'react-native'
-import { WebView } from 'react-native-webview';
-import React from 'react'
+import { StyleSheet, View } from "react-native";
+import { WebView } from "react-native-webview";
+import React from "react";
 
 const Help = () => {
   return (
     <View style={styles.container}>
-        <WebView
+      <WebView
         source={{
-          uri: 'https://www.google.com/maps/search/police+station+and+hospitals+near+me/',
+          uri: "https://www.google.com/maps/search/police+station+and+hospitals+near+me/",
         }}
       />
     </View>
-  )
-}
+  );
+};
 
-export default Help
+export default Help;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 3.4/4,
-      }
-})
+  container: {
+    flex: 3.4 / 4,
+  },
+});

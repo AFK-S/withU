@@ -11,24 +11,27 @@ const SOS = (io, socket) => {
   });
   socket.on("On_SOS", async (callback) => {
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
+    if (!socket.user_id) {
+      return callback({
+        err: true,
+        msg: "User not found",
+      });
+    }
     const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
     const user_response = await UserSchema.findById(socket.user_id).lean();
     if (user_response === null) {
-      callback("Invalid Request");
-      return;
+      return callback({
+        err: true,
+        msg: "User not found",
+      });
     }
     const nearby_users = await NearbyUsers(socket);
     const family_members = await FamilyMembers(socket, callback);
-    let SOS_response;
-    try {
-      SOS_response = await SOSSchema.create({
-        owner_id: socket.user_id,
-        coordinates: users[socket.user_id].coordinates,
-      });
-    } catch (error) {
-      callback(error);
-      return;
-    }
+    const SOS_response = await SOSSchema.create({
+      owner_id: socket.user_id,
+      coordinates: users[socket.user_id].coordinates,
+    });
+
     sos_user[socket.user_id] = {
       sos_id: SOS_response._id,
       user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
@@ -49,26 +52,27 @@ const SOS = (io, socket) => {
     callback(user_detail);
   });
   socket.on("SOS_Cancel", async (callback) => {
-    try {
-      await SOSSchema.findOneAndUpdate(
-        {
-          owner_id: socket.user_id,
-        },
-        {
-          status: "resolved",
-        }
-      );
-    } catch (error) {
-      callback(error);
-      return;
-    }
     const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
+    if (!sos_user[socket.user_id]) {
+      return callback({
+        err: true,
+        msg: "You are not in SOS",
+      });
+    }
+    await SOSSchema.findOneAndUpdate(
+      {
+        owner_id: socket.user_id,
+      },
+      {
+        status: "resolved",
+      }
+    );
     if (sos_user[socket.user_id]) {
       delete sos_user[socket.user_id];
       fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
     }
-    io.emit("Refetch_SOS_Details");
     const user_response = await UserSchema.findById(socket.user_id).lean();
+    io.emit("Refetch_SOS_Details");
     callback(user_response.name);
   });
   socket.on("SOS_Accepted_Commity", async (sos_user_id) => {
@@ -156,7 +160,9 @@ const SOS = (io, socket) => {
     callback(sos_accepted_detail, sos_accepted_officials_detail);
   });
   socket.on("Get_SOS", async (callback) => {
-    const sos_response = await SOSSchema.find().lean();
+    const sos_response = await SOSSchema.find({
+      status: "resolved",
+    }).lean();
     callback(sos_response);
   });
 };

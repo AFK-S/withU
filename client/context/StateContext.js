@@ -127,7 +127,7 @@ export const SocketProvider = ({ children }) => {
   }, [socketLoading]);
 
   socket.on("disconnect", () => {
-    socketLoading(true);
+    setSocketLoading(true);
   });
 
   socket.on("connect_error", (err) => {
