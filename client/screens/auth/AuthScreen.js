@@ -5,7 +5,7 @@ import Register from "./Register";
 import Register2 from "./Register2";
 import Login from "./Login";
 
-const AuthScreen = ({ setIsLogin, setAlert }) => {
+const AuthScreen = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator initialRouteName="Home">
@@ -19,16 +19,16 @@ const AuthScreen = ({ setIsLogin, setAlert }) => {
         component={Register}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="register2" options={{ headerShown: false }}>
-        {(props) => (
-          <Register2 {...props} setIsLogin={setIsLogin} setAlert={setAlert} />
-        )}
-      </Stack.Screen>
-      <Stack.Screen name="login" options={{ headerShown: false }}>
-        {(props) => (
-          <Login {...props} setIsLogin={setIsLogin} setAlert={setAlert} />
-        )}
-      </Stack.Screen>
+      <Stack.Screen
+        name="register2"
+        options={{ headerShown: false }}
+        component={Register2}
+      />
+      <Stack.Screen
+        name="login"
+        options={{ headerShown: false }}
+        component={Login}
+      />
     </Stack.Navigator>
   );
 };

@@ -1,12 +1,10 @@
-const { validationResult } = require('express-validator')
-const User = require('../models/User')
+const { validationResult } = require("express-validator");
+const User = require("../models/User");
 
 const Register = async (req, res) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res
-      .status(400)
-      .json({ type: 'error', message: errors.array()[0].msg })
+    return res.status(400).send(errors.array()[0].msg);
   }
   const {
     name,
@@ -15,7 +13,7 @@ const Register = async (req, res) => {
     gender,
     emergency_contact,
     password,
-  } = req.body
+  } = req.body;
   try {
     const response = await User.create({
       name,
@@ -24,7 +22,7 @@ const Register = async (req, res) => {
       gender,
       emergency_contact,
       password,
-    })
+    });
     return res.json({
       user_id: response._id,
       name: response.name,
@@ -32,30 +30,28 @@ const Register = async (req, res) => {
       gender: response.gender,
       emergency_contact: response.emergency_contact,
       password: response.password,
-    })
+    });
   } catch (err) {
-    console.error(err)
-    res.status(400).json({ type: 'error', message: err })
+    console.log(err);
+    res.status(400).send(err);
   }
-}
+};
 
 const Login = async (req, res) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res
       .status(400)
-      .json({ type: 'error', message: errors.array()[0].msg })
+      .json({ type: "error", message: errors.array()[0].msg });
   }
-  const { email_address, password } = req.body
+  const { email_address, password } = req.body;
   try {
     const response = await User.findOne({
       email_address,
       password,
-    }).lean()
+    }).lean();
     if (response === null) {
-      return res
-        .status(400)
-        .json({ type: 'error', message: 'Invalid Credentials' })
+      return res.status(400).send("Invalid Credentials");
     }
     return res.json({
       user_id: response._id,
@@ -64,14 +60,14 @@ const Login = async (req, res) => {
       gender: response.gender,
       emergency_contact: response.emergency_contact,
       password: response.password,
-    })
+    });
   } catch (err) {
-    console.error(err)
-    res.status(400).json({ type: 'error', message: err })
+    console.log(err);
+    res.status(400).send(err);
   }
-}
+};
 
 module.exports = {
   Register,
   Login,
-}
+};

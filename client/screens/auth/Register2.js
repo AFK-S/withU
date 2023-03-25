@@ -1,5 +1,4 @@
 import {
-  View,
   TextInput,
   TouchableOpacity,
   Text,
@@ -9,11 +8,13 @@ import {
   Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
+import StateContext from "../../context/StateContext";
 
-const Register = ({ route, navigation, setIsLogin }) => {
+const Register = ({ route, navigation }) => {
+  const { setIsLogin, setAlert, setLoading } = useContext(StateContext);
   const { cred, setCred } = route.params;
   const [register, setRegister] = useState({
     name: cred.name,
@@ -26,6 +27,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
   });
 
   const onSubmit = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.post(
         "https://withU.adityarai16.repl.co/api/register",
@@ -58,13 +60,14 @@ const Register = ({ route, navigation, setIsLogin }) => {
       });
       setIsLogin(true);
     } catch (err) {
-      console.error(err.response.data);
+      console.error(err);
       setAlert({
         isAlert: true,
-        type: err.response.data.type,
+        type: "error",
         message: err.response.data,
       });
     }
+    setLoading(false);
   };
 
   return (

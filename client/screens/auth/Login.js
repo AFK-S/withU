@@ -9,33 +9,37 @@ import {
   Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
+import StateContext from "../../context/StateContext";
 
-const Login = ({ navigation, setIsLogin, setAlert }) => {
+const Login = ({ navigation }) => {
+  const { setIsLogin, setAlert, setLoading } = useContext(StateContext);
   const [login, setLogin] = useState({
     email_address: "",
     password: "",
   });
 
   const onSubmit = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.put(
-        "https://withU.adityarai16.repl.co/api/login",
+        "http://192.168.0.105:8000/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));
       setLogin({ email_address: "", password: "" });
       setIsLogin(true);
     } catch (err) {
-      console.error(err.response.data);
+      console.error(err);
       setAlert({
         isAlert: true,
-        type: err.response.data.type,
+        type: "error",
         message: err.response.data,
       });
     }
+    setLoading(false);
   };
 
   return (
