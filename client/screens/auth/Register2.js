@@ -97,13 +97,14 @@ const Register = ({ route, navigation, setIsLogin }) => {
           autoComplete="off"
         />
         <Picker
+          editable={false}
           selectedValue={register.gender}
           onValueChange={(itemValue, itemIndex) =>
             setRegister({ ...register, gender: itemValue })
           }
         >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
+          <Picker.Item label="Male" value="male" />
+          <Picker.Item label="Female" value="female" />
         </Picker>
         <TextInput
           style={styles.input}
