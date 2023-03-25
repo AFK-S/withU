@@ -25,6 +25,10 @@ const SOS = new Schema(
       type: Array,
       default: [],
     },
+    accepted_officials_list: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,

@@ -31,7 +31,6 @@ const SOS = (io, socket) => {
       owner_id: socket.user_id,
       coordinates: users[socket.user_id].coordinates,
     });
-
     sos_user[socket.user_id] = {
       sos_id: SOS_response._id,
       user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
@@ -76,11 +75,10 @@ const SOS = (io, socket) => {
     callback(user_response.name);
   });
   socket.on("SOS_Accepted_Commity", async (sos_user_id) => {
-    const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
-    if (!sos_user[sos_user_id].accepted_commity_list) {
-      sos_user[sos_user_id].accepted_commity_list = [];
-    }
-    if (sos_user[sos_user_id].accepted_commity_list.includes(socket.user_id)) {
+    const sos_response = await SOSSchema.findById({
+      owner_id: sos_user_id,
+    }).lean();
+    if (sos_response.accepted_commity_list.includes(socket.user_id)) {
       return;
     }
     await SOSSchema.findOneAndUpdate(
@@ -90,13 +88,11 @@ const SOS = (io, socket) => {
       },
       {
         status: "accepted",
+        $push: {
+          accepted_commity_list: socket.user_id,
+        },
       }
     );
-    sos_user[sos_user_id].accepted_commity_list = [
-      ...sos_user[sos_user_id].accepted_commity_list,
-      socket.user_id,
-    ];
-    fs.writeFileSync("./json/isSOS.json", JSON.stringify(sos_user));
     io.emit("Refetch_SOS_Details");
   });
   socket.on("Get_SOS_details", async () => {
@@ -118,6 +114,7 @@ const SOS = (io, socket) => {
       {
         $match: {
           id: { $in: sos_ids },
+          status: { $ne: "resolved" },
         },
       },
       {
@@ -142,20 +139,14 @@ const SOS = (io, socket) => {
     socket.emit("Pass_SOS_Details", sos_response);
   });
   socket.on("Get_SOS_Accepted_List", async (sos_owner_id, callback) => {
-    const sos_user = await JSON.parse(fs.readFileSync("./json/isSOS.json"));
-    if (!sos_user[sos_owner_id].accepted_commity_list) {
-      sos_user[sos_owner_id].accepted_commity_list = [];
-    }
-    const get_commity_list = sos_user[sos_owner_id].accepted_commity_list;
-    const sos_accepted_detail = await UserSchema.find({
-      _id: { $in: get_commity_list },
+    const sos_response = await SOSSchema.findOne({
+      owner_id: sos_owner_id,
     }).lean();
-    if (!sos_user[sos_owner_id].accepted_officials_list) {
-      sos_user[sos_owner_id].accepted_officials_list = [];
-    }
-    const get_official_list = sos_user[sos_owner_id].accepted_officials_list;
+    const sos_accepted_detail = await UserSchema.find({
+      _id: { $in: sos_response.accepted_commity_list },
+    }).lean();
     const sos_accepted_officials_detail = await PoliceSchema.find({
-      _id: { $in: get_official_list },
+      _id: { $in: sos_response.accepted_officials_list },
     }).lean();
     callback(sos_accepted_detail, sos_accepted_officials_detail);
   });
