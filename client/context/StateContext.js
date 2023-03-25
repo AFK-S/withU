@@ -61,7 +61,6 @@ export const StateProvider = ({ children }) => {
 export const SocketProvider = ({ children }) => {
   const { setIsLogin, User, setUser, setLoading } = useContext(StateContext);
 
-  const [socketLoading, setSocketLoading] = useState(true);
   const [location, setLocation] = useState(null);
   const [isSOS, setIsSOS] = useState(false);
 
@@ -101,58 +100,29 @@ export const SocketProvider = ({ children }) => {
   socket.on("connect", async () => {
     socket.emit("Set_User_ID", await User.user_id);
     console.log("connected");
-    setSocketLoading(false);
+    socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
   });
-
-  const [PoliceInfo, setPoliceInfo] = useState([]);
-  const [SOSInfo, setSOSInfo] = useState([]);
-
-  useEffect(() => {
-    if (!socketLoading) {
-      socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
-      socket.emit("Get_Police", (data) => {
-        setPoliceInfo(data);
-      });
-      socket.emit("Get_SOS", (data) => {
-        setSOSInfo(data);
-      });
-    }
-  }, [socketLoading]);
 
   socket.on("connect_error", (err) => {
     console.log(err);
-    setSocketLoading(true);
   });
 
   useEffect(() => {
     (async () => {
-      if (!socketLoading) {
+      if (socket.connected) {
         await LocationUpdate();
       }
     })();
-  }, [socketLoading]);
+  }, [socket.connected]);
 
   const Logout = async () => {
     await AsyncStorage.removeItem("user");
     setIsLogin(false);
   };
 
-  const [AlertList, setAlertList] = useState([]);
-
-  socket.on("Refetch_SOS_Details", () => {
-    setLoading(true);
-    socket.emit("Get_SOS_details");
-  });
-
-  socket.on("Pass_SOS_Details", (data) => {
-    setAlertList(data);
-    setLoading(false);
-  });
-
   return (
     <StateContext.Provider
       value={{
-        socketLoading,
         socket,
         location,
         setLocation,
@@ -162,9 +132,6 @@ export const SocketProvider = ({ children }) => {
         setIsSOS,
         Logout,
         setLoading,
-        PoliceInfo,
-        SOSInfo,
-        AlertList,
       }}
     >
       {children}

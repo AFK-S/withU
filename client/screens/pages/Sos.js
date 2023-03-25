@@ -14,8 +14,7 @@ import call from "react-native-phone-call";
 import StateContext from "../../context/StateContext";
 
 const SOS = () => {
-  const { socket, socketLoading, Logout, User, isSOS, setIsSOS } =
-    useContext(StateContext);
+  const { socket, Logout, User, isSOS, setIsSOS } = useContext(StateContext);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -49,7 +48,7 @@ const SOS = () => {
   };
 
   const OnSOS = async () => {
-    if (socketLoading) {
+    if (!socket.connected) {
       return;
     }
     setIsSOS(!isSOS);

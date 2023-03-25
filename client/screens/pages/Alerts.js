@@ -15,17 +15,27 @@ import StateContext from "../../context/StateContext";
 // import Chatroom from './Chatroom'
 
 const Alerts = () => {
-  const { socket, socketLoading, setLoading, User, AlertList } =
-    useContext(StateContext);
+  const { socket, setLoading, User } = useContext(StateContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [acceptedList, setAcceptedList] = useState([]);
+  const [AlertList, setAlertList] = useState([]);
 
   useEffect(() => {
-    if (!socketLoading) {
+    if (socket.connected) {
       setLoading(true);
       socket.emit("Get_SOS_details");
     }
-  }, [socketLoading]);
+  }, [socket.connected]);
+
+  socket.on("Refetch_SOS_Details", () => {
+    setLoading(true);
+    socket.emit("Get_SOS_details");
+  });
+
+  socket.on("Pass_SOS_Details", (data) => {
+    setAlertList(data);
+    setLoading(false);
+  });
 
   const GetDirection = (user_id, sos_id) => {
     if (!socket.connected) {
