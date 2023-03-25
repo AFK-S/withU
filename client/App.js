@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import { useFonts } from "expo-font";
 import React, { useContext } from "react";
-import AppLoading from "expo-app-loading";
+// import AppLoading from "expo-app-loading";
 import Auth from "./screens/auth/AuthScreen";
 import MainScreen from "./screens/MainScreen";
 import StateContext, {
@@ -18,7 +18,8 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    // return <AppLoading />;
+    return null;
   }
 
   return (

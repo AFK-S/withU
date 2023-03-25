@@ -17,7 +17,7 @@ import { useCookies } from "react-cookie";
 import AlertModal from "../components/AlertModal";
 const AllSOS = () => {
   const [cookies] = useCookies(["user_id"]);
-  const socket = io("https://withU.adityarai16.repl.co", {
+  const socket = io("http://192.168.0.110:8000", {
     transports: ["websocket"],
   });
 

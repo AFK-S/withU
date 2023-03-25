@@ -12,6 +12,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
+import { Picker } from "@react-native-picker/picker";
 
 const Register = ({ route, navigation }) => {
   const { setIsLogin, setLoading } = useContext(StateContext);
@@ -30,7 +31,7 @@ const Register = ({ route, navigation }) => {
     setLoading(true);
     try {
       const { data } = await axios.post(
-        "https://withU.adityarai16.repl.co/api/register",
+        "http://192.168.0.110:8000/api/register",
         {
           name: register.name,
           email_address: register.email_address,
@@ -97,6 +98,16 @@ const Register = ({ route, navigation }) => {
           autoCapitalize="none"
           autoComplete="off"
         />
+        <Picker
+          editable={false}
+          selectedValue={register.gender}
+          onValueChange={(itemValue, itemIndex) =>
+            setRegister({ ...register, gender: itemValue })
+          }
+        >
+          <Picker.Item label="Male" value="male" />
+          <Picker.Item label="Female" value="female" />
+        </Picker>
         <TextInput
           style={styles.input}
           placeholder="Emergency Contact 1"
