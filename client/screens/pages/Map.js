@@ -4,14 +4,23 @@ import { View, Text } from "react-native";
 import StateContext from "../../context/StateContext";
 
 const Map = () => {
-  const { socket, socketLoading, location, User, PoliceInfo, SOSInfo } =
-    useContext(StateContext);
+  const {
+    socket,
+    socketLoading,
+    setLoading,
+    location,
+    User,
+    PoliceInfo,
+    SOSInfo,
+  } = useContext(StateContext);
   const [activeUsers, setActiveUsers] = useState([]);
 
   useEffect(() => {
     if (!socketLoading) {
+      setLoading(true);
       socket.emit("Get_All_Active_Users", (users) => {
         setActiveUsers(users);
+        setLoading(false);
       });
     }
   }, [socketLoading]);

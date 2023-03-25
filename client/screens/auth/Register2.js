@@ -14,7 +14,7 @@ import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
 
 const Register = ({ route, navigation }) => {
-  const { setIsLogin, setAlert, setLoading } = useContext(StateContext);
+  const { setIsLogin, setLoading } = useContext(StateContext);
   const { cred, setCred } = route.params;
   const [register, setRegister] = useState({
     name: cred.name,
@@ -61,11 +61,10 @@ const Register = ({ route, navigation }) => {
       setIsLogin(true);
     } catch (err) {
       console.error(err);
-      setAlert({
-        isAlert: true,
-        type: "error",
-        message: err.response.data,
-      });
+      if (err.response) {
+        return alert(err.response.data);
+      }
+      alert(err);
     }
     setLoading(false);
   };

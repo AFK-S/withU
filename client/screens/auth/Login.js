@@ -15,7 +15,7 @@ import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
 
 const Login = ({ navigation }) => {
-  const { setIsLogin, setAlert, setLoading } = useContext(StateContext);
+  const { setIsLogin, setLoading } = useContext(StateContext);
   const [login, setLogin] = useState({
     email_address: "",
     password: "",
@@ -33,11 +33,10 @@ const Login = ({ navigation }) => {
       setIsLogin(true);
     } catch (err) {
       console.error(err);
-      setAlert({
-        isAlert: true,
-        type: "error",
-        message: err.response.data,
-      });
+      if (err.response) {
+        return alert(err.response.data);
+      }
+      alert(err);
     }
     setLoading(false);
   };

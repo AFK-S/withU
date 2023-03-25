@@ -7,11 +7,6 @@ const StateContext = createContext();
 export default StateContext;
 
 export const StateProvider = ({ children }) => {
-  const [alert, setAlert] = useState({
-    isAlert: false,
-    type: "",
-    message: "",
-  });
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [User, setUser] = useState(null);
@@ -52,8 +47,6 @@ export const StateProvider = ({ children }) => {
       value={{
         loading,
         setLoading,
-        alert,
-        setAlert,
         isLogin,
         setIsLogin,
         User,
@@ -66,7 +59,7 @@ export const StateProvider = ({ children }) => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const { setAlert, setIsLogin, User, setUser } = useContext(StateContext);
+  const { setIsLogin, User, setUser, setLoading } = useContext(StateContext);
 
   const [socketLoading, setSocketLoading] = useState(true);
   const [location, setLocation] = useState(null);
@@ -132,11 +125,7 @@ export const SocketProvider = ({ children }) => {
 
   socket.on("connect_error", (err) => {
     console.log(err);
-    setAlert({
-      isAlert: true,
-      type: "error",
-      message: "Socket connection error",
-    });
+    alert("Socket connection error");
   });
 
   useEffect(() => {
@@ -152,6 +141,18 @@ export const SocketProvider = ({ children }) => {
     setIsLogin(false);
   };
 
+  const [AlertList, setAlertList] = useState([]);
+
+  socket.on("Refetch_SOS_Details", () => {
+    setLoading(true);
+    socket.emit("Get_SOS_details");
+  });
+
+  socket.on("Pass_SOS_Details", (data) => {
+    setAlertList(data);
+    setLoading(false);
+  });
+
   return (
     <StateContext.Provider
       value={{
@@ -164,8 +165,10 @@ export const SocketProvider = ({ children }) => {
         isSOS,
         setIsSOS,
         Logout,
+        setLoading,
         PoliceInfo,
         SOSInfo,
+        AlertList,
       }}
     >
       {children}
