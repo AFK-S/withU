@@ -75,10 +75,11 @@ const SOS = (io, socket) => {
     callback(user_response.name);
   });
   socket.on("SOS_Accepted_Commity", async (sos_user_id) => {
-    const sos_response = await SOSSchema.findById({
+    const sos_response = await SOSSchema.findOne({
       owner_id: sos_user_id,
+      accepted_commity_list: { $ne: socket.user_id },
     }).lean();
-    if (sos_response.accepted_commity_list.includes(socket.user_id)) {
+    if (sos_response !== null) {
       return;
     }
     await SOSSchema.findOneAndUpdate(
