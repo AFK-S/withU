@@ -119,13 +119,10 @@ export const SocketProvider = ({ children }) => {
     }
   }, [socketLoading]);
 
-  socket.on("disconnect", () => {
-    setSocketLoading(true);
-  });
-
   socket.on("connect_error", (err) => {
     console.log(err);
-    alert("Socket connection error");
+    // alert("Socket connection error");
+    setSocketLoading(true);
   });
 
   useEffect(() => {
