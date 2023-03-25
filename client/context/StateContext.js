@@ -109,9 +109,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     (async () => {
-      if (socket.connected) {
-        await LocationUpdate();
-      }
+      await LocationUpdate();
     })();
   }, [socket.connected]);
 
