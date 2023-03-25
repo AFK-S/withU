@@ -37,7 +37,7 @@ const Alerts = () => {
       if (data.err) {
         return alert(data.msg);
       }
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
       Linking.openURL(url);
     });
   };

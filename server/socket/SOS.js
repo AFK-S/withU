@@ -75,13 +75,13 @@ const SOS = (io, socket) => {
     callback(user_response.name);
   });
   socket.on("SOS_Accepted_Commity", async (sos_user_id) => {
-    const sos_response = await SOSSchema.findOne({
-      owner_id: sos_user_id,
-      accepted_commity_list: { $ne: socket.user_id },
-    }).lean();
-    if (sos_response !== null) {
-      return;
-    }
+    // const sos_response = await SOSSchema.findOne({
+    //   owner_id: sos_user_id,
+    //   accepted_commity_list: { $ne: socket.user_id },
+    // }).lean();
+    // if (sos_response !== null) {
+    //   return;
+    // }
     await SOSSchema.findOneAndUpdate(
       {
         owner_id: sos_user_id,
@@ -89,7 +89,7 @@ const SOS = (io, socket) => {
       },
       {
         status: "accepted",
-        $push: {
+        $addToSet: {
           accepted_commity_list: socket.user_id,
         },
       }
