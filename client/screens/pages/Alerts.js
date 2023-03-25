@@ -27,12 +27,12 @@ const Alerts = () => {
     }
   }, [socketLoading]);
 
-  const GetDirection = (user_id, sos_user_id) => {
+  const GetDirection = (user_id, sos_id) => {
     if (!socket.connected) {
       alert("Please Connect to Internet");
       return;
     }
-    socket.emit("SOS_Accepted_Commity", sos_user_id);
+    socket.emit("SOS_Accepted_Commity", sos_id);
     socket.emit("Get_SOS_Location", user_id, async (data) => {
       if (data.err) {
         return alert(data.msg);
@@ -66,7 +66,7 @@ const Alerts = () => {
                   {User.user_id !== item.user._id && (
                     <TouchableOpacity
                       style={styles.btn}
-                      onPress={() => GetDirection(item.user._id, item.owner_id)}
+                      onPress={() => GetDirection(item.user._id, item._id)}
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>
@@ -79,14 +79,10 @@ const Alerts = () => {
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={() => {
-                      socket.emit(
-                        "Get_SOS_Accepted_List",
-                        item.owner_id,
-                        (data) => {
-                          setAcceptedList(data);
-                          setModalVisible(true);
-                        }
-                      );
+                      socket.emit("Get_SOS_Accepted_List", item._id, (data) => {
+                        setAcceptedList(data);
+                        setModalVisible(true);
+                      });
                     }}
                   >
                     <Text style={styles.btnText}>Accepted Users</Text>

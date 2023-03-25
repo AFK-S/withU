@@ -101,7 +101,6 @@ export const SocketProvider = ({ children }) => {
   socket.on("connect", async () => {
     socket.emit("Set_User_ID", await User.user_id);
     console.log("connected");
-    socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
     setSocketLoading(false);
   });
 
@@ -110,6 +109,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (!socketLoading) {
+      socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
       socket.emit("Get_Police", (data) => {
         setPoliceInfo(data);
       });
@@ -121,7 +121,6 @@ export const SocketProvider = ({ children }) => {
 
   socket.on("connect_error", (err) => {
     console.log(err);
-    // alert("Socket connection error");
     setSocketLoading(true);
   });
 

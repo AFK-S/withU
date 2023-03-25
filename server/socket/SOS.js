@@ -74,34 +74,15 @@ const SOS = (io, socket) => {
     io.emit("Refetch_SOS_Details");
     callback(user_response.name);
   });
-  socket.on("SOS_Accepted_Commity", async (sos_user_id) => {
-    const sos_response = await SOSSchema.findOne({
-      owner_id: sos_user_id,
-      accepted_commity_list: { $in: socket.user_id },
-    }).lean();
-    if (sos_response !== null) {
-      return;
-    }
-    await SOSSchema.findOneAndUpdate(
-      {
-        owner_id: sos_user_id,
-        status: "pending",
+  socket.on("SOS_Accepted_Commity", async (sos_id) => {
+    await SOSSchema.findByIdAndUpdate(sos_id, {
+      $push: {
+        accepted_commity_list: socket.user_id,
       },
-      {
-        $push: {
-          accepted_commity_list: socket.user_id,
-        },
-      }
-    );
-    await SOSSchema.findOneAndUpdate(
-      {
-        owner_id: sos_user_id,
-        status: "pending",
-      },
-      {
-        status: "accepted",
-      }
-    );
+    });
+    await SOSSchema.findOneAndUpdate(sos_id, {
+      status: "accepted",
+    });
 
     io.emit("Refetch_SOS_Details");
   });
@@ -148,10 +129,8 @@ const SOS = (io, socket) => {
     ]);
     socket.emit("Pass_SOS_Details", sos_response);
   });
-  socket.on("Get_SOS_Accepted_List", async (sos_owner_id, callback) => {
-    const sos_response = await SOSSchema.findOne({
-      owner_id: sos_owner_id,
-    }).lean();
+  socket.on("Get_SOS_Accepted_List", async (sos_id, callback) => {
+    const sos_response = await SOSSchema.findById(sos_id).lean();
     const sos_accepted_detail = await UserSchema.find({
       _id: { $in: sos_response.accepted_commity_list },
     }).lean();
