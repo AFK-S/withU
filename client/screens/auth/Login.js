@@ -22,7 +22,7 @@ const Login = ({ navigation, setIsLogin, setAlert }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.put(
-        "https://withU.adityarai16.repl.co/api/login",
+        "http://192.168.0.110:8000/api/login",
         login
       );
       await AsyncStorage.setItem("user", JSON.stringify(data));

@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
+import { Picker } from "@react-native-picker/picker";
 
 const Register = ({ route, navigation, setIsLogin }) => {
   const { cred, setCred } = route.params;
@@ -28,7 +29,7 @@ const Register = ({ route, navigation, setIsLogin }) => {
   const onSubmit = async () => {
     try {
       const { data } = await axios.post(
-        "https://withU.adityarai16.repl.co/api/register",
+        "http://192.168.0.110:8000/api/register",
         {
           name: register.name,
           email_address: register.email_address,
@@ -95,6 +96,15 @@ const Register = ({ route, navigation, setIsLogin }) => {
           autoCapitalize="none"
           autoComplete="off"
         />
+        <Picker
+          selectedValue={register.gender}
+          onValueChange={(itemValue, itemIndex) =>
+            setRegister({ ...register, gender: itemValue })
+          }
+        >
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="js" />
+        </Picker>
         <TextInput
           style={styles.input}
           placeholder="Emergency Contact 1"

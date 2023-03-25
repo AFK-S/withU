@@ -70,15 +70,17 @@ const Map = ({ socket, User, location }) => {
             return (
               <Circle
                 center={sos.coordinates}
-                radius={50}
-                fillColor={"rgba(255,0,0,0.1)"}
+                radius={30}
+                fillColor={"rgba(255,0,0,0.05)"}
+                strokeColor={"rgba(255,0,0,0.0)"}
+                strokeWidth={0}
                 key={index}
               />
             );
           })}
           <Circle
             center={location}
-            radius={500}
+            radius={3000}
             fillColor={"rgba(0,0,0,0.1)"}
           />
         </MapView>

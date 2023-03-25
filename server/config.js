@@ -1,3 +1,3 @@
-const METER_RADIUS = 5
+const METER_RADIUS = 3;
 
-module.exports = { METER_RADIUS }
+module.exports = { METER_RADIUS };
