@@ -5,7 +5,10 @@ import React, { useContext } from "react";
 import AppLoading from "expo-app-loading";
 import Auth from "./screens/auth/AuthScreen";
 import MainScreen from "./screens/MainScreen";
-import StateContext, { StateProvider } from "./context/StateContext";
+import StateContext, {
+  StateProvider,
+  SocketProvider,
+} from "./context/StateContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -29,12 +32,12 @@ export default function App() {
 }
 
 const Provider = () => {
-  const { isLogin, setIsLogin, setAlert } = useContext(StateContext);
+  const { isLogin } = useContext(StateContext);
   return isLogin ? (
-    // <SocketProvider>
-    <MainScreen setIsLogin={setIsLogin} />
+    <SocketProvider>
+      <MainScreen />
+    </SocketProvider>
   ) : (
-    // </SocketProvider>
     <Auth />
   );
 };

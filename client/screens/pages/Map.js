@@ -1,25 +1,20 @@
 import MapView, { Circle, Marker } from "react-native-maps";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
+import StateContext from "../../context/StateContext";
 
-const Map = ({ socket, User, location }) => {
+const Map = () => {
+  const { socket, socketLoading, location, User, PoliceInfo, SOSInfo } =
+    useContext(StateContext);
   const [activeUsers, setActiveUsers] = useState([]);
-  const [Police, setPolice] = useState([]);
-  const [SOS, setSOS] = useState([]);
 
   useEffect(() => {
-    if (socket.connected) {
-      socket.emit("Get_Meter_Active_Users", (users) => {
+    if (!socketLoading) {
+      socket.emit("Get_All_Active_Users", (users) => {
         setActiveUsers(users);
       });
-      socket.emit("Get_Police", (police) => {
-        setPolice(police);
-      });
-      socket.emit("Get_SOS", (sos) => {
-        setSOS(sos);
-      });
     }
-  }, [location]);
+  }, [socketLoading]);
 
   socket.on("Send_Active_Users", (users) => {
     setActiveUsers(users);
@@ -56,7 +51,7 @@ const Map = ({ socket, User, location }) => {
               />
             );
           })}
-          {Police.map((police, index) => {
+          {PoliceInfo.map((police, index) => {
             return (
               <Marker
                 key={index}
@@ -66,7 +61,7 @@ const Map = ({ socket, User, location }) => {
               />
             );
           })}
-          {SOS.map((sos, index) => {
+          {SOSInfo.map((sos, index) => {
             return (
               <Circle
                 center={sos.coordinates}
