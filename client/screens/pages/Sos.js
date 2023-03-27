@@ -14,9 +14,16 @@ import call from "react-native-phone-call";
 import StateContext from "../../context/StateContext";
 
 const SOS = () => {
-  const { socket, Logout, User, isSOS, setIsSOS } = useContext(StateContext);
+  const { socket, Logout, User, isSocketConnected } = useContext(StateContext);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isSOS, setIsSOS] = useState(false);
+
+  useEffect(() => {
+    if (!isSocketConnected) return;
+    socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
+    return () => socket.off("Is_SOS");
+  }, [isSocketConnected]);
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
@@ -48,24 +55,18 @@ const SOS = () => {
   };
 
   const OnSOS = async () => {
-    if (!socket.connected) {
-      return;
-    }
+    if (!isSocketConnected) return;
     setIsSOS(!isSOS);
     const { emergency_contact } = User;
     if (isSOS) {
       return socket.emit("SOS_Cancel", (data) => {
-        if (data.err) {
-          return alert(data.msg);
-        }
+        if (data.err) return alert(data.msg);
         const message = `I am ${data} and I am not in danger anymore.`;
         SendSMS(emergency_contact, message);
       });
     }
     socket.emit("On_SOS", (data) => {
-      if (data.err) {
-        return alert(data.msg);
-      }
+      if (data.err) return alert(data.msg);
       const message = `I am ${
         data.name
       } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${

@@ -7,6 +7,7 @@ import Alerts from "./pages/Alerts";
 import Help from "./pages/Help";
 import * as Notifications from "expo-notifications";
 import StateContext from "../context/StateContext";
+import * as Location from "expo-location";
 
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({
@@ -22,10 +23,25 @@ const MainScreen = () => {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  socket.on("Send_Notification", async (details) => {
-    console.log("notification received");
-    // await schedulePushNotification(details)
-  });
+  useEffect(() => {
+    (async () => {
+      while (true) {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return alert("Grant permission to access your location");
+        }
+        break;
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    socket.on("Send_Notification", async (details) => {
+      console.log("notification received");
+      // await schedulePushNotification(details)
+    });
+    return () => socket.off("Send_Notification");
+  }, []);
 
   // useEffect(() => {
   //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
