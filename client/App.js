@@ -2,13 +2,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import { useFonts } from "expo-font";
 import React, { useContext } from "react";
-// import AppLoading from "expo-app-loading";
 import Auth from "./screens/auth/AuthScreen";
 import MainScreen from "./screens/MainScreen";
 import StateContext, {
   StateProvider,
   SocketProvider,
 } from "./context/StateContext";
+import Loading from "./components/Loading";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,12 +16,7 @@ export default function App() {
     "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),
     "Poppins-Medium": require(".//assets/Fonts/Poppins-Medium.ttf"),
   });
-
-  if (!fontsLoaded) {
-    // return <AppLoading />;
-    return null;
-  }
-
+  if (!fontsLoaded) return null;
   return (
     <StateProvider>
       <StatusBar barStyle={"dark-content"} />
@@ -34,11 +29,16 @@ export default function App() {
 
 const Provider = () => {
   const { isLogin } = useContext(StateContext);
-  return isLogin ? (
-    <SocketProvider>
-      <MainScreen />
-    </SocketProvider>
-  ) : (
-    <Auth />
+  return (
+    <>
+      {isLogin ? (
+        <SocketProvider>
+          <MainScreen />
+        </SocketProvider>
+      ) : (
+        <Auth />
+      )}
+      <Loading />
+    </>
   );
 };
