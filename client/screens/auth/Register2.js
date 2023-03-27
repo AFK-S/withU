@@ -13,6 +13,7 @@ import axios from "axios";
 import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
 import { Picker } from "@react-native-picker/picker";
+import { SERVER_URL } from "../../config";
 
 const Register = ({ route, navigation }) => {
   const { setIsLogin, setLoading } = useContext(StateContext);
@@ -30,20 +31,17 @@ const Register = ({ route, navigation }) => {
   const onSubmit = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        "https://withu.adityarai16.repl.co/api/register",
-        {
-          name: register.name,
-          email_address: register.email_address,
-          phone_number: register.phone_number,
-          gender: register.gender,
-          emergency_contact: [
-            register.emergency_contact1,
-            register.emergency_contact2,
-          ],
-          password: register.password,
-        }
-      );
+      const { data } = await axios.post(`${SERVER_URL}/api/register`, {
+        name: register.name,
+        email_address: register.email_address,
+        phone_number: register.phone_number,
+        gender: register.gender,
+        emergency_contact: [
+          register.emergency_contact1,
+          register.emergency_contact2,
+        ],
+        password: register.password,
+      });
       await AsyncStorage.setItem("user", JSON.stringify(data));
       setCred({
         name: "",
@@ -62,9 +60,7 @@ const Register = ({ route, navigation }) => {
       setIsLogin(true);
     } catch (err) {
       console.error(err);
-      if (err.response) {
-        return alert(err.response.data);
-      }
+      if (err.response) return alert(err.response.data);
       alert(err);
     }
     setLoading(false);

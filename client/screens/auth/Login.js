@@ -1,5 +1,4 @@
 import {
-  View,
   TextInput,
   TouchableOpacity,
   Text,
@@ -13,6 +12,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
+import { SERVER_URL } from "../../config";
 
 const Login = ({ navigation }) => {
   const { setIsLogin, setLoading } = useContext(StateContext);
@@ -24,18 +24,13 @@ const Login = ({ navigation }) => {
   const onSubmit = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.put(
-        "https://withu.adityarai16.repl.co/api/login",
-        login
-      );
+      const { data } = await axios.put(`${SERVER_URL}/api/login`, login);
       await AsyncStorage.setItem("user", JSON.stringify(data));
       setLogin({ email_address: "", password: "" });
       setIsLogin(true);
     } catch (err) {
       console.error(err);
-      if (err.response) {
-        return alert(err.response.data);
-      }
+      if (err.response) return alert(err.response.data);
       alert(err);
     }
     setLoading(false);

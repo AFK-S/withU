@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as Location from "expo-location";
 import io from "socket.io-client";
+import { SERVER_URL } from "../config";
 
 const StateContext = createContext();
 export default StateContext;
@@ -42,6 +43,12 @@ export const StateProvider = ({ children }) => {
     })();
   }, [isLogin]);
 
+  const Logout = async () => {
+    await AsyncStorage.removeItem("user");
+    setUser(null);
+    setIsLogin(false);
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -50,7 +57,7 @@ export const StateProvider = ({ children }) => {
         isLogin,
         setIsLogin,
         User,
-        setUser,
+        Logout,
       }}
     >
       {children}
@@ -59,77 +66,72 @@ export const StateProvider = ({ children }) => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const { setIsLogin, User, setUser, setLoading } = useContext(StateContext);
+  const { Logout, User, loading, setLoading } = useContext(StateContext);
 
+  const [socket] = useState(() =>
+    io(SERVER_URL, {
+      transports: ["websocket"],
+    })
+  );
   const [location, setLocation] = useState(null);
-  const [isSOS, setIsSOS] = useState(false);
-
-  const socket = io("https://withu.adityarai16.repl.co/", {
-    transports: ["websocket"],
-  });
-
-  const LocationUpdate = async () => {
-    while (true) {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        return alert("Grant permission to access your location");
-      }
-      break;
-    }
-    const subscription = await Location.watchPositionAsync(
-      {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 5000,
-        distanceInterval: 20,
-      },
-      ({ coords }) => {
-        setLocation({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-        socket.emit("Set_Active_User", {
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        });
-        console.log("location updated");
-      }
-    );
-    return () => subscription.remove();
-  };
-
-  socket.on("connect", async () => {
-    socket.emit("Set_User_ID", await User.user_id);
-    console.log("connected");
-    socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
-  });
-
-  socket.on("connect_error", (err) => {
-    console.log(err);
-  });
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      await LocationUpdate();
-    })();
-  }, [socket.connected]);
+    const { user_id } = User;
+    socket.on("connect", async () => {
+      socket.emit("Set_User_ID", user_id);
+      setIsSocketConnected(true);
+      console.log("connected");
+    });
+    socket.on("connect_error", (err) => {
+      console.log(err);
+    });
+    socket.on("disconnect", () => {
+      setIsSocketConnected(false);
+      console.log("disconnected");
+    });
+    return () => {
+      socket.off("connect");
+      socket.off("connect_error");
+      socket.off("disconnect");
+    };
+  }, []);
 
-  const Logout = async () => {
-    await AsyncStorage.removeItem("user");
-    setIsLogin(false);
-  };
+  useEffect(() => {
+    if (!isSocketConnected) return;
+    (async () => {
+      const subscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 20,
+        },
+        ({ coords }) => {
+          setLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+          socket.emit("Set_Active_User", {
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+          console.log("location updated");
+        }
+      );
+      return () => subscription.remove();
+    })();
+  }, [isSocketConnected]);
 
   return (
     <StateContext.Provider
       value={{
         socket,
         location,
-        setLocation,
         User,
-        setUser,
-        isSOS,
-        setIsSOS,
         Logout,
         setLoading,
+        loading,
+        isSocketConnected,
       }}
     >
       {children}
