@@ -32,18 +32,8 @@ const socket = (http) => {
     });
     ActiveSocket(socket);
     SOSSocket(io, socket);
-    PoliceSocket(io, socket);
+    PoliceSocket(socket);
     ChatSocket(io, socket);
-    socket.on("Get_SOS_Location", async (user_id, callback) => {
-      const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-      if (!users[user_id]) {
-        return callback({
-          err: true,
-          msg: "User not found",
-        });
-      }
-      callback(users[user_id].coordinates);
-    });
     // socket.on(
     //   'Get_Direction_Location',
     //   async (sos_user_id, person_user_id, callback) => {

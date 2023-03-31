@@ -32,18 +32,15 @@ const NearbyUsers = async (socket) => {
 
 const FamilyMembers = async (socket, callback) => {
   const user_response = await UserSchema.findById(socket.user_id).lean();
-  if (user_response === null) {
-    callback("Invalid Request");
-    return;
-  }
   const user_ids = await UserSchema.find({
     phone_number: user_response.emergency_contact,
   }).distinct("_id");
+  const user_ids_string = user_ids.map((user_id) => user_id.toString());
   const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
   const socket_ids = Object.values(users).map((user) => {
-    if (user_ids.includes(user.user_id)) return user.socket_id;
+    if (user_ids_string.includes(user.user_id)) return user.socket_id;
   });
-  return [user_ids, socket_ids];
+  return [user_ids_string, socket_ids];
 };
 
 module.exports = { NearbyUsers, FamilyMembers };

@@ -12,6 +12,8 @@ import {
 import React, { useState, useEffect, useContext } from "react";
 import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
+import axios from "axios";
+import { SERVER_URL } from "../../config";
 // import Chatroom from './Chatroom'
 
 const Alerts = () => {
@@ -20,37 +22,42 @@ const Alerts = () => {
   const [acceptedList, setAcceptedList] = useState([]);
   const [AlertList, setAlertList] = useState([]);
 
-  useEffect(() => {
-    if (socket.connected) {
-      setLoading(true);
-      socket.emit("Get_SOS_details");
+  const Get_SOS_details = async () => {
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos/details/${User.user_id}`
+      );
+      setAlertList(data);
+    } catch (err) {
+      alert(err);
     }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    Get_SOS_details();
+    setLoading(false);
   }, [socket.connected]);
 
-  socket.on("Refetch_SOS_Details", () => {
-    setLoading(true);
-    socket.emit("Get_SOS_details");
-    setLoading(false);
-  });
+  useEffect(() => {
+    socket.on("Refetch_SOS_Details", () => Get_SOS_details());
+    return () => {
+      socket.off("Refetch_SOS_Details");
+    };
+  }, []);
 
-  socket.on("Pass_SOS_Details", (data) => {
-    setAlertList(data);
-    setLoading(false);
-  });
-
-  const GetDirection = (user_id, sos_id) => {
-    if (!socket.connected) {
-      alert("Please Connect to Internet");
-      return;
-    }
-    socket.emit("SOS_Accepted_Commity", sos_id);
-    socket.emit("Get_SOS_Location", user_id, async (data) => {
-      if (data.err) {
-        return alert(data.msg);
-      }
+  const GetDirection = async (user_id, sos_id) => {
+    if (!socket.connected) return alert("Please Connect to Socket");
+    try {
+      await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id });
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/active/location/${user_id}`
+      );
       const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
       Linking.openURL(url);
-    });
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -77,7 +84,7 @@ const Alerts = () => {
                   {User.user_id !== item.user._id && (
                     <TouchableOpacity
                       style={styles.btn}
-                      onPress={() => GetDirection(item.user._id, item._id)}
+                      onPress={() => GetDirection(User.user_id, item._id)}
                     >
                       <Text style={styles.btnText}>Get Directions</Text>
                     </TouchableOpacity>
@@ -89,11 +96,16 @@ const Alerts = () => {
                   /> */}
                   <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => {
-                      socket.emit("Get_SOS_Accepted_List", item._id, (data) => {
+                    onPress={async () => {
+                      try {
+                        const { data } = await axios.get(
+                          `${SERVER_URL}/api/sos/accepted/${item._id}`
+                        );
                         setAcceptedList(data);
                         setModalVisible(true);
-                      });
+                      } catch (error) {
+                        alert(error);
+                      }
                     }}
                   >
                     <Text style={styles.btnText}>Accepted Users</Text>
