@@ -89,6 +89,9 @@ const SOS = () => {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.pseduo}>
+        <Text style={styles.pseduoText}>No SOS Active.</Text>
+      </View>
       <View style={styles.logoutDiv}>
         <TouchableOpacity style={styles.logout} onPress={Logout}>
           <Image
@@ -240,6 +243,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFAACF",
     padding: 15,
     borderRadius: 100,
+  },
+  pseduo: {
+    position: "absolute",
+    bottom: 70,
+    elevation: 0,
+    width: "100%",
+    backgroundColor: "#7D40FF",
+    height: 80,
+    padding: 15,
+    paddingHorizontal: 35,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  pseduoText: {
+    color: "#fff",
+    fontSize: 15,
+    fontFamily: Styles.bold.fontFamily,
   },
 });
 

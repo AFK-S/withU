@@ -1,13 +1,15 @@
-import { View, Image, Platform } from "react-native";
+import { View, Image, Platform, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Sos from "./pages/Sos";
 import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
 import Help from "./pages/Help";
+import Profile from "./pages/Profile.js";
 import * as Notifications from "expo-notifications";
 import StateContext from "../context/StateContext";
 import * as Location from "expo-location";
+import Knowledge from "./pages/Knowledge";
 
 // Notifications.setNotificationHandler({
 //   handleNotification: async () => ({
@@ -59,140 +61,173 @@ const MainScreen = () => {
 
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator
-      initialRouteName="SOS"
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          position: "absolute",
-          bottom: 30,
-          left: 30,
-          right: 30,
-          elevation: 0,
-          backgroundColor: "#FFAACF",
-          borderRadius: 25,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="MAP"
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 15,
-                backgroundColor: focused ? "#fff" : "transparent",
-                alignItems: "center",
-                justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 15,
-                backgroundColor: focused ? "#fff" : "transparent",
-                padding: 20,
-                borderRadius: 15,
-                aspectRatio: 1,
-              }}
-            >
-              <Image
-                source={require("../assets/icons/map.png")}
-                resizeMode="contain"
-                style={{
-                  width: 35,
-                  height: 35,
-                }}
-              />
-            </View>
-          ),
+    <>
+      {/* <View style={styles.pseduo}></View> */}
+      <Tab.Navigator
+        initialRouteName="SOS"
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "#fff",
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+            padding: 50,
+            height: 100,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.07,
+            shadowRadius: 20,
+            elevation: 2,
+          },
         }}
-        component={Map}
-      />
-      <Tab.Screen
-        name="SOS"
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 15,
-                backgroundColor: focused ? "#fff" : "transparent",
-                padding: 20,
-                borderRadius: 15,
-                aspectRatio: 1,
-              }}
-            >
-              <Image
-                source={require("../assets/icons/alert.png")}
-                resizeMode="contain"
+      >
+        <Tab.Screen
+          name="MAP"
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View
                 style={{
-                  width: 35,
-                  height: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: Platform.OS === "android" ? 0 : -15,
+                  padding: 20,
+                  borderRadius: 15,
+                  aspectRatio: 1,
                 }}
-              />
-            </View>
-          ),
-        }}
-        component={Sos}
-      />
-      <Tab.Screen
-        name="ALERTS"
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 15,
-                backgroundColor: focused ? "#fff" : "transparent",
-                padding: 20,
-                borderRadius: 15,
-                aspectRatio: 1,
-              }}
-            >
-              <Image
-                source={require("../assets/icons/sos.png")}
-                resizeMode="contain"
+              >
+                <Image
+                  source={require("../assets/icons/map.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 30,
+                    height: 30,
+                    fill: "red",
+                  }}
+                />
+              </View>
+            ),
+          }}
+          component={Map}
+        />
+        <Tab.Screen
+          name="ALERTS"
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <View
                 style={{
-                  width: 35,
-                  height: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: Platform.OS === "android" ? 0 : -15,
+                  padding: 20,
+                  borderRadius: 15,
                 }}
-              />
-            </View>
-          ),
-        }}
-        component={Alerts}
-      />
-      <Tab.Screen
-        name="HELP"
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                top: Platform.OS === "android" ? 0 : 15,
-                backgroundColor: focused ? "#fff" : "transparent",
-                padding: 20,
-                borderRadius: 15,
-                aspectRatio: 1,
-              }}
-            >
-              <Image
-                source={require("../assets/icons/police.png")}
-                resizeMode="contain"
+              >
+                <Image
+                  source={require("../assets/icons/sos.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </View>
+            ),
+          }}
+          component={Alerts}
+        />
+        <Tab.Screen
+          name="SOS"
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View
                 style={{
-                  width: 35,
-                  height: 35,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: Platform.OS === "android" ? 0 : -15,
+                  padding: 25,
+                  borderRadius: 40,
+                  aspectRatio: 1,
+                  backgroundColor: "#F06C70",
                 }}
-              />
-            </View>
-          ),
-        }}
-        component={Help}
-      />
-    </Tab.Navigator>
+              >
+                <Image
+                  source={require("../assets/icons/alert.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 35,
+                    height: 35,
+                    marginBottom: 5,
+                  }}
+                />
+              </View>
+            ),
+          }}
+          component={Sos}
+        />
+        <Tab.Screen
+          name="LEARN"
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: Platform.OS === "android" ? 0 : -15,
+                  padding: 20,
+                  borderRadius: 15,
+                  aspectRatio: 1,
+                }}
+              >
+                <Image
+                  source={require("../assets/icons/police.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </View>
+            ),
+          }}
+          component={Knowledge}
+        />
+        <Tab.Screen
+          name="PROFILE"
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  top: Platform.OS === "android" ? 0 : -15,
+                  padding: 20,
+                  borderRadius: 15,
+                  aspectRatio: 1,
+                }}
+              >
+                <Image
+                  source={require("../assets/icons/profile.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </View>
+            ),
+          }}
+          component={Profile}
+        />
+      </Tab.Navigator>
+    </>
   );
 };
 
