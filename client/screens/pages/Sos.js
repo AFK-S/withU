@@ -106,8 +106,36 @@ const SOS = () => {
         </View>
         <View
           style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            width: "100%",
+            marginTop: "10%",
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              ...styles.additionalSosButton,
+              backgroundColor: "#F7AB48",
+            }}
+          >
+            <Text> Accident</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.additionalSosButton,
+              backgroundColor: "#FFAACF",
+              borderColor: "#db88ac",
+            }}
+          >
+            <Text> Normal</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
             padding: 30,
             marginBottom: "10%",
+            marginTop: "10%",
           }}
         >
           <TouchableOpacity style={styles.onlySosButton} onPress={playSound}>
@@ -115,8 +143,17 @@ const SOS = () => {
               {isPlaying ? "Stop Siren" : "Play Siren"}
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
-            style={styles.onlySosButton}
+            style={{
+              backgroundColor: "#2E2E2E",
+              width: 250,
+              height: 60,
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
+              justifyContent: "center",
+              marginVertical: 10,
+            }}
             onPress={() =>
               call({
                 number: User.emergency_contact[0],
@@ -137,7 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom: 100,
+    marginBottom: "15%",
   },
   sosButton: {
     backgroundColor: "red",
@@ -148,6 +185,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 5,
     borderColor: "red",
+  },
+  additionalSosButton: {
+    backgroundColor: "orange",
+    width: 90,
+    height: 90,
+    borderRadius: 200,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#c28b44",
+    justifyContent: "center",
   },
   buttonText: {
     color: "#fff",
@@ -160,14 +207,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 18,
     fontFamily: Styles.medium.fontFamily,
   },
   onlySosButton: {
-    backgroundColor: "#F0A04B",
-    width: 200,
+    marginBottom: 0,
+    backgroundColor: "#2E2E2E",
+    width: 250,
     height: 60,
-    borderRadius: 200,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     justifyContent: "center",
     marginVertical: 10,
   },
