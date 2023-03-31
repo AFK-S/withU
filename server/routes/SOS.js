@@ -3,6 +3,20 @@ const router = express.Router();
 const SOSSchema = require("../models/SOS");
 const UserSchema = require("../models/User");
 
+router.get("/is_sos/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const user_response = await SOSSchema.findOne({
+      owner_id: user_id,
+      status: { $ne: "resolved" },
+    }).lean();
+    res.send(user_response !== null ? true : false);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+});
+
 router.get("/sos/accepted/:sos_id", async (req, res) => {
   const { sos_id } = req.params;
   try {

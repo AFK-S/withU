@@ -2,6 +2,18 @@ const express = require("express");
 const router = express.Router();
 const PoliceSchema = require("../models/Police");
 const SOSSchema = require("../models/SOS");
+const UserSchema = require("../models/User");
+
+router.get("/user/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const user_detail = await UserSchema.findById(user_id).lean();
+    res.send(user_detail);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+});
 
 router.get("/police_sos", async (req, res) => {
   try {

@@ -2,16 +2,8 @@ const fs = require("fs");
 const { NearbyUsers, FamilyMembers } = require("../functions");
 const UserSchema = require("../models/User");
 const SOSSchema = require("../models/SOS");
-const PoliceSchema = require("../models/Police");
 
 const SOS = (io, socket) => {
-  socket.on("Is_SOS", async (callback) => {
-    const user_response = await SOSSchema.findOne({
-      owner_id: socket.user_id,
-      status: { $ne: "resolved" },
-    }).lean();
-    callback(user_response !== null ? true : false);
-  });
   socket.on("On_SOS", async (callback) => {
     if (!socket.user_id) {
       return callback({
@@ -52,6 +44,7 @@ const SOS = (io, socket) => {
     await SOSSchema.findOneAndUpdate(
       {
         owner_id: socket.user_id,
+        status: { $ne: "resolved" },
       },
       {
         status: "resolved",

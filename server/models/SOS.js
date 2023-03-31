@@ -21,11 +21,11 @@ const SOS = new Schema(
       type: Object,
       required: [true, "Please add a Coordinates"],
     },
-    accepted_commity_list: {
+    user_ids: {
       type: Array,
       default: [],
     },
-    accepted_officials_list: {
+    accepted_commity_list: {
       type: Array,
       default: [],
     },

@@ -12,6 +12,8 @@ import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
 import call from "react-native-phone-call";
 import StateContext from "../../context/StateContext";
+import axios from "axios";
+import { SERVER_URL } from "../../config";
 
 const SOS = () => {
   const { socket, Logout, User, isSocketConnected } = useContext(StateContext);
@@ -19,11 +21,19 @@ const SOS = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSOS, setIsSOS] = useState(false);
 
+  const Is_SOS = async () => {
+    try {
+      const { data } = await axios.get(`${SERVER_URL}/api/is_sos/${User._id}`);
+      setIsSOS(data);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
   useEffect(() => {
-    if (!isSocketConnected) return;
-    socket.emit("Is_SOS", (boolean) => setIsSOS(boolean));
-    return () => socket.off("Is_SOS");
-  }, [isSocketConnected]);
+    Is_SOS();
+  }, [socket.connected]);
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
