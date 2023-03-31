@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Text, Badge, Group, Grid, Button } from "@mantine/core";
 import { IconShield } from "@tabler/icons-react";
 import io from "socket.io-client";
@@ -7,23 +7,31 @@ import AlertModal from "../components/AlertModal";
 
 const AllSOS = () => {
   const [cookies] = useCookies(["user_id"]);
-  const socket = io("http://192.168.0.110:8000", {
-    transports: ["websocket"],
-  });
+  const [socket] = useState(
+    io("http://172.20.10.3:8000", {
+      transports: ["websocket"],
+    })
+  );
   const [sosList, setSosList] = useState([]);
 
-  socket.on("connect", async () => {
-    console.log("connected");
-    socket.emit("Get_SOS_Officials", cookies.user_id);
-  });
+  useEffect(() => {
+    socket.on("connect", async () => {
+      console.log("connected");
+      socket.emit("Get_SOS_Officials", cookies.user_id);
+    });
+    socket.on("Pass_Officials_SOS_Details", (data) => {
+      setSosList(data);
+    });
+    socket.on("connect_error", (err) => {
+      console.log(err);
+    });
 
-  socket.on("Pass_Officials_SOS_Details", (data) => {
-    setSosList(data);
-  });
-
-  socket.on("connect_error", (err) => {
-    console.log(err);
-  });
+    return () => {
+      socket.off("connect");
+      socket.off("Pass_Officials_SOS_Details");
+      socket.off("connect_error");
+    };
+  }, []);
 
   const GetDirection = (user_id, sos_id) => {
     if (!socket.connected) {
@@ -32,7 +40,7 @@ const AllSOS = () => {
     socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_id);
     socket.emit("Get_SOS_Location", user_id, async (data) => {
       if (data.err) {
-        return alert(data.err);
+        return alert(data.msg);
       }
       const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
       window.open(url, "_blank");
@@ -73,7 +81,7 @@ const AllSOS = () => {
                   >
                     Get Location
                   </Button>
-                  <AlertModal socket={socket} owner_id={item.owner_id} />
+                  <AlertModal socket={socket} sos_id={item._id} />
                 </Group>
               </Card>
             </Grid.Col>

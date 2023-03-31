@@ -55,7 +55,7 @@ export function Login({ setIsLogin }) {
             onSubmit={form.onSubmit(async (val) => {
               try {
                 const { data } = await axios.put(
-                  "http://192.168.0.110:8000/api/police/login",
+                  "http://172.20.10.3:8000/api/police/login",
                   val
                 );
                 setCookie("user_id", data, { path: "/" });

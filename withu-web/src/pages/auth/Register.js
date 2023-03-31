@@ -70,7 +70,7 @@ const Register = ({ setIsLogin }) => {
             onSubmit={form.onSubmit(async (values) => {
               try {
                 const { data } = await axios.post(
-                  "http://192.168.0.110:8000/api/police/register",
+                  "http://172.20.10.3:8000/api/police/register",
                   {
                     name: values.name,
                     branch_name: values.branch_name,

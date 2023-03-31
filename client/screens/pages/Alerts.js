@@ -30,6 +30,7 @@ const Alerts = () => {
   socket.on("Refetch_SOS_Details", () => {
     setLoading(true);
     socket.emit("Get_SOS_details");
+    setLoading(false);
   });
 
   socket.on("Pass_SOS_Details", (data) => {

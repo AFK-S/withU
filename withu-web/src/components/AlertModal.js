@@ -3,7 +3,7 @@ import { Modal, Group, Button, Text, Table } from "@mantine/core";
 
 import React, { useState } from "react";
 
-function AlertModal({ socket, owner_id }) {
+function AlertModal({ socket, sos_id }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [acceptedList, setAcceptedList] = useState([]);
   const [policeList, setPoliceList] = useState([]);
@@ -45,7 +45,7 @@ function AlertModal({ socket, owner_id }) {
       <Group position="center">
         <Button
           onClick={() => {
-            socket.emit("Get_SOS_Accepted_List", owner_id, (data, data1) => {
+            socket.emit("Get_SOS_Accepted_List", sos_id, (data, data1) => {
               setAcceptedList(data);
               // console.log(data1);
               // setPoliceList(data1);
