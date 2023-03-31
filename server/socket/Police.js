@@ -3,17 +3,16 @@ const PoliceSchema = require("../models/Police");
 const { METER_RADIUS } = require("../config");
 const geolib = require("geolib");
 
-const SOS = (io, socket) => {
+const SOS = (socket) => {
   socket.on("SOS_Accepted_Officials", async (user_id, sos_id) => {
     await SOSSchema.findByIdAndUpdate(sos_id, {
       $push: {
         accepted_officials_list: user_id,
       },
     });
-    await SOSSchema.findOneAndUpdate(sos_id, {
+    await SOSSchema.findByIdAndUpdate(sos_id, {
       status: "accepted",
     });
-    io.emit("Refetch_SOS_Details");
   });
   socket.on("Get_SOS_Officials", async (user_id) => {
     const officer_response = await PoliceSchema.findById(user_id);
@@ -56,10 +55,6 @@ const SOS = (io, socket) => {
       },
     ]);
     socket.emit("Pass_Officials_SOS_Details", sos_details);
-  });
-  socket.on("Get_Police", async (callback) => {
-    const police_response = await PoliceSchema.find().lean();
-    callback(police_response);
   });
 };
 
