@@ -1,7 +1,6 @@
 const { Server } = require("socket.io");
 const fs = require("fs");
 const SOSSocket = require("../socket/SOS");
-const PoliceSocket = require("../socket/Police");
 const ChatSocket = require("../socket/Chat");
 
 const socket = (http) => {
@@ -27,7 +26,6 @@ const socket = (http) => {
       fs.writeFileSync("./json/isActive.json", JSON.stringify(users));
     });
     SOSSocket(io, socket);
-    PoliceSocket(socket);
     ChatSocket(io, socket);
     socket.on("disconnect", async () => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
