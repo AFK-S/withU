@@ -1,4 +1,4 @@
-import { View, Image, Platform, StyleSheet } from "react-native";
+import { View, Image, Platform, StyleSheet, Vibration } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Sos from "./pages/Sos";
@@ -108,7 +108,6 @@ const MainScreen = () => {
                   style={{
                     width: 30,
                     height: 30,
-                    fill: "red",
                   }}
                 />
               </View>
@@ -155,7 +154,7 @@ const MainScreen = () => {
                   padding: 25,
                   borderRadius: 40,
                   aspectRatio: 1,
-                  backgroundColor: "#F06C70",
+                  backgroundColor: "#f75459",
                 }}
               >
                 <Image
@@ -187,7 +186,7 @@ const MainScreen = () => {
                 }}
               >
                 <Image
-                  source={require("../assets/icons/police.png")}
+                  source={require("../assets/icons/learn.png")}
                   resizeMode="contain"
                   style={{
                     width: 30,
@@ -217,8 +216,8 @@ const MainScreen = () => {
                   source={require("../assets/icons/profile.png")}
                   resizeMode="contain"
                   style={{
-                    width: 30,
-                    height: 30,
+                    width: 25,
+                    height: 25,
                   }}
                 />
               </View>

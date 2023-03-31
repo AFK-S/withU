@@ -123,22 +123,19 @@ const SOS = () => {
             flexDirection: "row",
             justifyContent: "space-around",
             width: "100%",
-            marginTop: "10%",
+            marginTop: "5%",
           }}
         >
           <TouchableOpacity
             style={{
               ...styles.additionalSosButton,
-              backgroundColor: "#F7AB48",
             }}
           >
-            <Text> Accident</Text>
+            <Text>Accident</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
               ...styles.additionalSosButton,
-              backgroundColor: "#FFAACF",
-              borderColor: "#db88ac",
             }}
           >
             <Text> Normal</Text>
@@ -147,8 +144,8 @@ const SOS = () => {
         <View
           style={{
             padding: 30,
-            marginBottom: "10%",
-            marginTop: "10%",
+            marginBottom: "15%",
+            marginTop: "0%",
           }}
         >
           <TouchableOpacity style={styles.onlySosButton} onPress={playSound}>
@@ -159,13 +156,13 @@ const SOS = () => {
 
           <TouchableOpacity
             style={{
-              backgroundColor: "#2E2E2E",
+              backgroundColor: "#f75459",
               width: 250,
               height: 60,
               borderBottomLeftRadius: 30,
               borderBottomRightRadius: 30,
               justifyContent: "center",
-              marginVertical: 10,
+              marginVertical: 5,
             }}
             onPress={() =>
               call({
@@ -200,14 +197,15 @@ const styles = StyleSheet.create({
     borderColor: "red",
   },
   additionalSosButton: {
-    backgroundColor: "orange",
     width: 90,
     height: 90,
     borderRadius: 200,
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#c28b44",
     justifyContent: "center",
+    borderWidth: 3,
+    borderColor: "#ff7575",
+    backgroundColor: "#ffdede",
+    marginBottom: 20,
   },
   buttonText: {
     color: "#fff",
@@ -220,12 +218,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: Styles.medium.fontFamily,
   },
   onlySosButton: {
     marginBottom: 0,
-    backgroundColor: "#2E2E2E",
+    backgroundColor: "#f75459",
     width: 250,
     height: 60,
     borderTopLeftRadius: 30,
@@ -240,7 +238,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   logout: {
-    backgroundColor: "#FFAACF",
+    backgroundColor: "#c6b5ff",
     padding: 15,
     borderRadius: 100,
   },
