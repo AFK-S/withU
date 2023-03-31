@@ -1,24 +1,14 @@
-const SOSSchema = require("../models/SOS");
-const PoliceSchema = require("../models/Police");
-const { METER_RADIUS } = require("../config");
+const express = require("express");
+const router = express.Router();
 const geolib = require("geolib");
+const { METER_RADIUS } = require("../config");
+const PoliceSchema = require("../models/Police");
+const SOSSchema = require("../models/SOS");
 
-const SOS = (socket) => {
-  socket.on("SOS_Accepted_Officials", async (user_id, sos_id) => {
-    await SOSSchema.findByIdAndUpdate(sos_id, {
-      $push: {
-        accepted_officials_list: user_id,
-      },
-    });
-    await SOSSchema.findByIdAndUpdate(sos_id, {
-      status: "accepted",
-    });
-  });
-  socket.on("Get_SOS_Officials", async (user_id) => {
+router.get("/police/sos/:user_id", async (req, res) => {
+  const { user_id } = req.query;
+  try {
     const officer_response = await PoliceSchema.findById(user_id);
-    if (officer_response === null) {
-      return;
-    }
     const sos_response = await SOSSchema.find({
       status: { $in: ["pending", "accepted"] },
     }).lean();
@@ -54,8 +44,11 @@ const SOS = (socket) => {
         $unwind: "$user",
       },
     ]);
-    socket.emit("Pass_Officials_SOS_Details", sos_details);
-  });
-};
+    res.send(sos_details);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+});
 
-module.exports = SOS;
+module.exports = router;

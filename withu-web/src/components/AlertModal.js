@@ -1,12 +1,11 @@
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Group, Button, Text, Table } from "@mantine/core";
-
+import { Modal, Group, Button, Text } from "@mantine/core";
+import axios from "axios";
 import React, { useState } from "react";
 
-function AlertModal({ socket, sos_id }) {
+function AlertModal({ sos_id }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [acceptedList, setAcceptedList] = useState([]);
-  const [policeList, setPoliceList] = useState([]);
 
   return (
     <div>
@@ -29,28 +28,15 @@ function AlertModal({ socket, sos_id }) {
             </div>
           );
         })}
-        {/* {policeList.map((item) => {
-          const { branch_name } = item;
-          <tr>
-            <td>{policeList.branch_name}</td>
-          </tr>;
-          return (
-            <div>
-              <Text fz={"sm"}>Branch Name : {branch_name}</Text>
-              <hr></hr>
-            </div>
-          );
-        })} */}
       </Modal>
       <Group position="center">
         <Button
-          onClick={() => {
-            socket.emit("Get_SOS_Accepted_List", sos_id, (data, data1) => {
-              setAcceptedList(data);
-              // console.log(data1);
-              // setPoliceList(data1);
-              open();
-            });
+          onClick={async () => {
+            const { data } = await axios.get(
+              `http://172.20.10.3:8000/api/sos/accepted/${sos_id}`
+            );
+            setAcceptedList(data);
+            open();
           }}
           color={"pink"}
           size={"xs"}
