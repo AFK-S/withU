@@ -2,6 +2,8 @@ import MapView, { Circle, Marker } from "react-native-maps";
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Image } from "react-native";
 import StateContext from "../../context/StateContext";
+import axios from "axios";
+import { SERVER_URL } from "../../config";
 
 const Map = () => {
   const { socket, setLoading, location, User } = useContext(StateContext);
@@ -9,25 +11,38 @@ const Map = () => {
   const [PoliceInfo, setPoliceInfo] = useState([]);
   const [SOSInfo, setSOSInfo] = useState([]);
 
+  const Fetch_Active_Users = async () => {
+    const { data } = await axios.get(`${SERVER_URL}/api/active/location`);
+    setActiveUsers(data);
+  };
+
   useEffect(() => {
-    if (socket.connected) {
-      setLoading(true);
-      socket.emit("Get_All_Active_Users", (users) => {
-        setActiveUsers(users);
-        setLoading(false);
-      });
-      socket.emit("Get_Police", (data) => {
-        setPoliceInfo(data);
-      });
-      socket.emit("Get_SOS", (data) => {
-        setSOSInfo(data);
-      });
-    }
+    setLoading(true);
+    Fetch_Active_Users();
+    setLoading(false);
   }, [socket.connected]);
 
-  socket.on("Send_Active_Users", (users) => {
-    setActiveUsers(users);
-  });
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${SERVER_URL}/api/police_sos`);
+        setPoliceInfo(data.police_response);
+        setSOSInfo(data.sos_response);
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    })();
+  }, [socket.connected]);
+
+  useEffect(() => {
+    socket.on("Update_Active_Users", () => {
+      Fetch_Active_Users();
+    });
+    return () => {
+      socket.off("Update_Active_Users");
+    };
+  }, [socket.connected]);
 
   return (
     <View

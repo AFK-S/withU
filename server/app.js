@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
+app.use("/api", require("./routes/index"));
 app.use("/api", require("./routes/Credentials"));
 app.use("/api", require("./routes/SOS"));
 app.use("/api", require("./routes/Active"));

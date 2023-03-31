@@ -61,12 +61,6 @@ const SOS = (io, socket) => {
     io.emit("Refetch_SOS_Details");
     callback(user_response.name);
   });
-  socket.on("Get_SOS", async (callback) => {
-    const sos_response = await SOSSchema.find({
-      status: "resolved",
-    }).lean();
-    callback(sos_response);
-  });
 };
 
 module.exports = SOS;
