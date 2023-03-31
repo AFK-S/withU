@@ -72,7 +72,22 @@ const Map = () => {
                 key={index}
                 coordinate={user.coordinates}
                 opacity={user.user_id === User.user_id ? 1 : 0.6}
-              />
+                pinColor="red"
+              >
+                <View
+                  style={{
+                    borderWidth: 2,
+                    borderColor: "black",
+                    borderRadius: 40,
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/icons/woman.png")}
+                    style={{ width: 40, height: 40 }}
+                    resizeMode="contain"
+                  />
+                </View>
+              </Marker>
 
               // <Marker
               //   key={index}
@@ -94,11 +109,19 @@ const Map = () => {
                 title={police.branch_name}
                 coordinate={police.coordinates}
               >
-                <Image
-                  source={require("../../assets/police.png")}
-                  style={{ width: 40, height: 40 }}
-                  resizeMode="contain"
-                />
+                <View
+                  style={{
+                    borderWidth: 2,
+                    borderColor: "black",
+                    borderRadius: 40,
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/policeman.png")}
+                    style={{ width: 40, height: 40 }}
+                    resizeMode="contain"
+                  />
+                </View>
               </Marker>
             );
           })}
