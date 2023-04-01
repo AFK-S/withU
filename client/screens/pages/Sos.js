@@ -46,6 +46,19 @@ const SOS = () => {
     })();
   }, [socket.connected]);
 
+  const refreshStatus = async () => {
+    try {
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos_accepted_count/${user.user_id}`
+      );
+      setAccepted_count(data);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
   const Is_SOS = async () => {
     try {
       const user = await JSON.parse(await AsyncStorage.getItem("user"));
@@ -97,6 +110,7 @@ const SOS = () => {
     setIsSOS(!isSOS);
     const { emergency_contact } = User;
     if (isSOS) {
+      setAccepted_count("0");
       return socket.emit("SOS_Cancel", (data) => {
         if (data.err) return alert(data.msg);
         const message = `I am ${data} and I am not in danger anymore.`;
@@ -167,8 +181,20 @@ const SOS = () => {
       <View style={styles.pseduo}>
         <Text style={styles.pseduoText}>
           {!isSOS && "No "}SOS Active{" "}
-          {accepted_count !== "0" && `(${accepted_count} Accepted)`}
+          {isSOS &&
+            parseInt(accepted_count) > "0" &&
+            `(${accepted_count} Accepted)`}
         </Text>
+        <TouchableOpacity onPress={refreshStatus}>
+          <Image
+            source={require("../../assets/icons/reload.png")}
+            resizeMode="contain"
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <View style={styles.logoutDiv}>
         <TouchableOpacity style={styles.logout} onPress={Logout}>
@@ -336,6 +362,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    zIndex: 1,
   },
   pseduoText: {
     color: "#fff",
