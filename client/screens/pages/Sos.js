@@ -12,6 +12,7 @@ import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
 import call from "react-native-phone-call";
 import StateContext from "../../context/StateContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
 
@@ -23,7 +24,10 @@ const SOS = () => {
 
   const Is_SOS = async () => {
     try {
-      const { data } = await axios.get(`${SERVER_URL}/api/is_sos/${User._id}`);
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/is_sos/${user.user_id}`
+      );
       setIsSOS(data);
     } catch (error) {
       console.log(error);
