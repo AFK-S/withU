@@ -7,16 +7,17 @@ import AlertModal from "../components/AlertModal";
 import axios from "axios";
 
 const AllSOS = () => {
+  const SERVER_URL = "http://172.20.10.3:8000";
   const [cookies] = useCookies(["user_id"]);
   const [socket] = useState(
-    io("http://172.20.10.3:8000", {
+    io(SERVER_URL, {
       transports: ["websocket"],
     })
   );
   const [sosList, setSosList] = useState([]);
   const Fetch_SOS = async () => {
     const { data } = await axios.get(
-      `http://172.20.10.3:8000/api/police/sos/${cookies.user_id}`
+      `${SERVER_URL}/api/police/sos/${cookies.user_id}`
     );
     setSosList(data);
   };
