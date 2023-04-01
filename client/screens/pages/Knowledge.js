@@ -89,6 +89,7 @@ export default function App() {
                   height: 2,
                 },
               }}
+              key={index}
             >
               <View>
                 <Text
