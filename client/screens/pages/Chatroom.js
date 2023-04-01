@@ -8,38 +8,36 @@ import {
   TextInput,
   Button,
   FlatList,
-} from "react-native";
-import Styles from "../../CommonStyles";
-
-import React, { useState, useEffect, useContext } from "react";
-import CommonStyles from "../../CommonStyles.js";
-import StateContext from "../../context/StateContext";
+} from 'react-native'
+import Styles from '../../CommonStyles'
+import React, { useState, useEffect, useContext } from 'react'
+import CommonStyles from '../../CommonStyles.js'
+import StateContext from '../../context/StateContext'
 
 const Chatroom = ({ socket, sos_id }) => {
-  const { User } = useContext(StateContext);
-  const [chatModalVisible, setChatModalVisible] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const { User } = useContext(StateContext)
+  const [chatModalVisible, setChatModalVisible] = useState(false)
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    socket.emit("join-room", sos_id);
-    socket.on("receive-message", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-    });
+    socket.on('receive-message', (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg])
+    })
     return () => {
-      socket.off("receive-message");
-    };
-  }, []);
+      socket.off('receive-message')
+    }
+  }, [])
 
   const renderItem = ({ item }) => {
-    const isSentByMe = item.user_id === User.user_id;
+    const isSentByMe = item.user_id === User.user_id
     const messageStyle = {
-      backgroundColor: isSentByMe ? "#bfa1ff" : "#EAEAEA",
-      alignSelf: isSentByMe ? "flex-end" : "flex-start",
-    };
+      backgroundColor: isSentByMe ? '#bfa1ff' : '#EAEAEA',
+      alignSelf: isSentByMe ? 'flex-end' : 'flex-start',
+    }
     const textStyle = {
-      color: isSentByMe ? "#000" : "#555",
-    };
+      color: isSentByMe ? '#000' : '#555',
+    }
     return (
       <View style={[styles.message, messageStyle]}>
         <Text
@@ -47,9 +45,9 @@ const Chatroom = ({ socket, sos_id }) => {
             styles.text,
             textStyle,
             {
-              fontSize: "12",
-              color: "black",
-              fontWeight: "bold",
+              fontSize: '12',
+              color: 'black',
+              fontWeight: 'bold',
               marginBottom: 5,
             },
           ]}
@@ -58,19 +56,35 @@ const Chatroom = ({ socket, sos_id }) => {
         </Text>
         <Text style={[styles.text, textStyle]}>{item.message}</Text>
       </View>
-    );
-  };
+    )
+  }
 
   return (
-    <View>
+    <>
       <TouchableOpacity
-        style={styles.btn}
+        style={{
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 50,
+          marginVertical: 5,
+          zIndex: 100,
+        }}
         onPress={() => {
-          socket.on("join-room", sos_id);
-          setChatModalVisible(true);
+          if (!socket.connected) return alert('Please wait for a while')
+          socket.emit('join-room', sos_id)
+          setChatModalVisible(true)
         }}
       >
-        <Text style={styles.btnText}>Chat Room</Text>
+        <Image
+          source={require('../../assets/icons/chat.png')}
+          resizeMode="contain"
+          style={{
+            width: 25,
+            height: 25,
+            // alignSelf: 'center',
+            // zIndex: 100,
+          }}
+        />
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -81,17 +95,17 @@ const Chatroom = ({ socket, sos_id }) => {
         <View
           style={{
             flex: 1,
-            justifyContent: "center",
-            backgroundColor: "#00000080",
+            justifyContent: 'center',
+            backgroundColor: '#00000080',
           }}
         >
           <View
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: '#fff',
               padding: 20,
               borderRadius: 15,
               elevation: 5,
-              shadowColor: "#c6c6c678",
+              shadowColor: '#c6c6c678',
               marginVertical: 5,
               shadowOffset: {
                 width: 0,
@@ -101,10 +115,10 @@ const Chatroom = ({ socket, sos_id }) => {
           >
             <View
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#fff",
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                backgroundColor: '#fff',
               }}
             >
               <Text style={styles.modal_head}>Chat</Text>
@@ -113,12 +127,12 @@ const Chatroom = ({ socket, sos_id }) => {
                 onPress={() => setChatModalVisible(false)}
               >
                 <Image
-                  source={require("../../assets/icons/close.png")}
+                  source={require('../../assets/icons/close.png')}
                   resizeMode="contain"
                   style={{
                     width: 20,
                     height: 20,
-                    alignSelf: "flex-end",
+                    alignSelf: 'flex-end',
                   }}
                 />
               </TouchableOpacity>
@@ -136,12 +150,12 @@ const Chatroom = ({ socket, sos_id }) => {
                   title="Send"
                   onPress={() => {
                     socket.emit(
-                      "send-message",
+                      'send-message',
                       message,
                       sos_id,
                       User.user_id,
-                      User.name
-                    );
+                      User.name,
+                    )
                     setMessages((prevMessages) => [
                       ...prevMessages,
                       {
@@ -149,8 +163,8 @@ const Chatroom = ({ socket, sos_id }) => {
                         message: message,
                         user_id: User.user_id,
                       },
-                    ]);
-                    setMessage("");
+                    ])
+                    setMessage('')
                   }}
                 />
               </View>
@@ -158,11 +172,11 @@ const Chatroom = ({ socket, sos_id }) => {
           </View>
         </View>
       </Modal>
-    </View>
-  );
-};
+    </>
+  )
+}
 
-export default Chatroom;
+export default Chatroom
 
 const styles = StyleSheet.create({
   btn: {
@@ -170,57 +184,57 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   btnText: {
     ...Styles.medium,
-    color: "#fff",
+    color: '#fff',
   },
   modal_head: {
     ...Styles.medium,
     fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 20,
   },
   usernameContainer: {
     padding: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: "#CCCCCC",
-    width: "100%",
+    borderBottomColor: '#CCCCCC',
+    width: '100%',
   },
   usernameInput: {
     height: 40,
     borderWidth: 1,
-    borderColor: "#CCCCCC",
+    borderColor: '#CCCCCC',
     padding: 10,
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: "#CCCCCC",
-    width: "100%",
+    borderTopColor: '#CCCCCC',
+    width: '100%',
   },
   input: {
     height: 40,
-    width: "80%",
+    width: '80%',
     borderWidth: 1,
-    borderColor: "#CCCCCC",
+    borderColor: '#CCCCCC',
     padding: 10,
   },
   message: {
-    backgroundColor: "#EAEAEA",
+    backgroundColor: '#EAEAEA',
     borderRadius: 10,
     padding: 10,
     margin: 5,
-    maxWidth: "80%",
-    minWidth: "20%",
+    maxWidth: '80%',
+    minWidth: '20%',
   },
   text: {
     fontSize: 16,
   },
-});
+})

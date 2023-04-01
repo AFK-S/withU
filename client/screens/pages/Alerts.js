@@ -10,81 +10,81 @@ import {
   SafeAreaView,
   RefreshControl,
   Alert,
-} from "react-native";
-import React, { useState, useEffect, useContext } from "react";
-import Styles from "../../CommonStyles";
-import StateContext from "../../context/StateContext";
-import axios from "axios";
-import { SERVER_URL } from "../../config";
-import CommonStyles from "../../CommonStyles.js";
-import Chatroom from "./Chatroom";
+} from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import Styles from '../../CommonStyles'
+import StateContext from '../../context/StateContext'
+import axios from 'axios'
+import { SERVER_URL } from '../../config'
+import CommonStyles from '../../CommonStyles.js'
+import Chatroom from './Chatroom'
 
 const Alerts = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const { socket, setLoading, User } = useContext(StateContext);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [acceptedList, setAcceptedList] = useState([]);
-  const [AlertList, setAlertList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false)
+  const { socket, setLoading, User } = useContext(StateContext)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible2, setModalVisible2] = useState(false)
+  const [acceptedList, setAcceptedList] = useState([])
+  const [AlertList, setAlertList] = useState([])
 
   const Get_SOS_details = async () => {
     try {
       const { data } = await axios.get(
-        `${SERVER_URL}/api/sos/details/${User.user_id}`
-      );
-      setAlertList(data);
+        `${SERVER_URL}/api/sos/details/${User.user_id}`,
+      )
+      setAlertList(data)
     } catch (err) {
-      alert(err);
+      alert(err)
     }
-  };
+  }
 
   const onRefresh = async () => {
-    setRefreshing(true);
+    setRefreshing(true)
     try {
       const { data } = await axios.get(
-        `${SERVER_URL}/api/sos/details/${User.user_id}`
-      );
-      setAlertList(data);
-      setRefreshing(false);
+        `${SERVER_URL}/api/sos/details/${User.user_id}`,
+      )
+      setAlertList(data)
+      setRefreshing(false)
     } catch (err) {
-      alert(err);
+      alert(err)
     }
-  };
+  }
 
   useEffect(() => {
-    setLoading(true);
-    Get_SOS_details();
-    setLoading(false);
-  }, [socket.connected]);
+    setLoading(true)
+    Get_SOS_details()
+    setLoading(false)
+  }, [socket.connected])
 
   useEffect(() => {
-    socket.on("Refetch_SOS_Details", () => Get_SOS_details());
+    socket.on('Refetch_SOS_Details', () => Get_SOS_details())
     return () => {
-      socket.off("Refetch_SOS_Details");
-    };
-  }, [socket.connected]);
+      socket.off('Refetch_SOS_Details')
+    }
+  }, [socket.connected])
 
   const AcceptRequest = async (user_id, sos_id) => {
     try {
-      await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id });
+      await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
     } catch (err) {
-      alert(err);
+      alert(err)
     }
-  };
+  }
 
   const GetDirection = async (user_id, sos_id) => {
-    if (!socket.connected) return alert("Please Connect to Socket");
+    if (!socket.connected) return alert('Please Connect to Socket')
     try {
       // await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
       const { data } = await axios.get(
-        `${SERVER_URL}/api/active/location/${user_id}`
-      );
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
-      Linking.openURL(url);
+        `${SERVER_URL}/api/active/location/${user_id}`,
+      )
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`
+      Linking.openURL(url)
     } catch (err) {
-      alert(err);
+      alert(err)
     }
-  };
+  }
 
   return (
     <View style={{ paddingHorizontal: 20, flex: 3.3 / 4 }}>
@@ -102,36 +102,50 @@ const Alerts = () => {
                 <View style={styles.card}>
                   <View
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      position: 'relative',
+                      // display: 'flex',
+                      // flexDirection: 'row',
+                      // justifyContent: 'space-between',
                     }}
                   >
-                    <View style={{ display: "flex", flexDirection: "row" }}>
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
                       <Text style={styles.raisedBy}>Raised By : </Text>
                       <Text style={styles.rbName}>{item.user.name}</Text>
                     </View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        Alert.alert("User Reported");
+                    <View
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}
                     >
-                      <Image
-                        source={require("../../assets/icons/warning.png")}
-                        resizeMode="contain"
-                        style={{ width: 25, height: 25, zIndex: 1 }}
-                      />
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          Alert.alert('User Reported')
+                        }}
+                      >
+                        <Image
+                          source={require('../../assets/icons/warning.png')}
+                          resizeMode="contain"
+                          style={{ width: 30, height: 30, zIndex: 1 }}
+                        />
+                      </TouchableOpacity>
+                      <Chatroom socket={socket} sos_id={item._id} />
+                    </View>
                   </View>
                   <Text style={{ ...styles.raisedBy }}>
                     Phone Number : {item.user.phone_number}
                   </Text>
                   <Text
-                    style={{ ...styles.raisedBy, textTransform: "capitalize" }}
+                    style={{ ...styles.raisedBy, textTransform: 'capitalize' }}
                   >
                     Description : {item.description}
                   </Text>
-                  <Text style={styles.raisedBy}>
+                  <Text style={{ ...styles.raisedBy, marginBottom: 10 }}>
                     Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
                   {User.user_id !== item.user._id && (
@@ -139,8 +153,8 @@ const Alerts = () => {
                       <TouchableOpacity
                         style={styles.btn}
                         onPress={() => {
-                          setModalVisible2(true);
-                          GetDirection(User.user_id, item._id);
+                          setModalVisible2(true)
+                          GetDirection(User.user_id, item._id)
                         }}
                       >
                         <Text style={styles.btnText}>Get Directions</Text>
@@ -154,18 +168,18 @@ const Alerts = () => {
                         <View
                           style={{
                             flex: 1,
-                            justifyContent: "center",
+                            justifyContent: 'center',
                             paddingHorizontal: 20,
-                            backgroundColor: "#00000080",
+                            backgroundColor: '#00000080',
                           }}
                         >
                           <View
                             style={{
-                              backgroundColor: "#fff",
+                              backgroundColor: '#fff',
                               padding: 20,
                               borderRadius: 15,
                               elevation: 5,
-                              shadowColor: "#c6c6c678",
+                              shadowColor: '#c6c6c678',
                               marginVertical: 5,
                               shadowOffset: {
                                 width: 0,
@@ -176,9 +190,9 @@ const Alerts = () => {
                             <View>
                               <View
                                 style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-between",
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
                                 }}
                               >
                                 <Text style={styles.modal_head}>
@@ -189,39 +203,40 @@ const Alerts = () => {
                                   onPress={() => setModalVisible2(false)}
                                 >
                                   <Image
-                                    source={require("../../assets/icons/close.png")}
+                                    source={require('../../assets/icons/close.png')}
                                     resizeMode="contain"
                                     style={{
                                       width: 16,
-                                      alignSelf: "flex-end",
+                                      height: 16,
+                                      alignSelf: 'flex-end',
                                     }}
                                   />
                                 </TouchableOpacity>
                               </View>
                               <View
                                 style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-around",
-                                  width: "100%",
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-around',
+                                  width: '100%',
                                 }}
                               >
                                 <TouchableOpacity
                                   style={{
                                     ...styles.btn,
                                     ...styles.btn_width,
-                                    backgroundColor: "white",
+                                    backgroundColor: 'white',
                                     borderWidth: 2,
-                                    borderColor: "#7d40ff",
+                                    borderColor: '#7d40ff',
                                   }}
                                   onPress={() => {
-                                    setModalVisible2(false);
+                                    setModalVisible2(false)
                                   }}
                                 >
                                   <Text
                                     style={{
                                       ...styles.btnText,
-                                      color: "#000",
+                                      color: '#000',
                                     }}
                                   >
                                     Reject
@@ -230,8 +245,8 @@ const Alerts = () => {
                                 <TouchableOpacity
                                   style={[styles.btn, styles.btn_width]}
                                   onPress={() => {
-                                    setModalVisible2(false);
-                                    AcceptRequest(User.user_id, item._id);
+                                    setModalVisible2(false)
+                                    AcceptRequest(User.user_id, item._id)
                                   }}
                                 >
                                   <Text style={styles.btnText}>Accept</Text>
@@ -243,18 +258,17 @@ const Alerts = () => {
                       </Modal>
                     </>
                   )}
-                  <Chatroom socket={socket} sos_id={item._id} />
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={async () => {
                       try {
                         const { data } = await axios.get(
-                          `${SERVER_URL}/api/sos/accepted/${item._id}`
-                        );
-                        setAcceptedList(data);
-                        setModalVisible(true);
+                          `${SERVER_URL}/api/sos/accepted/${item._id}`,
+                        )
+                        setAcceptedList(data)
+                        setModalVisible(true)
                       } catch (error) {
-                        alert(error);
+                        alert(error)
                       }
                     }}
                   >
@@ -270,18 +284,18 @@ const Alerts = () => {
                       <View
                         style={{
                           flex: 1,
-                          justifyContent: "center",
+                          justifyContent: 'center',
                           paddingHorizontal: 20,
-                          backgroundColor: "#00000080",
+                          backgroundColor: '#00000080',
                         }}
                       >
                         <View
                           style={{
-                            backgroundColor: "#fff",
+                            backgroundColor: '#fff',
                             padding: 20,
                             borderRadius: 15,
                             elevation: 5,
-                            shadowColor: "#c6c6c678",
+                            shadowColor: '#c6c6c678',
                             marginVertical: 5,
                             shadowOffset: {
                               width: 0,
@@ -291,9 +305,9 @@ const Alerts = () => {
                         >
                           <View
                             style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Text style={styles.modal_head}>Accepted User</Text>
@@ -302,11 +316,13 @@ const Alerts = () => {
                               onPress={() => setModalVisible(false)}
                             >
                               <Image
-                                source={require("../../assets/icons/close.png")}
+                                source={require('../../assets/icons/close.png')}
                                 resizeMode="contain"
                                 style={{
                                   width: 16,
-                                  alignSelf: "flex-end",
+                                  height: 16,
+
+                                  alignSelf: 'flex-end',
                                 }}
                               />
                             </TouchableOpacity>
@@ -323,12 +339,12 @@ const Alerts = () => {
                                   >
                                     <View
                                       style={{
-                                        display: "flex",
-                                        flexDirection: "row",
+                                        display: 'flex',
+                                        flexDirection: 'row',
                                       }}
                                     >
                                       <Text style={styles.raisedBy}>
-                                        Person :{" "}
+                                        Person :{' '}
                                       </Text>
                                       <Text style={styles.rbName}>
                                         {user.item.name}
@@ -342,7 +358,7 @@ const Alerts = () => {
                                       Phone Number : {user.item.phone_number}
                                     </Text>
                                   </View>
-                                );
+                                )
                               }}
                               showsVerticalScrollIndicator={false}
                             />
@@ -357,15 +373,15 @@ const Alerts = () => {
                   </SafeAreaView>
                 </View>
               )
-            );
+            )
           }}
           showsVerticalScrollIndicator={false}
         />
       )}
     </View>
-  );
-};
-export default Alerts;
+  )
+}
+export default Alerts
 
 const styles = StyleSheet.create({
   title: {
@@ -374,14 +390,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   card: {
-    backgroundColor: "#fff",
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
     marginTop: 20,
     elevation: 5,
-    shadowColor: "#000",
-    shadowColor: "#000",
+    shadowColor: '#000',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -391,45 +407,46 @@ const styles = StyleSheet.create({
   raisedBy: {
     ...Styles.medium,
     fontSize: 15,
+    zIndex: -1,
   },
   btn_width: {
-    width: "40%",
-    width: "40%",
+    width: '40%',
+    width: '40%',
   },
   rbName: {
     ...Styles.bold,
-    textTransform: "capitalize",
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
+    textTransform: 'capitalize',
   },
   btn: {
     backgroundColor: CommonStyles.bg.backgroundColor,
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
-    alignItems: "center",
-    alignItems: "center",
+    alignItems: 'center',
+    alignItems: 'center',
   },
   btnText: {
     ...Styles.medium,
-    color: "#fff",
-    color: "#fff",
+    color: '#fff',
+    color: '#fff',
   },
   silent: {
     ...Styles.medium,
     fontSize: 20,
-    color: "#aaa",
-    color: "#aaa",
+    color: '#aaa',
+    color: '#aaa',
     marginTop: 20,
-    textAlign: "center",
-    marginTop: "70%",
-    textAlign: "center",
-    marginTop: "70%",
+    textAlign: 'center',
+    marginTop: '70%',
+    textAlign: 'center',
+    marginTop: '70%',
   },
   modal_head: {
     ...Styles.medium,
     fontSize: 20,
-    textAlign: "center",
-    textAlign: "center",
+    textAlign: 'center',
+    textAlign: 'center',
     marginBottom: 20,
   },
-});
+})
