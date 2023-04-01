@@ -16,7 +16,7 @@ import StateContext from "../../context/StateContext";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
 import CommonStyles from "../../CommonStyles.js";
-// import Chatroom from './Chatroom'
+import Chatroom from "./Chatroom";
 
 const Alerts = () => {
   const [refreshing, setRefreshing] = useState(false);
@@ -43,6 +43,7 @@ const Alerts = () => {
       const { data } = await axios.get(
         `${SERVER_URL}/api/sos/details/${User.user_id}`
       );
+      setAlertList(data);
       setRefreshing(false);
     } catch (err) {
       alert(err);
@@ -61,6 +62,7 @@ const Alerts = () => {
       socket.off("Refetch_SOS_Details");
     };
   }, [socket.connected]);
+
   const AcceptRequest = async (user_id, sos_id) => {
     try {
       await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id });
@@ -186,7 +188,6 @@ const Alerts = () => {
                                     resizeMode="contain"
                                     style={{
                                       width: 16,
-                                      height: 16,
                                       alignSelf: "flex-end",
                                     }}
                                   />
@@ -206,7 +207,6 @@ const Alerts = () => {
                                     ...styles.btn_width,
                                     backgroundColor: "white",
                                     borderWidth: 2,
-
                                     borderColor: "#7d40ff",
                                   }}
                                   onPress={() => {
@@ -238,11 +238,9 @@ const Alerts = () => {
                       </Modal>
                     </>
                   )}
-                  {/* <Chatroom
-                    socket={socket}
-                    sos_id={item._id}
-                    user_name={item.user.name}
-                  /> */}
+                  {User.user_id === item.user._id && (
+                    <Chatroom socket={socket} sos_id={item._id} />
+                  )}
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={async () => {
@@ -305,7 +303,6 @@ const Alerts = () => {
                                 resizeMode="contain"
                                 style={{
                                   width: 16,
-                                  height: 16,
                                   alignSelf: "flex-end",
                                 }}
                               />
@@ -365,7 +362,6 @@ const Alerts = () => {
     </View>
   );
 };
-
 export default Alerts;
 
 const styles = StyleSheet.create({
@@ -376,10 +372,12 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#fff",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 15,
     marginTop: 20,
     elevation: 5,
+    shadowColor: "#000",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -393,9 +391,11 @@ const styles = StyleSheet.create({
   },
   btn_width: {
     width: "40%",
+    width: "40%",
   },
   rbName: {
     ...Styles.bold,
+    textTransform: "capitalize",
     textTransform: "capitalize",
   },
   btn: {
@@ -404,22 +404,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     alignItems: "center",
+    alignItems: "center",
   },
   btnText: {
     ...Styles.medium,
+    color: "#fff",
     color: "#fff",
   },
   silent: {
     ...Styles.medium,
     fontSize: 20,
     color: "#aaa",
+    color: "#aaa",
     marginTop: 20,
+    textAlign: "center",
+    marginTop: "70%",
     textAlign: "center",
     marginTop: "70%",
   },
   modal_head: {
     ...Styles.medium,
     fontSize: 20,
+    textAlign: "center",
     textAlign: "center",
     marginBottom: 20,
   },

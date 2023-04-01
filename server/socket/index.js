@@ -1,7 +1,6 @@
 const { Server } = require("socket.io");
 const fs = require("fs");
 const SOSSocket = require("../socket/SOS");
-const ChatSocket = require("../socket/Chat");
 
 const socket = (http) => {
   const io = new Server(http);
@@ -26,7 +25,12 @@ const socket = (http) => {
       fs.writeFileSync("./json/isActive.json", JSON.stringify(users));
     });
     SOSSocket(io, socket);
-    ChatSocket(io, socket);
+    socket.on("join-room", async (sos_id) => {
+      socket.join(sos_id);
+    });
+    socket.on("send-message", async (message, sos_id) => {
+      socket.to(sos_id).emit("receive-message", message);
+    });
     socket.on("disconnect", async () => {
       const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
       for (const user_id in users) {
