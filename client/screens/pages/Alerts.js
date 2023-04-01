@@ -8,15 +8,18 @@ import {
   Modal,
   Image,
   SafeAreaView,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Styles from "../../CommonStyles";
 import StateContext from "../../context/StateContext";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
+import CommonStyles from "../../CommonStyles.js";
 // import Chatroom from './Chatroom'
 
 const Alerts = () => {
+  const [refreshing, setRefreshing] = useState(false);
   const { socket, setLoading, User } = useContext(StateContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [acceptedList, setAcceptedList] = useState([]);
@@ -28,6 +31,18 @@ const Alerts = () => {
         `${SERVER_URL}/api/sos/details/${User.user_id}`
       );
       setAlertList(data);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos/details/${User.user_id}`
+      );
+      setRefreshing(false);
     } catch (err) {
       alert(err);
     }
@@ -66,6 +81,9 @@ const Alerts = () => {
         <Text style={styles.silent}>No Alerts</Text>
       ) : (
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           data={AlertList}
           renderItem={({ item }) => {
             return (
@@ -247,7 +265,7 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
   },
   btn: {
-    backgroundColor: "#FFAACF",
+    backgroundColor: CommonStyles.bg.backgroundColor,
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
@@ -255,6 +273,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     ...Styles.medium,
+    color: "#fff",
   },
   silent: {
     ...Styles.medium,
