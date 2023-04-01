@@ -77,6 +77,7 @@ const Profile = () => {
             <View style={styles.inputDiv}>
               <Text style={styles.inputTitle}>Emergency Contact 1</Text>
               <TextInput
+                keyboardType="numeric"
                 placeholder="Emergency Contact 1"
                 style={styles.input}
                 onChangeText={(text) =>
@@ -88,6 +89,7 @@ const Profile = () => {
             <View style={styles.inputDiv}>
               <Text style={styles.inputTitle}>Emergency Contact 2</Text>
               <TextInput
+                keyboardType="numeric"
                 placeholder="Emergency Contact 2"
                 style={styles.input}
                 onChangeText={(text) =>
