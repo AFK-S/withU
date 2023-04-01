@@ -9,6 +9,7 @@ import {
   Image,
   SafeAreaView,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import Styles from "../../CommonStyles";
@@ -110,11 +111,15 @@ const Alerts = () => {
                       <Text style={styles.raisedBy}>Raised By : </Text>
                       <Text style={styles.rbName}>{item.user.name}</Text>
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert("User Reported");
+                      }}
+                    >
                       <Image
                         source={require("../../assets/icons/warning.png")}
                         resizeMode="contain"
-                        style={{ width: 30, height: 30, zIndex: 1 }}
+                        style={{ width: 25, height: 25, zIndex: 1 }}
                       />
                     </TouchableOpacity>
                   </View>
