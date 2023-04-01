@@ -1,5 +1,4 @@
 import {
-  View,
   TextInput,
   TouchableOpacity,
   Text,
@@ -9,11 +8,15 @@ import {
   Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import Styles from "../../CommonStyles";
+import StateContext from "../../context/StateContext";
+import { Picker } from "@react-native-picker/picker";
+import { SERVER_URL } from "../../config";
 
-const Register = ({ route, navigation, setIsLogin }) => {
+const Register = ({ route, navigation }) => {
+  const { setIsLogin, setLoading } = useContext(StateContext);
   const { cred, setCred } = route.params;
   const [register, setRegister] = useState({
     name: cred.name,
@@ -26,21 +29,19 @@ const Register = ({ route, navigation, setIsLogin }) => {
   });
 
   const onSubmit = async () => {
+    setLoading(true);
     try {
-      const { data } = await axios.post(
-        "https://withU.adityarai16.repl.co/api/register",
-        {
-          name: register.name,
-          email_address: register.email_address,
-          phone_number: register.phone_number,
-          gender: register.gender,
-          emergency_contact: [
-            register.emergency_contact1,
-            register.emergency_contact2,
-          ],
-          password: register.password,
-        }
-      );
+      const { data } = await axios.post(`${SERVER_URL}/api/register`, {
+        name: register.name,
+        email_address: register.email_address,
+        phone_number: register.phone_number,
+        gender: register.gender,
+        emergency_contact: [
+          register.emergency_contact1,
+          register.emergency_contact2,
+        ],
+        password: register.password,
+      });
       await AsyncStorage.setItem("user", JSON.stringify(data));
       setCred({
         name: "",
@@ -58,13 +59,11 @@ const Register = ({ route, navigation, setIsLogin }) => {
       });
       setIsLogin(true);
     } catch (err) {
-      console.error(err.response.data);
-      setAlert({
-        isAlert: true,
-        type: err.response.data.type,
-        message: err.response.data,
-      });
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
+    setLoading(false);
   };
 
   return (
@@ -95,6 +94,16 @@ const Register = ({ route, navigation, setIsLogin }) => {
           autoCapitalize="none"
           autoComplete="off"
         />
+        <Picker
+          editable={false}
+          selectedValue={register.gender}
+          onValueChange={(itemValue, itemIndex) =>
+            setRegister({ ...register, gender: itemValue })
+          }
+        >
+          <Picker.Item label="Male" value="male" />
+          <Picker.Item label="Female" value="female" />
+        </Picker>
         <TextInput
           style={styles.input}
           placeholder="Emergency Contact 1"

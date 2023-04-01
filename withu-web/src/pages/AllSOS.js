@@ -1,61 +1,54 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Avatar,
-  Text,
-  Progress,
-  Badge,
-  Group,
-  ActionIcon,
-  Grid,
-  Button,
-} from "@mantine/core";
+import { Card, Text, Badge, Group, Grid, Button } from "@mantine/core";
 import { IconShield } from "@tabler/icons-react";
 import io from "socket.io-client";
 import { useCookies } from "react-cookie";
-
 import AlertModal from "../components/AlertModal";
+import axios from "axios";
+
 const AllSOS = () => {
   const [cookies] = useCookies(["user_id"]);
-  const socket = io("https://withU.adityarai16.repl.co", {
-    transports: ["websocket"],
-  });
-
+  const [socket] = useState(
+    io("http://172.20.10.3:8000", {
+      transports: ["websocket"],
+    })
+  );
   const [sosList, setSosList] = useState([]);
-  const [acceptedList, setAcceptedList] = useState([]);
-  const [location, setLocation] = useState([]);
+  const Fetch_SOS = async () => {
+    const { data } = await axios.get(
+      `http://172.20.10.3:8000/api/police/sos/${cookies.user_id}`
+    );
+    setSosList(data);
+  };
 
   useEffect(() => {
     socket.on("connect", async () => {
       console.log("connected");
-      socket.emit("Get_SOS_Officials", cookies.user_id);
+      Fetch_SOS();
     });
+    socket.on("connect_error", (err) => {
+      console.log(err);
+    });
+    return () => {
+      socket.off("connect");
+      socket.off("Pass_Officials_SOS_Details");
+      socket.off("connect_error");
+    };
   }, []);
-  socket.on("Refetch_SOS_Details", () => {
-    socket.emit("Get_SOS_details", cookies.user_id);
-  });
 
-  socket.on("Pass_Officials_SOS_Details", (data) => {
-    setSosList(data);
-  });
-
-  socket.on("connect_error", (err) => {
-    console.log(err);
-  });
-
-  const GetDirection = (user_id, sos_user_id) => {
-    if (!socket.connected) {
-      alert("Please Connect to Internet");
-      return;
-    }
-    socket.emit("SOS_Accepted_Officials", cookies.user_id, sos_user_id);
-    socket.emit("Get_SOS_Location", user_id, async (location) => {
-      setLocation(location);
-      console.log(location);
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`;
+  const GetDirection = async (user_id) => {
+    if (!socket.connected) return alert("Please Connect to Socket");
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/active/location/${user_id}`
+      );
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`;
       window.open(url, "_blank");
-    });
+    } catch (err) {
+      alert(err);
+    }
   };
+
   return (
     <div>
       <Grid gutterXl={30}>
@@ -87,11 +80,11 @@ const AllSOS = () => {
                   <Button
                     size={"xs"}
                     variant="outline"
-                    onClick={() => GetDirection(item.user._id, item.owner_id)}
+                    onClick={() => GetDirection(item.user._id)}
                   >
                     Get Location
                   </Button>
-                  <AlertModal socket={socket} owner_id={item.owner_id} />
+                  <AlertModal sos_id={item._id} />
                 </Group>
               </Card>
             </Grid.Col>

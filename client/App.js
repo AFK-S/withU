@@ -1,70 +1,44 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "react-native";
-import { useFonts } from "expo-font";
-import React, { useState, useEffect } from "react";
-import AppLoading from "expo-app-loading";
-import Auth from "./screens/auth/AuthScreen";
-import MainScreen from "./screens/MainScreen";
+import { NavigationContainer } from '@react-navigation/native'
+import { StatusBar } from 'react-native'
+import { useFonts } from 'expo-font'
+import React, { useContext } from 'react'
+import Auth from './screens/auth/AuthScreen'
+import MainScreen from './screens/MainScreen'
+import StateContext, {
+  StateProvider,
+  SocketProvider,
+} from './context/StateContext'
+import Loading from './components/Loading'
 
 export default function App() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [Alert, setAlert] = useState({
-    isAlert: false,
-    type: "",
-    message: "",
-  });
-
-  useEffect(() => {
-    (async () => {
-      const user = await AsyncStorage.getItem("user");
-      if (user === null) {
-        return setIsLogin(false);
-      }
-      const {
-        user_id,
-        name,
-        phone_number,
-        gender,
-        emergency_contact,
-        password,
-      } = JSON.parse(user);
-      if (
-        !(
-          user_id &&
-          name &&
-          phone_number &&
-          gender &&
-          emergency_contact &&
-          password
-        )
-      ) {
-        return setIsLogin(false);
-      }
-      setIsLogin(true);
-    })();
-  }, [isLogin]);
-
   const [fontsLoaded] = useFonts({
-    "Poppins-Bold": require("./assets/Fonts/Poppins-Bold.ttf"),
-    "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),
-    "Poppins-Medium": require(".//assets/Fonts/Poppins-Medium.ttf"),
-  });
+    'Poppins-Bold': require('./assets/Fonts/Poppins-Bold.ttf'),
+    'Poppins-Thin': require('.//assets/Fonts/Poppins-Thin.ttf'),
+    'Poppins-Medium': require('.//assets/Fonts/Poppins-Medium.ttf'),
+  })
+  if (!fontsLoaded) return null
+  return (
+    <StateProvider>
+      <StatusBar barStyle={'light-content'} />
+      <NavigationContainer>
+        <Provider />
+      </NavigationContainer>
+    </StateProvider>
+  )
+}
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
-
+const Provider = () => {
+  const { isLogin } = useContext(StateContext)
   return (
     <>
-      <StatusBar barStyle={"dark-content"} />
-      <NavigationContainer>
-        {isLogin ? (
-          <MainScreen setIsLogin={setIsLogin} />
-        ) : (
-          <Auth setIsLogin={setIsLogin} setAlert={setAlert} />
-        )}
-      </NavigationContainer>
+      {isLogin ? (
+        <SocketProvider>
+          <MainScreen />
+        </SocketProvider>
+      ) : (
+        <Auth />
+      )}
+      <Loading />
     </>
-  );
+  )
 }

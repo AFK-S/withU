@@ -1,5 +1,4 @@
 import {
-  View,
   TextInput,
   TouchableOpacity,
   Text,
@@ -18,17 +17,11 @@ const Register = ({ navigation }) => {
     password: "",
   });
 
-  const onSubmit = () => {
-    navigation.navigate("register2", {
-      cred: register,
-      setCred: setRegister,
-    });
-  };
-
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>Register</Text>
         <TextInput
@@ -59,7 +52,12 @@ const Register = ({ navigation }) => {
           value={register.password}
         />
         <TouchableOpacity
-          onPress={onSubmit}
+          onPress={() =>
+            navigation.navigate("register2", {
+              cred: register,
+              setCred: setRegister,
+            })
+          }
           style={{ ...Styles.button, marginTop: 10 }}
         >
           <Text style={styles.buttonText}>Next</Text>

@@ -1,50 +1,46 @@
-const fs = require('fs')
-const geolib = require('geolib')
-const { METER_RADIUS } = require('../config')
-const UserSchema = require('../models/User')
+const fs = require("fs");
+const geolib = require("geolib");
+const { METER_RADIUS } = require("../config");
+const UserSchema = require("../models/User");
 
 const NearbyUsers = async (socket) => {
-  const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+  const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
   const closest_users = Object.values(users)
     .map((user) => {
       const distance = geolib.getDistance(
         users[socket.user_id].coordinates,
-        user.coordinates,
-      )
-      if (distance / 1000 <= METER_RADIUS) {
+        user.coordinates
+      );
+      if (distance <= METER_RADIUS) {
         return {
           socket_id: user.socket_id,
           user_id: user.user_id,
           coordinates: user.coordinates,
           distance: distance,
-        }
+        };
       }
     })
-    .sort((a, b) => a.distance - b.distance)
+    .sort((a, b) => a.distance - b.distance);
   const user_ids = closest_users.map((user) => {
-    if (user) return user.user_id
-  })
+    if (user) return user.user_id;
+  });
   const socket_ids = closest_users.map((user) => {
-    if (user) return user.socket_id
-  })
-  return [user_ids, socket_ids]
-}
+    if (user) return user.socket_id;
+  });
+  return [user_ids, socket_ids];
+};
 
 const FamilyMembers = async (socket, callback) => {
-  const user_response = await UserSchema.findById(socket.user_id).lean()
-  if (user_response === null) {
-    callback('Invalid Request')
-    return
-  }
+  const user_response = await UserSchema.findById(socket.user_id).lean();
   const user_ids = await UserSchema.find({
     phone_number: user_response.emergency_contact,
-  }).distinct('_id')
-  console.log(user_ids)
-  const users = await JSON.parse(fs.readFileSync('./json/isActive.json'))
+  }).distinct("_id");
+  const user_ids_string = user_ids.map((user_id) => user_id.toString());
+  const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
   const socket_ids = Object.values(users).map((user) => {
-    if (user_ids.includes(user.user_id)) return user.socket_id
-  })
-  return [user_ids, socket_ids]
-}
+    if (user_ids_string.includes(user.user_id)) return user.socket_id;
+  });
+  return [user_ids_string, socket_ids];
+};
 
-module.exports = { NearbyUsers, FamilyMembers }
+module.exports = { NearbyUsers, FamilyMembers };

@@ -8,40 +8,79 @@ import {
   Modal,
   Image,
   SafeAreaView,
+  RefreshControl,
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Styles from '../../CommonStyles'
+import StateContext from '../../context/StateContext'
+import axios from 'axios'
+import { SERVER_URL } from '../../config'
+import CommonStyles from '../../CommonStyles.js'
 // import Chatroom from './Chatroom'
 
-const Alerts = ({ socket, User }) => {
-  const [AlertList, setAlertList] = useState([])
+const Alerts = () => {
+  const [refreshing, setRefreshing] = useState(false)
+  const { socket, setLoading, User } = useContext(StateContext)
   const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible2, setModalVisible2] = useState(false)
   const [acceptedList, setAcceptedList] = useState([])
+  const [AlertList, setAlertList] = useState([])
+
+  const Get_SOS_details = async () => {
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos/details/${User.user_id}`,
+      )
+      setAlertList(data)
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  const onRefresh = async () => {
+    setRefreshing(true)
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos/details/${User.user_id}`,
+      )
+      setRefreshing(false)
+    } catch (err) {
+      alert(err)
+    }
+  }
 
   useEffect(() => {
-    if (socket.connected) {
-      socket.emit('Get_SOS_details')
-    }
+    setLoading(true)
+    Get_SOS_details()
+    setLoading(false)
   }, [socket.connected])
 
-  socket.on('Refetch_SOS_Details', () => {
-    socket.emit('Get_SOS_details')
-  })
-
-  socket.on('Pass_SOS_Details', (data) => {
-    setAlertList(data)
-  })
-
-  const GetDirection = (user_id, sos_user_id) => {
-    if (!socket.connected) {
-      alert('Please Connect to Internet')
-      return
+  useEffect(() => {
+    socket.on('Refetch_SOS_Details', () => Get_SOS_details())
+    return () => {
+      socket.off('Refetch_SOS_Details')
     }
-    socket.emit('SOS_Accepted_Commity', sos_user_id)
-    socket.emit('Get_SOS_Location', user_id, async (location) => {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=walking`
+  }, [socket.connected])
+  const AcceptRequest = async (user_id, sos_id) => {
+    try {
+      await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  const GetDirection = async (user_id, sos_id) => {
+    if (!socket.connected) return alert('Please Connect to Socket')
+    try {
+      // await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/active/location/${user_id}`,
+      )
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${data.latitude},${data.longitude}&travelmode=walking`
       Linking.openURL(url)
-    })
+    } catch (err) {
+      alert(err)
+    }
   }
 
   return (
@@ -50,6 +89,9 @@ const Alerts = ({ socket, User }) => {
         <Text style={styles.silent}>No Alerts</Text>
       ) : (
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           data={AlertList}
           renderItem={({ item }) => {
             return (
@@ -62,16 +104,124 @@ const Alerts = ({ socket, User }) => {
                   <Text style={{ ...styles.raisedBy }}>
                     Phone Number : {item.user.phone_number}
                   </Text>
+                  <Text
+                    style={{ ...styles.raisedBy, textTransform: 'capitalize' }}
+                  >
+                    Description : {item.description}
+                  </Text>
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
                   {User.user_id !== item.user._id && (
-                    <TouchableOpacity
-                      style={styles.btn}
-                      onPress={() => GetDirection(item.user._id, item.owner_id)}
-                    >
-                      <Text style={styles.btnText}>Get Directions</Text>
-                    </TouchableOpacity>
+                    <>
+                      <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => {
+                          setModalVisible2(true)
+                          GetDirection(User.user_id, item._id)
+                        }}
+                      >
+                        <Text style={styles.btnText}>Get Directions</Text>
+                      </TouchableOpacity>
+                      <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible2}
+                        onRequestClose={() => false}
+                      >
+                        <View
+                          style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            paddingHorizontal: 20,
+                            backgroundColor: '#00000080',
+                          }}
+                        >
+                          <View
+                            style={{
+                              backgroundColor: '#fff',
+                              padding: 20,
+                              borderRadius: 15,
+                              elevation: 5,
+                              shadowColor: '#c6c6c678',
+                              marginVertical: 5,
+                              shadowOffset: {
+                                width: 0,
+                                height: 2,
+                              },
+                            }}
+                          >
+                            <View>
+                              <View
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
+                                <Text style={styles.modal_head}>
+                                  Accept or Reject Request?
+                                </Text>
+                                <TouchableOpacity
+                                  style={{ padding: 15, paddingTop: 0 }}
+                                  onPress={() => setModalVisible2(false)}
+                                >
+                                  <Image
+                                    source={require('../../assets/icons/close.png')}
+                                    resizeMode="contain"
+                                    style={{
+                                      width: 16,
+                                      height: 16,
+                                      alignSelf: 'flex-end',
+                                    }}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                              <View
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-around',
+                                  width: '100%',
+                                }}
+                              >
+                                <TouchableOpacity
+                                  style={{
+                                    ...styles.btn,
+                                    ...styles.btn_width,
+                                    backgroundColor: 'white',
+                                    borderWidth: 2,
+
+                                    borderColor: '#7d40ff',
+                                  }}
+                                  onPress={() => {
+                                    setModalVisible2(false)
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      ...styles.btnText,
+                                      color: '#000',
+                                    }}
+                                  >
+                                    Reject
+                                  </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  style={[styles.btn, styles.btn_width]}
+                                  onPress={() => {
+                                    setModalVisible2(false)
+                                    AcceptRequest(User.user_id, item._id)
+                                  }}
+                                >
+                                  <Text style={styles.btnText}>Accept</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      </Modal>
+                    </>
                   )}
                   {/* <Chatroom
                     socket={socket}
@@ -80,15 +230,16 @@ const Alerts = ({ socket, User }) => {
                   /> */}
                   <TouchableOpacity
                     style={styles.btn}
-                    onPress={() => {
-                      socket.emit(
-                        'Get_SOS_Accepted_List',
-                        item.owner_id,
-                        (data) => {
-                          setAcceptedList(data)
-                          setModalVisible(true)
-                        },
-                      )
+                    onPress={async () => {
+                      try {
+                        const { data } = await axios.get(
+                          `${SERVER_URL}/api/sos/accepted/${item._id}`,
+                        )
+                        setAcceptedList(data)
+                        setModalVisible(true)
+                      } catch (error) {
+                        alert(error)
+                      }
                     }}
                   >
                     <Text style={styles.btnText}>Accepted Users</Text>
@@ -98,7 +249,7 @@ const Alerts = ({ socket, User }) => {
                       animationType="slide"
                       transparent={true}
                       visible={modalVisible}
-                      onRequestClose={() => setModalVisible(false)}
+                      onRequestClose={() => false}
                     >
                       <View
                         style={{
@@ -225,12 +376,15 @@ const styles = StyleSheet.create({
     ...Styles.medium,
     fontSize: 15,
   },
+  btn_width: {
+    width: '40%',
+  },
   rbName: {
     ...Styles.bold,
     textTransform: 'capitalize',
   },
   btn: {
-    backgroundColor: '#FFAACF',
+    backgroundColor: CommonStyles.bg.backgroundColor,
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
@@ -238,6 +392,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     ...Styles.medium,
+    color: '#fff',
   },
   silent: {
     ...Styles.medium,
