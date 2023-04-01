@@ -146,6 +146,7 @@ const Map = () => {
               );
             })}
             {PoliceInfo.map((police, index) => {
+              console.log(police.type_of_user);
               return (
                 <Marker
                   key={index}
@@ -160,7 +161,11 @@ const Map = () => {
                     }}
                   >
                     <Image
-                      source={require("../../assets/policeman.png")}
+                      source={
+                        police.type_of_user === "police"
+                          ? require("../../assets/policeman.png")
+                          : require("../../assets/icons/hospital.png")
+                      }
                       style={{ width: 40, height: 40 }}
                       resizeMode="contain"
                     />
