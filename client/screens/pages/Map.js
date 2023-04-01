@@ -1,62 +1,74 @@
-import MapView, { Circle, Marker } from "react-native-maps";
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image } from "react-native";
-import StateContext from "../../context/StateContext";
-import axios from "axios";
-import { SERVER_URL } from "../../config";
+import MapView, { Circle, Marker } from 'react-native-maps'
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
+import StateContext from '../../context/StateContext'
+import axios from 'axios'
+import { SERVER_URL } from '../../config'
 
 const Map = () => {
-  const { socket, setLoading, location, User } = useContext(StateContext);
-  const [activeUsers, setActiveUsers] = useState([]);
-  const [PoliceInfo, setPoliceInfo] = useState([]);
-  const [SOSInfo, setSOSInfo] = useState([]);
+  const { socket, setLoading, location, User } = useContext(StateContext)
+  const [activeUsers, setActiveUsers] = useState([])
+  const [PoliceInfo, setPoliceInfo] = useState([])
+  const [SOSInfo, setSOSInfo] = useState([])
 
   const Fetch_Active_Users = async () => {
-    const { data } = await axios.get(`${SERVER_URL}/api/active/location`);
-    setActiveUsers(data);
-  };
+    const { data } = await axios.get(`${SERVER_URL}/api/active/location`)
+    setActiveUsers(data)
+  }
 
   useEffect(() => {
-    setLoading(true);
-    Fetch_Active_Users();
-    setLoading(false);
-  }, [socket.connected]);
+    setLoading(true)
+    Fetch_Active_Users()
+    setLoading(false)
+  }, [socket.connected])
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        const { data } = await axios.get(`${SERVER_URL}/api/police_sos`);
-        setPoliceInfo(data.police_response);
-        setSOSInfo(data.sos_response);
+        const { data } = await axios.get(`${SERVER_URL}/api/police_sos`)
+        setPoliceInfo(data.police_response)
+        setSOSInfo(data.sos_response)
       } catch (error) {
-        console.log(error);
-        alert(error);
+        console.log(error)
+        alert(error)
       }
-    })();
-  }, [socket.connected]);
+    })()
+  }, [socket.connected])
+
+  const mapViewRef = useRef(null)
+
+  const relocateToUserLocation = () => {
+    mapViewRef.current.animateToRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    })
+  }
 
   useEffect(() => {
-    socket.on("Update_Active_Users", () => {
-      Fetch_Active_Users();
-    });
+    socket.on('Update_Active_Users', () => {
+      Fetch_Active_Users()
+    })
     return () => {
-      socket.off("Update_Active_Users");
-    };
-  }, [socket.connected]);
+      socket.off('Update_Active_Users')
+    }
+  }, [socket.connected])
 
   return (
     <View
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       {location !== null ? (
         <MapView
+          ref={mapViewRef}
           style={{
-            width: "100%",
-            height: "100%",
+            width: '100%',
+            height: '100%',
           }}
           region={{
             latitude: location.latitude,
@@ -77,12 +89,12 @@ const Map = () => {
                 <View
                   style={{
                     borderWidth: 2,
-                    borderColor: "black",
+                    borderColor: 'black',
                     borderRadius: 40,
                   }}
                 >
                   <Image
-                    source={require("../../assets/icons/woman.png")}
+                    source={require('../../assets/icons/woman.png')}
                     style={{ width: 40, height: 40 }}
                     resizeMode="contain"
                   />
@@ -100,7 +112,7 @@ const Map = () => {
               //     resizeMode="contain"
               //   />
               // </Marker>
-            );
+            )
           })}
           {PoliceInfo.map((police, index) => {
             return (
@@ -112,42 +124,74 @@ const Map = () => {
                 <View
                   style={{
                     borderWidth: 2,
-                    borderColor: "black",
+                    borderColor: 'black',
                     borderRadius: 40,
                   }}
                 >
                   <Image
-                    source={require("../../assets/policeman.png")}
+                    source={require('../../assets/policeman.png')}
                     style={{ width: 40, height: 40 }}
                     resizeMode="contain"
                   />
                 </View>
               </Marker>
-            );
+            )
           })}
           {SOSInfo.map((sos, index) => {
             return (
               <Circle
                 center={sos.coordinates}
                 radius={30}
-                fillColor={"rgba(255,0,0,0.05)"}
-                strokeColor={"rgba(255,0,0,0.0)"}
+                fillColor={'rgba(255,0,0,0.05)'}
+                strokeColor={'rgba(255,0,0,0.0)'}
                 strokeWidth={0}
                 key={index}
               />
-            );
+            )
           })}
           <Circle
             center={location}
             radius={3000}
-            fillColor={"rgba(0,0,0,0.1)"}
+            fillColor={'rgba(0,0,0,0.1)'}
           />
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: 720,
+              right: 30,
+              backgroundColor: 'white',
+              padding: 15,
+              borderRadius: 50,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            onPress={relocateToUserLocation}
+          >
+            {/* <View> */}
+            <Image
+              source={require('../../assets/icons/precision.png')}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                // zIndex: 100,
+              }}
+              onLoad={() => console.log('Image loaded successfully')}
+            />
+            {/* </View> */}
+          </TouchableOpacity>
         </MapView>
       ) : (
         <Text>Waiting for location</Text>
       )}
     </View>
-  );
-};
+  )
+}
 
-export default Map;
+export default Map
