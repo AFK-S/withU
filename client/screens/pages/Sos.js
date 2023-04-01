@@ -75,7 +75,7 @@ const SOS = () => {
     );
   };
 
-  const OnSOS = async () => {
+  const OnSOS = async (description) => {
     if (!isSocketConnected) return;
     setIsSOS(!isSOS);
     const { emergency_contact } = User;
@@ -86,7 +86,7 @@ const SOS = () => {
         SendSMS(emergency_contact, message);
       });
     }
-    socket.emit("On_SOS", (data) => {
+    socket.emit("On_SOS", description, (data) => {
       if (data.err) return alert(data.msg);
       const message = `I am ${
         data.name
@@ -172,7 +172,10 @@ const SOS = () => {
             padding: 15,
           }}
         >
-          <TouchableOpacity style={styles.sosButton} onPress={OnSOS}>
+          <TouchableOpacity
+            style={styles.sosButton}
+            onPress={() => OnSOS("general")}
+          >
             <Text style={styles.buttonText}>{isSOS ? "Cancel" : "SOS"}</Text>
           </TouchableOpacity>
         </View>
@@ -189,6 +192,7 @@ const SOS = () => {
             style={{
               ...styles.additionalSosButton,
             }}
+            onPress={() => OnSOS("accident")}
           >
             <Text>Accident</Text>
           </TouchableOpacity>
@@ -196,6 +200,7 @@ const SOS = () => {
             style={{
               ...styles.additionalSosButton,
             }}
+            onPress={() => OnSOS("medical")}
           >
             <Text>Medical</Text>
           </TouchableOpacity>
