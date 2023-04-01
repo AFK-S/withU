@@ -6,15 +6,19 @@ const Register = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).send(errors.array()[0].msg);
   }
-  const { name, branch_name, coordinates, password } = req.body;
+  const { name, branch_name, type_of_user, coordinates, password } = req.body;
   try {
     const response = await Police.create({
       name,
       branch_name,
+      type_of_user,
       coordinates,
       password,
     });
-    res.cookie("user_id", response._id).send(response._id);
+    res.json({
+      user_id: response._id,
+      type_of_user: response.type_of_user,
+    });
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
@@ -35,7 +39,10 @@ const Login = async (req, res) => {
     if (response === null) {
       return res.status(400).send("Invalid Credentials");
     }
-    res.send(response._id);
+    res.json({
+      user_id: response._id,
+      type_of_user: response.type_of_user,
+    });
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
