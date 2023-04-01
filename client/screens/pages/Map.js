@@ -141,7 +141,7 @@ const Map = () => {
             return (
               <Circle
                 center={sos.coordinates}
-                radius={30}
+                radius={120}
                 fillColor={'rgba(255,0,0,0.05)'}
                 strokeColor={'rgba(255,0,0,0.0)'}
                 strokeWidth={0}
@@ -157,7 +157,7 @@ const Map = () => {
           <TouchableOpacity
             style={{
               position: 'absolute',
-              top: 720,
+              bottom: 150,
               right: 30,
               backgroundColor: 'white',
               padding: 15,
