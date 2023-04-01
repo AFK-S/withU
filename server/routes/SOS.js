@@ -10,7 +10,8 @@ router.get("/sos_accepted_count/:user_id", async (req, res) => {
       owner_id: user_id,
       status: { $ne: "resolved" },
     }).lean();
-    res.send(user_response.accepted_commity_list.length);
+    if (!user_response) return res.send("0");
+    res.send(user_response.accepted_commity_list.length.toString());
   } catch (error) {
     console.log(error);
     res.status(400).send(error.message);

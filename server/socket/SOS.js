@@ -4,7 +4,7 @@ const UserSchema = require("../models/User");
 const SOSSchema = require("../models/SOS");
 
 const SOS = (io, socket) => {
-  socket.on("On_SOS", async (callback) => {
+  socket.on("On_SOS", async (description, callback) => {
     if (!socket.user_id) {
       return callback({
         err: true,
@@ -25,6 +25,7 @@ const SOS = (io, socket) => {
       owner_id: socket.user_id,
       coordinates: users[socket.user_id].coordinates,
       user_ids: [...new Set([...nearby_users[0], ...family_members[0]])],
+      description,
     });
     const user_detail = {
       user_id: SOS_response.owner_id,

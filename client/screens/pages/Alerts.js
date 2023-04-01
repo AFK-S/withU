@@ -104,6 +104,11 @@ const Alerts = () => {
                   <Text style={{ ...styles.raisedBy }}>
                     Phone Number : {item.user.phone_number}
                   </Text>
+                  <Text
+                    style={{ ...styles.raisedBy, textTransform: 'capitalize' }}
+                  >
+                    Description : {item.description}
+                  </Text>
                   <Text style={styles.raisedBy}>
                     Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
@@ -113,7 +118,6 @@ const Alerts = () => {
                         style={styles.btn}
                         onPress={() => {
                           setModalVisible2(true)
-                          console.log(modalVisible2)
                           GetDirection(User.user_id, item._id)
                         }}
                       >

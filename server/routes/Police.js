@@ -11,6 +11,7 @@ router.get("/police/sos/:user_id", async (req, res) => {
     const officer_response = await PoliceSchema.findById(user_id);
     const sos_response = await SOSSchema.find({
       status: { $in: ["pending", "accepted"] },
+      description: { $ne: "medical" },
     }).lean();
     const sos_ids = sos_response.map((sos) => {
       const distance = geolib.getDistance(
