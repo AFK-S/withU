@@ -238,9 +238,7 @@ const Alerts = () => {
                       </Modal>
                     </>
                   )}
-                  {User.user_id === item.user._id && (
-                    <Chatroom socket={socket} sos_id={item._id} />
-                  )}
+                  <Chatroom socket={socket} sos_id={item._id} />
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={async () => {
