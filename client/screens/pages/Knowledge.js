@@ -1,41 +1,7 @@
-// import React, { useState, useCallback, useRef } from "react";
-// import { Button, View, Alert } from "react-native";
-// import YoutubePlayer from "react-native-youtube-iframe";
-
-// export default function App() {
-//   const [playing, setPlaying] = useState(false);
-
-//   const onStateChange = useCallback((state) => {
-//     if (state === "ended") {
-//       setPlaying(false);
-//       Alert.alert("video has finished playing!");
-//     }
-//   }, []);
-
-//   const togglePlaying = useCallback(() => {
-//     setPlaying((prev) => !prev);
-//   }, []);
-
-//   return (
-//     <View style={{ flex: 1 }}>
-//       <YoutubePlayer
-//         height={300}
-//         play={playing}
-//         videoId={"oyi79f9axRw"}
-//         onChangeState={onStateChange}
-//       />
-//       <YoutubePlayer
-//         height={300}
-//         play={playing}
-//         videoId={"oyi79f9axRw"}
-//         onChangeState={onStateChange}
-//       />
-//     </View>
-//   );
-// }
 import React, { useState, useCallback, useRef } from "react";
-import { Button, View, Alert, ScrollView } from "react-native";
+import { Button, View, Alert, ScrollView, Text } from "react-native";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function App() {
   const [playing, setPlaying] = useState(false);
@@ -68,45 +34,88 @@ export default function App() {
       }
     });
   }, []);
+  const data = [
+    {
+      title: "Women Rights",
+      videoId: "mql39VqUV5g",
+    },
+    {
+      title: "Emma Watson UN Speech",
+      videoId: "gkjW9PZBRfk",
+    },
+    {
+      title: "Like a Girl",
+      videoId: "dxrPeFKtUwQ",
+    },
+    {
+      title: "Self-Defense Moves for Women  ",
+      videoId: "KVpxP3ZZtAc",
+    },
+    {
+      title: "Muslim Girls Fence - This Girl Can",
+      videoId: "XJ5Kez290og",
+    },
+    {
+      title: "Commando Girls Defence Training",
+      videoId: "SfAoGd8R-CM",
+    },
+    {
+      title: "Female Martial Arts",
+      videoId: "DSa7wufvzjw",
+    },
+  ];
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView onScroll={onScroll} scrollEventThrottle={16}>
-        <YoutubePlayer
-          height={300}
-          play={playing}
-          videoId={"oyi79f9axRw"}
-          onChangeState={(state) => onStateChange(state, 0)}
-          ref={(player) => (playerRefs.current[0] = player)}
-        />
-        <YoutubePlayer
-          height={300}
-          play={playing}
-          videoId={"oyi79f9axRw"}
-          onChangeState={(state) => onStateChange(state, 1)}
-          ref={(player) => (playerRefs.current[1] = player)}
-        />
-        <YoutubePlayer
-          height={300}
-          play={playing}
-          videoId={"oyi79f9axRw"}
-          onChangeState={(state) => onStateChange(state, 1)}
-          ref={(player) => (playerRefs.current[1] = player)}
-        />
-        <YoutubePlayer
-          height={300}
-          play={playing}
-          videoId={"oyi79f9axRw"}
-          onChangeState={(state) => onStateChange(state, 1)}
-          ref={(player) => (playerRefs.current[1] = player)}
-        />
-        <YoutubePlayer
-          height={300}
-          play={playing}
-          videoId={"oyi79f9axRw"}
-          onChangeState={(state) => onStateChange(state, 1)}
-          ref={(player) => (playerRefs.current[1] = player)}
-        />
+    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
+      <ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+        style={{ marginBottom: 100 }}
+      >
+        {data.map((item, index) => {
+          return (
+            <View
+              style={{
+                backgroundColor: "white",
+                padding: 20,
+                marginBottom: 20,
+                borderRadius: 15,
+                elevation: 5,
+                shadowColor: "#c6c6c678",
+                marginVertical: 5,
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    color: "black",
+                    alignItems: "center",
+                    fontFamily: "Poppins-Bold",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    marginBottom: 20,
+                  }}
+                >
+                  {item.title}
+                </Text>
+                <YoutubePlayer
+                  height={180}
+                  width={300}
+                  play={playing}
+                  videoId={item.videoId}
+                  style={{ borderRadius: 40 }}
+                  onChangeState={(state) => onStateChange(state, 0)}
+                  ref={(player) => (playerRefs.current[0] = player)}
+                />
+              </View>
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );
