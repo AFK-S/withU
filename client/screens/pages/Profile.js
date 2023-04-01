@@ -41,6 +41,21 @@ const Profile = () => {
     setLoading(false);
   };
 
+  const updateProfile = async () => {
+    setLoading(true);
+    try {
+      await axios.put(`${SERVER_URL}/api/user/${User.user_id}`, {
+        name: user.name,
+        emergency_contact: [user.emergency_contact1, user.emergency_contact2],
+      });
+      Alert.alert("Success", "Profile updated successfully");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -99,6 +114,7 @@ const Profile = () => {
               />
             </View>
             <TouchableOpacity
+              onPress={updateProfile}
               style={{
                 backgroundColor: "#f75459",
                 padding: 20,
