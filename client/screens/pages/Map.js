@@ -64,104 +64,20 @@ const Map = () => {
       }}
     >
       {location !== null ? (
-        <MapView
-          ref={mapViewRef}
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
-          region={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-          provider="google"
-        >
-          {activeUsers.map((user, index) => {
-            return (
-              <Marker
-                key={index}
-                coordinate={user.coordinates}
-                opacity={user.user_id === User.user_id ? 1 : 0.6}
-                pinColor="red"
-              >
-                <View
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "black",
-                    borderRadius: 40,
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/icons/woman.png")}
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  />
-                </View>
-              </Marker>
-
-              // <Marker
-              //   key={index}
-              //   coordinate={user.coordinates}
-              //   opacity={user.user_id === User.user_id ? 1 : 0.6}
-              // >
-              //   <Image
-              //     source={require('../../assets/placeholder.png')}
-              //     style={{ width: 40, height: 40 }}
-              //     resizeMode="contain"
-              //   />
-              // </Marker>
-            );
-          })}
-          {PoliceInfo.map((police, index) => {
-            return (
-              <Marker
-                key={index}
-                title={police.branch_name}
-                coordinate={police.coordinates}
-              >
-                <View
-                  style={{
-                    borderWidth: 2,
-                    borderColor: "black",
-                    borderRadius: 40,
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/policeman.png")}
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  />
-                </View>
-              </Marker>
-            );
-          })}
-          {SOSInfo.map((sos, index) => {
-            return (
-              <Circle
-                center={sos.coordinates}
-                radius={120}
-                fillColor={"rgba(255,0,0,0.05)"}
-                strokeColor={"rgba(255,0,0,0.0)"}
-                strokeWidth={0}
-                key={index}
-              />
-            );
-          })}
-          <Circle
-            center={location}
-            radius={3000}
-            fillColor={"rgba(0,0,0,0.1)"}
-          />
+        <>
           <TouchableOpacity
             style={{
               position: "absolute",
-              bottom: 150,
+              bottom: 130,
               right: 30,
               backgroundColor: "white",
-              padding: 15,
+              width: 60,
+              height: 60,
               borderRadius: 50,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1,
               shadowColor: "#000",
               shadowOffset: {
                 width: 0,
@@ -173,18 +89,104 @@ const Map = () => {
             }}
             onPress={relocateToUserLocation}
           >
-            {/* <View> */}
             <Image
               source={require("../../assets/icons/precision.png")}
+              style={{ width: 30, height: 30 }}
               resizeMode="contain"
-              style={{
-                width: 30,
-                height: 30,
-              }}
             />
-            {/* </View> */}
           </TouchableOpacity>
-        </MapView>
+          <MapView
+            ref={mapViewRef}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+            region={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}
+            provider="google"
+          >
+            {activeUsers.map((user, index) => {
+              return (
+                <Marker
+                  key={index}
+                  coordinate={user.coordinates}
+                  opacity={user.user_id === User.user_id ? 1 : 0.6}
+                  pinColor="red"
+                >
+                  <View
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "black",
+                      borderRadius: 40,
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/icons/woman.png")}
+                      style={{ width: 40, height: 40 }}
+                      resizeMode="contain"
+                    />
+                  </View>
+                </Marker>
+
+                // <Marker
+                //   key={index}
+                //   coordinate={user.coordinates}
+                //   opacity={user.user_id === User.user_id ? 1 : 0.6}
+                // >
+                //   <Image
+                //     source={require('../../assets/placeholder.png')}
+                //     style={{ width: 40, height: 40 }}
+                //     resizeMode="contain"
+                //   />
+                // </Marker>
+              );
+            })}
+            {PoliceInfo.map((police, index) => {
+              return (
+                <Marker
+                  key={index}
+                  title={police.branch_name}
+                  coordinate={police.coordinates}
+                >
+                  <View
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "black",
+                      borderRadius: 40,
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/policeman.png")}
+                      style={{ width: 40, height: 40 }}
+                      resizeMode="contain"
+                    />
+                  </View>
+                </Marker>
+              );
+            })}
+            {SOSInfo.map((sos, index) => {
+              return (
+                <Circle
+                  center={sos.coordinates}
+                  radius={120}
+                  fillColor={"rgba(255,0,0,0.05)"}
+                  strokeColor={"rgba(255,0,0,0.0)"}
+                  strokeWidth={0}
+                  key={index}
+                />
+              );
+            })}
+            <Circle
+              center={location}
+              radius={3000}
+              fillColor={"rgba(0,0,0,0.1)"}
+            />
+          </MapView>
+        </>
       ) : (
         <Text>Waiting for location</Text>
       )}
