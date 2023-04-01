@@ -8,6 +8,8 @@ const cookieParser = require("cookie-parser");
 const net = require("net");
 const fs = require("fs");
 const geolib = require("geolib");
+const { METER_RADIUS } = require("./config");
+const SOSSchema = require("./models/SOS");
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -74,11 +76,11 @@ const server = net.createServer(function (client) {
     if (data.toString().length !== 24) return;
     const user_id = data.toString();
     const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
-    const nearby_users = await NearbyUsers(socket);
+    const nearby_users = await NearbyUsers(user_id);
     await SOSSchema.create({
       owner_id: user_id,
       coordinates: users[user_id].coordinates,
-      user_ids: new Set([...nearby_users]),
+      user_ids: [...new Set([...nearby_users])],
     });
     console.log("DONE");
   });

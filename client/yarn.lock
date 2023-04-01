@@ -4779,6 +4779,13 @@ expo-pwa@0.0.124:
     commander "2.20.0"
     update-check "1.5.3"
 
+expo-sensors@^12.1.1:
+  version "12.1.1"
+  resolved "https://registry.npmjs.org/expo-sensors/-/expo-sensors-12.1.1.tgz"
+  integrity sha512-b5vaz1vAXO9kPXZ06a0hxoSkL4VXtJyEb6Qatpu7jLgThhzKcHOWjOHFvr/hqB4nat6uaRLXii+F1CwcoBMnpQ==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-sms@^11.0.0:
   version "11.0.0"
   resolved "https://registry.npmjs.org/expo-sms/-/expo-sms-11.0.0.tgz"
