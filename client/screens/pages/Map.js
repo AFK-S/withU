@@ -1,6 +1,6 @@
 import MapView, { Circle, Marker } from "react-native-maps";
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Image } from "react-native";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import StateContext from "../../context/StateContext";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
@@ -35,6 +35,17 @@ const Map = () => {
     })();
   }, [socket.connected]);
 
+  const mapViewRef = useRef(null);
+
+  const relocateToUserLocation = () => {
+    mapViewRef.current.animateToRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+  };
+
   useEffect(() => {
     socket.on("Update_Active_Users", () => {
       Fetch_Active_Users();
@@ -54,6 +65,7 @@ const Map = () => {
     >
       {location !== null ? (
         <MapView
+          ref={mapViewRef}
           style={{
             width: "100%",
             height: "100%",
@@ -129,7 +141,7 @@ const Map = () => {
             return (
               <Circle
                 center={sos.coordinates}
-                radius={30}
+                radius={120}
                 fillColor={"rgba(255,0,0,0.05)"}
                 strokeColor={"rgba(255,0,0,0.0)"}
                 strokeWidth={0}
@@ -142,6 +154,36 @@ const Map = () => {
             radius={3000}
             fillColor={"rgba(0,0,0,0.1)"}
           />
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              bottom: 150,
+              right: 30,
+              backgroundColor: "white",
+              padding: 15,
+              borderRadius: 50,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+            onPress={relocateToUserLocation}
+          >
+            {/* <View> */}
+            <Image
+              source={require("../../assets/icons/precision.png")}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+              }}
+            />
+            {/* </View> */}
+          </TouchableOpacity>
         </MapView>
       ) : (
         <Text>Waiting for location</Text>

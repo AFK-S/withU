@@ -57,6 +57,7 @@ export const StateProvider = ({ children }) => {
         isLogin,
         setIsLogin,
         User,
+        setUser,
         Logout,
       }}
     >
@@ -66,7 +67,8 @@ export const StateProvider = ({ children }) => {
 };
 
 export const SocketProvider = ({ children }) => {
-  const { Logout, User, loading, setLoading } = useContext(StateContext);
+  const { Logout, User, setUser, loading, setLoading } =
+    useContext(StateContext);
 
   const [socket] = useState(() =>
     io(SERVER_URL, {
@@ -77,9 +79,10 @@ export const SocketProvider = ({ children }) => {
   const [isSocketConnected, setIsSocketConnected] = useState(false);
 
   useEffect(() => {
-    const { user_id } = User;
     socket.on("connect", async () => {
-      socket.emit("Set_User_ID", user_id);
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      setUser(user);
+      socket.emit("Set_User_ID", user.user_id);
       setIsSocketConnected(true);
       console.log("connected");
     });

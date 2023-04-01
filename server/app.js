@@ -5,6 +5,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const socket = require("./socket");
 const cookieParser = require("cookie-parser");
+const net = require("net");
+const fs = require("fs");
+const geolib = require("geolib");
+const { METER_RADIUS } = require("./config");
+const SOSSchema = require("./models/SOS");
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -39,4 +44,51 @@ socket(http);
 
 http.listen(port, () => {
   console.log(`Listening on port ${port}`);
+});
+
+const NearbyUsers = async (user_id) => {
+  const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+  const closest_users = Object.values(users)
+    .map((user) => {
+      const distance = geolib.getDistance(
+        users[user_id].coordinates,
+        user.coordinates
+      );
+      if (distance <= METER_RADIUS) {
+        return {
+          user_id: user.user_id,
+          coordinates: user.coordinates,
+          distance: distance,
+        };
+      }
+    })
+    .sort((a, b) => a.distance - b.distance);
+  const user_ids = closest_users.map((user) => {
+    if (user) return user.user_id;
+  });
+  return user_ids;
+};
+
+const server = net.createServer(function (client) {
+  console.log("client connected from", client.remoteAddress, client.remotePort);
+  client.on("data", async function (data) {
+    console.log("received:", data.toString());
+    if (data.toString().length !== 24) return;
+    const user_id = data.toString();
+    const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+    const nearby_users = await NearbyUsers(user_id);
+    await SOSSchema.create({
+      owner_id: user_id,
+      coordinates: users[user_id].coordinates,
+      user_ids: [...new Set([...nearby_users])],
+    });
+    console.log("DONE");
+  });
+  client.on("close", function () {
+    console.log("client disconnected");
+  });
+});
+
+server.listen(8080, function () {
+  console.log("server started on port 8080");
 });
