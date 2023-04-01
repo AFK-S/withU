@@ -29,6 +29,23 @@ const SOS = () => {
   const [lastShakeTimestamp, setLastShakeTimestamp] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
 
+  const [accepted_count, setAccepted_count] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await JSON.parse(await AsyncStorage.getItem("user"));
+        const { data } = await axios.get(
+          `${SERVER_URL}/api/sos_accepted_count/${user.user_id}`
+        );
+        setAccepted_count(data);
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    })();
+  }, [socket.connected]);
+
   const Is_SOS = async () => {
     try {
       const user = await JSON.parse(await AsyncStorage.getItem("user"));
@@ -141,7 +158,6 @@ const SOS = () => {
   useEffect(() => {
     async function checkSensor() {
       const isSensorAvailable = await Accelerometer.isAvailableAsync();
-      console.log("Accelerometer is available:", isSensorAvailable);
     }
     checkSensor();
   }, []);
@@ -149,7 +165,10 @@ const SOS = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.pseduo}>
-        <Text style={styles.pseduoText}>No SOS Active.</Text>
+        <Text style={styles.pseduoText}>
+          {!isSOS && "No "}SOS Active{" "}
+          {accepted_count !== "0" && `(${accepted_count} Accepted)`}
+        </Text>
       </View>
       <View style={styles.logoutDiv}>
         <TouchableOpacity style={styles.logout} onPress={Logout}>
