@@ -100,8 +100,9 @@ const Sidebar = ({ setIsLogin }) => {
   const { classes, cx } = useStyles();
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
-  const links = data.map((item) => (
+  const links = data.map((item, index) => (
     <NavLink
+      key={index}
       style={{ marginTop: "1rem" }}
       to={item.link}
       className={cx(classes.link, ({ isActive }) => (isActive ? "active" : ""))}
@@ -112,12 +113,7 @@ const Sidebar = ({ setIsLogin }) => {
   ));
 
   return (
-    <Navbar
-      fullWidth
-      p="md"
-      styles={{ minHeight: "100vh" }}
-      className="sidebar"
-    >
+    <Navbar p="md" styles={{ minHeight: "100vh" }} className="sidebar">
       <Navbar.Section grow>
         <Group className={classes.header} position="apart">
           <Title order={2}>withU</Title>

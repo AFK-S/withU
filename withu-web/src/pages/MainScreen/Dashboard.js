@@ -16,6 +16,8 @@ const Dashboard = ({ setIsLogin }) => {
         <Grid.Col span={9} p={40}>
           <Routes>
             <Route path="/" element={<Navigate to="/sos" />} />
+            <Route path="/register" element={<Navigate to="/sos" />} />
+            <Route path="/login" element={<Navigate to="/sos" />} />
             <Route path="/sos" element={<AllSOS />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/statistics" element={<Statistics />} />
