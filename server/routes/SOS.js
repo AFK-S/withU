@@ -3,6 +3,20 @@ const router = express.Router();
 const SOSSchema = require("../models/SOS");
 const UserSchema = require("../models/User");
 
+router.get("/sos_accepted_count/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  try {
+    const user_response = await SOSSchema.findOne({
+      owner_id: user_id,
+      status: { $ne: "resolved" },
+    }).lean();
+    res.send(user_response.accepted_commity_list.length);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+});
+
 router.get("/is_sos/:user_id", async (req, res) => {
   const { user_id } = req.params;
   try {
