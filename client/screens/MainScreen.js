@@ -11,17 +11,16 @@ import StateContext from "../context/StateContext";
 import * as Location from "expo-location";
 import Knowledge from "./pages/Knowledge";
 
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: true,
-//     shouldSetBadge: false,
-//   }),
-// })
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const MainScreen = () => {
   const { socket } = useContext(StateContext);
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -32,6 +31,12 @@ const MainScreen = () => {
         if (status !== "granted") {
           return alert("Grant permission to access your location");
         }
+        const { status: NotificationStatus } =
+          await Notifications.requestPermissionsAsync();
+        if (NotificationStatus !== "granted")
+          return alert(
+            "Hey! You might want to enable notifications for my app, they are good."
+          );
         break;
       }
     })();
@@ -40,29 +45,29 @@ const MainScreen = () => {
   useEffect(() => {
     socket.on("Send_Notification", async (details) => {
       console.log("notification received");
-      // await schedulePushNotification(details)
+      await schedulePushNotification(details);
     });
     return () => socket.off("Send_Notification");
   }, []);
 
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(
-  //     (notification) => {
-  //       setNotification(notification)
-  //     },
-  //   )
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener()
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener.current)
-  //     Notifications.removeNotificationSubscription(responseListener.current)
-  //   }
-  // }, [])
+  useEffect(() => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log(notification);
+      });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener();
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   const Tab = createBottomTabNavigator();
   return (
     <>
-      {/* <View style={styles.pseduo}></View> */}
       <Tab.Navigator
         initialRouteName="SOS"
         screenOptions={{
@@ -230,25 +235,15 @@ const MainScreen = () => {
   );
 };
 
-// async function schedulePushNotification(details) {
-//   await Notifications.scheduleNotificationAsync({
-//     content: {
-//       title: 'I am in danger',
-//       body: `Sent by ${details.name}`,
-//       data: { data: 'goes here' },
-//     },
-//     trigger: { seconds: 2 },
-//   })
-// }
-
-// async function registerForPushNotificationsAsync() {
-//   const { status } = await Notifications.requestPermissionsAsync()
-//   if (status !== 'granted') {
-//     console.log('Failed to get push token for push notification!')
-//     return
-//   }
-//   const token = (await Notifications.getExpoPushTokenAsync()).data
-//   return token
-// }
+async function schedulePushNotification(details) {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "I am in danger",
+      body: `Sent by ${details.name}`,
+      data: { data: "goes here" },
+    },
+    trigger: { seconds: 2 },
+  });
+}
 
 export default MainScreen;
