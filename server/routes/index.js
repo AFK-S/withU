@@ -15,6 +15,21 @@ router.get("/user/:user_id", async (req, res) => {
   }
 });
 
+router.put("/user/:user_id", async (req, res) => {
+  const { user_id } = req.params;
+  const { name, emergency_contact } = req.body;
+  try {
+    await UserSchema.findByIdAndUpdate(user_id, {
+      name,
+      emergency_contact,
+    });
+    res.send();
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+});
+
 router.get("/police_sos", async (req, res) => {
   try {
     const police_response = await PoliceSchema.find().lean();
