@@ -9,6 +9,7 @@ import {
   Image,
   SafeAreaView,
   RefreshControl,
+  Alert,
 } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import Styles from '../../CommonStyles'
@@ -16,7 +17,7 @@ import StateContext from '../../context/StateContext'
 import axios from 'axios'
 import { SERVER_URL } from '../../config'
 import CommonStyles from '../../CommonStyles.js'
-// import Chatroom from './Chatroom'
+import Chatroom from './Chatroom'
 
 const Alerts = () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -43,6 +44,7 @@ const Alerts = () => {
       const { data } = await axios.get(
         `${SERVER_URL}/api/sos/details/${User.user_id}`,
       )
+      setAlertList(data)
       setRefreshing(false)
     } catch (err) {
       alert(err)
@@ -61,6 +63,7 @@ const Alerts = () => {
       socket.off('Refetch_SOS_Details')
     }
   }, [socket.connected])
+
   const AcceptRequest = async (user_id, sos_id) => {
     try {
       await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
@@ -97,9 +100,42 @@ const Alerts = () => {
             return (
               item !== null && (
                 <View style={styles.card}>
-                  <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Text style={styles.raisedBy}>Raised By : </Text>
-                    <Text style={styles.rbName}>{item.user.name}</Text>
+                  <View
+                    style={{
+                      position: 'relative',
+                      // display: 'flex',
+                      // flexDirection: 'row',
+                      // justifyContent: 'space-between',
+                    }}
+                  >
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                      <Text style={styles.raisedBy}>Raised By : </Text>
+                      <Text style={styles.rbName}>{item.user.name}</Text>
+                    </View>
+                    <View
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={() => {
+                          Alert.alert('User Reported')
+                        }}
+                      >
+                        <Image
+                          source={require('../../assets/icons/warning.png')}
+                          resizeMode="contain"
+                          style={{ width: 30, height: 30, zIndex: 1 }}
+                        />
+                      </TouchableOpacity>
+                      <Chatroom socket={socket} sos_id={item._id} />
+                    </View>
                   </View>
                   <Text style={{ ...styles.raisedBy }}>
                     Phone Number : {item.user.phone_number}
@@ -109,7 +145,7 @@ const Alerts = () => {
                   >
                     Description : {item.description}
                   </Text>
-                  <Text style={styles.raisedBy}>
+                  <Text style={{ ...styles.raisedBy, marginBottom: 10 }}>
                     Time : {new Date(item.createdAt).toLocaleString()}
                   </Text>
                   {User.user_id !== item.user._id && (
@@ -191,7 +227,6 @@ const Alerts = () => {
                                     ...styles.btn_width,
                                     backgroundColor: 'white',
                                     borderWidth: 2,
-
                                     borderColor: '#7d40ff',
                                   }}
                                   onPress={() => {
@@ -223,11 +258,6 @@ const Alerts = () => {
                       </Modal>
                     </>
                   )}
-                  {/* <Chatroom
-                    socket={socket}
-                    sos_id={item._id}
-                    user_name={item.user.name}
-                  /> */}
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={async () => {
@@ -291,6 +321,7 @@ const Alerts = () => {
                                 style={{
                                   width: 16,
                                   height: 16,
+
                                   alignSelf: 'flex-end',
                                 }}
                               />
@@ -350,7 +381,6 @@ const Alerts = () => {
     </View>
   )
 }
-
 export default Alerts
 
 const styles = StyleSheet.create({
@@ -361,10 +391,12 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
     marginTop: 20,
     elevation: 5,
+    shadowColor: '#000',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -375,12 +407,15 @@ const styles = StyleSheet.create({
   raisedBy: {
     ...Styles.medium,
     fontSize: 15,
+    zIndex: -1,
   },
   btn_width: {
+    width: '40%',
     width: '40%',
   },
   rbName: {
     ...Styles.bold,
+    textTransform: 'capitalize',
     textTransform: 'capitalize',
   },
   btn: {
@@ -389,22 +424,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     alignItems: 'center',
+    alignItems: 'center',
   },
   btnText: {
     ...Styles.medium,
+    color: '#fff',
     color: '#fff',
   },
   silent: {
     ...Styles.medium,
     fontSize: 20,
     color: '#aaa',
+    color: '#aaa',
     marginTop: 20,
+    textAlign: 'center',
+    marginTop: '70%',
     textAlign: 'center',
     marginTop: '70%',
   },
   modal_head: {
     ...Styles.medium,
     fontSize: 20,
+    textAlign: 'center',
     textAlign: 'center',
     marginBottom: 20,
   },

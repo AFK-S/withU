@@ -9,6 +9,7 @@ import {
   Container,
   Group,
   Button,
+  Select,
   NumberInput,
 } from "@mantine/core";
 import { useEffect } from "react";
@@ -26,6 +27,7 @@ const Register = ({ setIsLogin }) => {
       password: "",
       latitude: "",
       longitude: "",
+      type_of_user: "",
     },
     validate: {
       userName: (value) => (value ? "Enter valid Username" : null),
@@ -62,7 +64,7 @@ const Register = ({ setIsLogin }) => {
             fontWeight: 800,
           })}
         >
-          Register A Police Station
+          Register A Administration
         </Title>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
@@ -70,7 +72,7 @@ const Register = ({ setIsLogin }) => {
             onSubmit={form.onSubmit(async (values) => {
               try {
                 const { data } = await axios.post(
-                  "http://172.20.10.3:8000/api/police/register",
+                  "http://192.168.137.1:8000/api/police/register",
                   {
                     name: values.name,
                     branch_name: values.branch_name,
@@ -79,9 +81,11 @@ const Register = ({ setIsLogin }) => {
                       latitude: values.latitude,
                       longitude: values.longitude,
                     },
+                    type_of_user: values.type_of_user,
                   }
                 );
-                setCookie("user_id", data, { path: "/" });
+                setCookie("user_id", data.user_id, { path: "/" });
+                setCookie("type_of_user", data.type_of_user, { path: "/" });
                 form.reset();
                 setIsLogin(true);
               } catch (error) {
@@ -89,7 +93,21 @@ const Register = ({ setIsLogin }) => {
               }
             })}
           >
+            <Select
+              label="Register As:"
+              placeholder="Pick one"
+              required
+              {...form.getInputProps("type_of_user")}
+              onChange={(value) => {
+                form.setFieldValue("type_of_user", value);
+              }}
+              data={[
+                { value: "police", label: "Police" },
+                { value: "hospital", label: "Hospital" },
+              ]}
+            />
             <TextInput
+              mt={15}
               label="Username"
               placeholder="Username"
               {...form.getInputProps("name")}

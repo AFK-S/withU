@@ -23,7 +23,8 @@
         "UIBackgroundModes": [
           "audio"
         ]
-      }
+      },
+      "bundleIdentifier": "com.aditya509.withU"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,10 +33,16 @@
       },
       "permissions": [
         "AUDIO_BACKGROUND_MODE"
-      ]
+      ],
+      "package": "com.aditya509.withU"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5cfab521-8b01-4acb-b72e-7759d8f63e81"
+      }
     }
   }
 }

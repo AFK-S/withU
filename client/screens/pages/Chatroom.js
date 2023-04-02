@@ -10,41 +10,81 @@ import {
   FlatList,
 } from 'react-native'
 import Styles from '../../CommonStyles'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import CommonStyles from '../../CommonStyles.js'
+import StateContext from '../../context/StateContext'
 
-const Chatroom = ({ socket, sos_id, user_name }) => {
+const Chatroom = ({ socket, sos_id }) => {
+  const { User } = useContext(StateContext)
   const [chatModalVisible, setChatModalVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
-  const [username, setUsername] = useState('')
 
-  socket.on('previous-messages', (msg) => {
-    setMessages((prevMessages) => [...prevMessages, msg])
-  })
-
-  socket.on('receive-message', (msg) => {
-    setMessages((prevMessages) => [...prevMessages, msg])
-  })
+  useEffect(() => {
+    socket.on('receive-message', (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg])
+    })
+    return () => {
+      socket.off('receive-message')
+    }
+  }, [])
 
   const renderItem = ({ item }) => {
-    console.log(item)
+    const isSentByMe = item.user_id === User.user_id
+    const messageStyle = {
+      backgroundColor: isSentByMe ? '#bfa1ff' : '#EAEAEA',
+      alignSelf: isSentByMe ? 'flex-end' : 'flex-start',
+    }
+    const textStyle = {
+      color: isSentByMe ? '#000' : '#555',
+    }
     return (
-      <View style={styles.message}>
-        <Text style={styles.text}>{item}</Text>
+      <View style={[styles.message, messageStyle]}>
+        <Text
+          style={[
+            styles.text,
+            textStyle,
+            {
+              fontSize: '12',
+              color: 'black',
+              fontWeight: 'bold',
+              marginBottom: 5,
+            },
+          ]}
+        >
+          {item.name}
+        </Text>
+        <Text style={[styles.text, textStyle]}>{item.message}</Text>
       </View>
     )
   }
 
   return (
-    <View>
+    <>
       <TouchableOpacity
-        style={styles.btn}
+        style={{
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 50,
+          marginVertical: 5,
+          zIndex: 100,
+        }}
         onPress={() => {
-          socket.on('join-room', sos_id, user_name)
+          if (!socket.connected) return alert('Please wait for a while')
+          socket.emit('join-room', sos_id)
           setChatModalVisible(true)
         }}
       >
-        <Text style={styles.btnText}>Chat Room</Text>
+        <Image
+          source={require('../../assets/icons/chat.png')}
+          resizeMode="contain"
+          style={{
+            width: 25,
+            height: 25,
+            // alignSelf: 'center',
+            // zIndex: 100,
+          }}
+        />
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -98,11 +138,7 @@ const Chatroom = ({ socket, sos_id, user_name }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.container}>
-              <FlatList
-                data={messages}
-                renderItem={renderItem}
-                // keyExtractor={(item, index) => index.toString()}
-              />
+              <FlatList data={messages} renderItem={renderItem} />
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -113,7 +149,21 @@ const Chatroom = ({ socket, sos_id, user_name }) => {
                 <Button
                   title="Send"
                   onPress={() => {
-                    socket.emit('send-message', message, user_name, sos_id)
+                    socket.emit(
+                      'send-message',
+                      message,
+                      sos_id,
+                      User.user_id,
+                      User.name,
+                    )
+                    setMessages((prevMessages) => [
+                      ...prevMessages,
+                      {
+                        name: User.name,
+                        message: message,
+                        user_id: User.user_id,
+                      },
+                    ])
                     setMessage('')
                   }}
                 />
@@ -122,7 +172,7 @@ const Chatroom = ({ socket, sos_id, user_name }) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </>
   )
 }
 
@@ -130,7 +180,7 @@ export default Chatroom
 
 const styles = StyleSheet.create({
   btn: {
-    backgroundColor: '#FFAACF',
+    backgroundColor: CommonStyles.bg.backgroundColor,
     padding: 10,
     borderRadius: 10,
     marginTop: 20,
@@ -138,6 +188,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     ...Styles.medium,
+    color: '#fff',
   },
   modal_head: {
     ...Styles.medium,
@@ -180,6 +231,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 5,
+    maxWidth: '80%',
+    minWidth: '20%',
   },
   text: {
     fontSize: 16,

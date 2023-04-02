@@ -13,7 +13,7 @@ function AlertModal({ sos_id }) {
         <Text align="center" fz="lg" fw={700} mb={20}>
           ACCEPTED USERS
         </Text>
-        {acceptedList.map((item) => {
+        {acceptedList.map((item, index) => {
           const { name, phone_number } = item;
           <tr>
             <td>{acceptedList.name}</td>
@@ -21,7 +21,7 @@ function AlertModal({ sos_id }) {
           </tr>;
 
           return (
-            <div>
+            <div key={index}>
               <Text fz={"sm"}>Name : {name}</Text>
               <Text fz={"sm"}>Phone Number: {phone_number}</Text>
               <hr></hr>
@@ -33,7 +33,7 @@ function AlertModal({ sos_id }) {
         <Button
           onClick={async () => {
             const { data } = await axios.get(
-              `http://172.20.10.3:8000/api/sos/accepted/${sos_id}`
+              `http://192.168.137.1:8000/api/sos/accepted/${sos_id}`
             );
             setAcceptedList(data);
             open();

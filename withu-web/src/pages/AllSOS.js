@@ -7,18 +7,23 @@ import AlertModal from "../components/AlertModal";
 import axios from "axios";
 
 const AllSOS = () => {
+  const SERVER_URL = "http://192.168.137.1:8000";
   const [cookies] = useCookies(["user_id"]);
   const [socket] = useState(
-    io("http://172.20.10.3:8000", {
+    io(SERVER_URL, {
       transports: ["websocket"],
     })
   );
   const [sosList, setSosList] = useState([]);
   const Fetch_SOS = async () => {
-    const { data } = await axios.get(
-      `http://172.20.10.3:8000/api/police/sos/${cookies.user_id}`
-    );
-    setSosList(data);
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/${cookies.type_of_user}/sos/${cookies.user_id}`
+      );
+      setSosList(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -52,11 +57,11 @@ const AllSOS = () => {
   return (
     <div>
       <Grid gutterXl={30}>
-        {sosList.map((item) => {
+        {sosList.map((item, index) => {
           const { name, phone_number } = item.user;
 
           return (
-            <Grid.Col span={4}>
+            <Grid.Col span={4} key={index}>
               <Card withBorder padding="lg" radius="md">
                 <Group position="apart">
                   <div className="avatar">
@@ -72,9 +77,13 @@ const AllSOS = () => {
                 <Text fz="sm" c="dimmed" mt={5}>
                   {phone_number}
                 </Text>
-                <Text c="dimmed" fz="sm" mt="md">
-                  Location: {item.coordinates.latitude},
-                  {item.coordinates.longitude}
+                <Text
+                  c="dimmed"
+                  fz="sm"
+                  mt="md"
+                  style={{ textTransform: "capitalize", fontWeight: "bold" }}
+                >
+                  Description: {item.description}
                 </Text>
                 <Group mt={15} spacing="xl" grow>
                   <Button
