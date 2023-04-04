@@ -41,6 +41,13 @@ const AllSOS = () => {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on("Refetch_SOS_Details", () => Fetch_SOS());
+    return () => {
+      socket.off("Refetch_SOS_Details");
+    };
+  }, [socket.connected]);
+
   const GetDirection = async (user_id) => {
     if (!socket.connected) return alert("Please Connect to Socket");
     try {
