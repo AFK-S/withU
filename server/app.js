@@ -82,6 +82,7 @@ const server = net.createServer(function (client) {
       owner_id: user_id,
       coordinates: users[user_id].coordinates,
       user_ids: [...new Set([...nearby_users])],
+      description: 'general',
     })
     console.log('DONE')
   })
