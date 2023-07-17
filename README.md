@@ -41,18 +41,8 @@ The Help tab has a Map View that displays the nearby Hospitals and Police Statio
 - [Faizan Potrick](https://github.com/FaizanPotrick)
 - [Sarthak Deshmukh](https://github.com/SarthakDeshmukh13)
 
-
-
-## Login & Register
-<img src="https://user-images.githubusercontent.com/72909842/219837436-6015da00-9ab8-41c5-8bb6-f2465b4baefc.PNG" width="300px"/>   <img src="https://user-images.githubusercontent.com/72909842/219842159-c6b42eac-1a46-4326-8461-7af7b7318fa9.PNG" width="300px"/>   <img src="https://user-images.githubusercontent.com/72909842/219842167-8bfd3012-d5d2-47c4-b069-ea75ad4441af.PNG" width="300px"/> 
-## SOS And Live Location
-<img src="https://user-images.githubusercontent.com/72909842/219842531-3b255125-34e6-4850-be4e-b71b31202573.PNG" width="300px"/>   <img src="https://user-images.githubusercontent.com/72909842/219842528-ef28726b-2640-4786-a381-261e37184098.PNG" width="300px"/> <img src="https://user-images.githubusercontent.com/72909842/219842789-9c9f9abc-beb0-4d18-b7b4-18ec9e80e2f8.jpeg" width="300px"/>
-
-## Alert and Help
-<img src="https://user-images.githubusercontent.com/72909842/219842631-ab017a4f-504c-4394-8772-f216cdf98872.jpeg" width="300px"/>  <img src="https://user-images.githubusercontent.com/72909842/219842627-532a35d4-0f48-4c63-8ac0-496ddbb04b62.jpeg" width="300px"/>
-
-## SMS Alerts With Live Location Map
- <img src="https://user-images.githubusercontent.com/72909842/219842721-de78152f-65d3-446b-993a-4a505f4a9294.PNG" width="300px"/> <img src="https://user-images.githubusercontent.com/72909842/218299357-02d470a2-4184-4d42-bf80-ee19ca042e19.png" width="300px"/>  <img src="https://user-images.githubusercontent.com/72909842/219842720-e6400b3e-94e4-4932-bf5e-7f4783f1c895.PNG" width="300px"/>
+## Images
+- [View All Images](https://drive.google.com/drive/folders/124GTr2t5fgHW4Lug5KtKzz1VJM1tOso9?usp=drive_link)
 
 ## Documentation
 [withU.pptx](https://github.com/Karan2310/withU/files/10774603/withU.pptx)
