@@ -17,6 +17,7 @@ import { useForm } from "@mantine/form";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { SERVER_URL } from "../../config.js";
 
 const Register = ({ setIsLogin }) => {
   const [cookies, setCookie] = useCookies(["user_id"]);
@@ -72,7 +73,7 @@ const Register = ({ setIsLogin }) => {
             onSubmit={form.onSubmit(async (values) => {
               try {
                 const { data } = await axios.post(
-                  "http://192.168.137.1:8000/api/police/register",
+                  `${SERVER_URL}/api/police/register`,
                   {
                     name: values.name,
                     branch_name: values.branch_name,

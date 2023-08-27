@@ -6,7 +6,7 @@ const UserSchema = new Schema(
       type: String,
       trim: true,
       match: [
-        /^[a-zA-Z0-9]+$/,
+        /^[a-zA-Z0-9 ]+$/,
         (props) => `${props.value} is not a valid name`,
       ],
       required: [true, "Please add a Name"],

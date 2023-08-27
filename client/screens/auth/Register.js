@@ -6,23 +6,23 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
-import React, { useState } from "react";
-import Styles from "../../CommonStyles";
+} from 'react-native'
+import React, { useState } from 'react'
+import Styles from '../../CommonStyles'
 
 const Register = ({ navigation }) => {
   const [register, setRegister] = useState({
-    name: "",
-    email_address: "",
-    password: "",
-  });
+    name: '',
+    email_address: '',
+    password: '',
+  })
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
+      <SafeAreaView style={{ width: '100%', maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>Register</Text>
         <TextInput
           style={styles.input}
@@ -53,7 +53,7 @@ const Register = ({ navigation }) => {
         />
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("register2", {
+            navigation.navigate('register2', {
               cred: register,
               setCred: setRegister,
             })
@@ -64,11 +64,11 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ marginTop: 10 }}
-          onPress={() => navigation.navigate("login")}
+          onPress={() => navigation.navigate('login')}
         >
           <Text
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               fontFamily: Styles.medium.fontFamily,
             }}
           >
@@ -77,19 +77,19 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: 40,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   title: {
     fontSize: 60,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 50,
   },
   input: {
@@ -98,14 +98,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
   },
   buttonText: {
-    color: "#fff",
-    textAlign: "center",
+    color: '#fff',
+    textAlign: 'center',
     fontFamily: Styles.bold.fontFamily,
     fontSize: 18,
   },
-});
+})
 
-export default Register;
+export default Register

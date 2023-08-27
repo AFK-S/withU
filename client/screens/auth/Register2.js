@@ -6,30 +6,56 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useContext } from "react";
-import axios from "axios";
-import Styles from "../../CommonStyles";
-import StateContext from "../../context/StateContext";
-import { Picker } from "@react-native-picker/picker";
-import { SERVER_URL } from "../../config";
+  View,
+} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState, useContext } from 'react'
+import axios from 'axios'
+import Styles from '../../CommonStyles'
+import StateContext from '../../context/StateContext'
+import { SERVER_URL } from '../../config'
+import RadioGroup from 'react-native-radio-buttons-group'
 
 const Register = ({ route, navigation }) => {
-  const { setIsLogin, setLoading } = useContext(StateContext);
-  const { cred, setCred } = route.params;
+  const [radioButtons, setRadioButtons] = useState([
+    {
+      id: '1',
+      label: 'Male',
+      value: 'male',
+    },
+    {
+      id: '2',
+      label: 'Female',
+      value: 'female',
+    },
+  ])
+
+  const { setIsLogin, setLoading } = useContext(StateContext)
+  const { cred, setCred } = route.params
   const [register, setRegister] = useState({
     name: cred.name,
     email_address: cred.email_address,
-    phone_number: "",
-    gender: "",
-    emergency_contact1: "",
-    emergency_contact2: "",
+    phone_number: '',
+    gender: '',
+    emergency_contact1: '',
+    emergency_contact2: '',
     password: cred.password,
-  });
+  })
+
+  function onPressRadioButton(radioButtonsArray) {
+    setRadioButtons(radioButtonsArray)
+    radioButtonsArray.map((radioButton) => {
+      if (radioButton.selected) {
+        setRegister({
+          ...register,
+          gender: radioButton.value,
+        })
+      }
+    })
+  }
 
   const onSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       const { data } = await axios.post(`${SERVER_URL}/api/register`, {
         name: register.name,
@@ -41,37 +67,37 @@ const Register = ({ route, navigation }) => {
           register.emergency_contact2,
         ],
         password: register.password,
-      });
-      await AsyncStorage.setItem("user", JSON.stringify(data));
+      })
+      await AsyncStorage.setItem('user', JSON.stringify(data))
       setCred({
-        name: "",
-        email_address: "",
-        password: "",
-      });
+        name: '',
+        email_address: '',
+        password: '',
+      })
       setRegister({
-        name: "",
-        email_address: "",
-        phone_number: "",
-        gender: "",
-        emergency_contact1: "",
-        emergency_contact2: "",
-        password: "",
-      });
-      setIsLogin(true);
+        name: '',
+        email_address: '',
+        phone_number: '',
+        gender: '',
+        emergency_contact1: '',
+        emergency_contact2: '',
+        password: '',
+      })
+      setIsLogin(true)
     } catch (err) {
-      console.error(err);
-      if (err.response) return alert(err.response.data);
-      alert(err);
+      console.error(err)
+      if (err.response) return alert(err.response.data)
+      alert(err)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
+      <SafeAreaView style={{ width: '100%', maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>
           Tell us more about you :)
         </Text>
@@ -86,24 +112,21 @@ const Register = ({ route, navigation }) => {
           autoCapitalize="none"
           autoComplete="off"
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Gender"
-          onChangeText={(text) => setRegister({ ...register, gender: text })}
-          value={register.gender}
-          autoCapitalize="none"
-          autoComplete="off"
-        />
-        <Picker
-          editable={false}
-          selectedValue={register.gender}
-          onValueChange={(itemValue, itemIndex) =>
-            setRegister({ ...register, gender: itemValue })
-          }
-        >
-          <Picker.Item label="Male" value="male" />
-          <Picker.Item label="Female" value="female" />
-        </Picker>
+        <View style={{ alignItems: 'flex-start' }}>
+          <RadioGroup
+            radioButtons={radioButtons}
+            onPress={onPressRadioButton}
+            containerStyle={{
+              alignItems: 'flex-start',
+              margin: 5,
+              marginBottom: 25,
+              marginVertical: 10,
+            }}
+            value={register.category}
+            layout="row"
+          />
+        </View>
+
         <TextInput
           style={styles.input}
           placeholder="Emergency Contact 1"
@@ -134,11 +157,11 @@ const Register = ({ route, navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ marginTop: 10 }}
-          onPress={() => navigation.navigate("register")}
+          onPress={() => navigation.navigate('register')}
         >
           <Text
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               fontFamily: Styles.medium.fontFamily,
             }}
             autoCapitalize="none"
@@ -149,20 +172,20 @@ const Register = ({ route, navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     padding: 40,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingTop: 100,
   },
   title: {
     fontSize: 30,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 50,
   },
   input: {
@@ -171,14 +194,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
   },
   buttonText: {
-    color: "#fff",
-    textAlign: "center",
+    color: '#fff',
+    textAlign: 'center',
     fontFamily: Styles.bold.fontFamily,
     fontSize: 18,
   },
-});
+})
 
-export default Register;
+export default Register

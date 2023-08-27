@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
-import Styles from "../../CommonStyles";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import React from 'react'
+import Styles from '../../CommonStyles'
 
 const GetStarted = ({ navigation }) => {
   return (
@@ -8,17 +8,17 @@ const GetStarted = ({ navigation }) => {
       <View style={styles.upperPattern}></View>
       <View style={styles.textCon}>
         <Image
-          source={require("../../assets/logo.jpg")}
+          source={require('../../assets/logo.jpg')}
           style={{ width: 150, height: 150, borderRadius: 100 }}
         />
         <Text style={[Styles.bold, styles.title]}>withU</Text>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate("login")}
+          onPress={() => navigation.navigate('login')}
         >
           <Text
             style={{
-              color: "#fff",
+              color: '#fff',
               fontFamily: Styles.bold.fontFamily,
               fontSize: 18,
             }}
@@ -28,23 +28,23 @@ const GetStarted = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   mainCon: {
     flex: 1,
-    width: "100%",
+    width: '100%',
   },
   upperPattern: {
     backgroundColor: Styles.bg.backgroundColor,
-    height: "40%",
+    height: '40%',
     borderBottomEndRadius: 100,
     borderBottomStartRadius: 100,
   },
   textCon: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     marginTop: -80,
   },
   title: {
@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
     backgroundColor: Styles.bg.backgroundColor,
     paddingVertical: 12,
     borderRadius: 12,
-    position: "absolute",
-    top: "180%",
+    position: 'absolute',
+    top: '180%',
     paddingHorizontal: 50,
   },
-});
+})
 
-export default GetStarted;
+export default GetStarted

@@ -2,6 +2,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Modal, Group, Button, Text } from "@mantine/core";
 import axios from "axios";
 import React, { useState } from "react";
+import { SERVER_URL } from "../config";
 
 function AlertModal({ sos_id }) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -33,7 +34,7 @@ function AlertModal({ sos_id }) {
         <Button
           onClick={async () => {
             const { data } = await axios.get(
-              `http://192.168.137.1:8000/api/sos/accepted/${sos_id}`
+              `${SERVER_URL}/api/sos/accepted/${sos_id}`
             );
             setAcceptedList(data);
             open();

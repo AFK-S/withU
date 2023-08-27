@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
-import StateContext from "../context/StateContext";
+import StateContext from "../../context/StateContext";
 
 const Loading = () => {
   const { loading } = useContext(StateContext);
@@ -10,7 +10,7 @@ const Loading = () => {
       <View style={styles.container}>
         <ActivityIndicator
           animating={loading}
-          color="#bc2b78"
+          color="#7d40ff"
           size="large"
           style={styles.activityIndicator}
         />

@@ -17,7 +17,6 @@ import StateContext from '../../context/StateContext'
 import axios from 'axios'
 import { SERVER_URL } from '../../config'
 import CommonStyles from '../../CommonStyles.js'
-import Chatroom from './Chatroom'
 
 const Alerts = () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -75,7 +74,6 @@ const Alerts = () => {
   const GetDirection = async (user_id, sos_id) => {
     if (!socket.connected) return alert('Please Connect to Socket')
     try {
-      // await axios.post(`${SERVER_URL}/api/sos/accepted`, { sos_id, user_id })
       const { data } = await axios.get(
         `${SERVER_URL}/api/active/location/${user_id}`,
       )
@@ -103,9 +101,6 @@ const Alerts = () => {
                   <View
                     style={{
                       position: 'relative',
-                      // display: 'flex',
-                      // flexDirection: 'row',
-                      // justifyContent: 'space-between',
                     }}
                   >
                     <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -134,7 +129,6 @@ const Alerts = () => {
                           style={{ width: 30, height: 30, zIndex: 1 }}
                         />
                       </TouchableOpacity>
-                      <Chatroom socket={socket} sos_id={item._id} />
                     </View>
                   </View>
                   <Text style={{ ...styles.raisedBy }}>

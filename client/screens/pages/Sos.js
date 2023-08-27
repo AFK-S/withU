@@ -8,7 +8,6 @@ import {
   Image,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
-
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
 import * as SMS from "expo-sms";
@@ -17,6 +16,7 @@ import StateContext from "../../context/StateContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { SERVER_URL } from "../../config";
+import Chatbot from "../../components/Chatbot.js";
 
 const SOS = () => {
   const { socket, Logout, User, isSocketConnected } = useContext(StateContext);
@@ -29,6 +29,7 @@ const SOS = () => {
   const [isShaking, setIsShaking] = useState(false);
 
   const [accepted_count, setAccepted_count] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -128,7 +129,6 @@ const SOS = () => {
       SendSMS(emergency_contact, message);
     });
   };
-  // Shake Event
 
   useEffect(() => {
     const subscription = Accelerometer.addListener((accelerometerData) => {
@@ -138,42 +138,27 @@ const SOS = () => {
 
       if (acceleration > 1.2) {
         if (!isShaking) {
-          // Start shaking
           setIsShaking(true);
           setShakeCount(1);
           setLastShakeTimestamp(now);
         } else if (shakeCount < 6 && now - lastShakeTimestamp < 500) {
-          // Continue shaking
           setShakeCount(shakeCount + 1);
           setLastShakeTimestamp(now);
         } else if (shakeCount >= 6) {
-          // Shake completed
           setIsShaking(false);
           setShakeCount(0);
           setLastShakeTimestamp(0);
           if (!isSOS) return OnSOS("general");
         }
       } else {
-        // Stop shaking
         setIsShaking(false);
         setShakeCount(0);
         setLastShakeTimestamp(0);
       }
     });
-
     Accelerometer.setUpdateInterval(16);
-
-    return () => {
-      subscription.remove();
-    };
+    return () => subscription.remove();
   }, [isShaking, shakeCount, lastShakeTimestamp]);
-
-  useEffect(() => {
-    async function checkSensor() {
-      const isSensorAvailable = await Accelerometer.isAvailableAsync();
-    }
-    checkSensor();
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -196,9 +181,14 @@ const SOS = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.logoutDiv}>
-        <TouchableOpacity style={styles.logout} onPress={Logout}>
+        <TouchableOpacity
+          style={styles.logout}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        >
           <Image
-            source={require("../../assets/logout-icon.png")}
+            source={require("../../assets/icons/chatbot.png")}
             resizeMode="contain"
             style={{
               width: 25,
@@ -206,6 +196,10 @@ const SOS = () => {
             }}
           />
         </TouchableOpacity>
+        <Chatbot
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
       </View>
       <View style={styles.container}>
         <View

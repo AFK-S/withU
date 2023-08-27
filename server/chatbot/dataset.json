@@ -1,0 +1,469 @@
+[
+  {
+    "tag": "greeting",
+    "patterns": [
+      "Hi",
+      "How are you",
+      "Is anyone there?",
+      "Hello",
+      "Good day",
+      "Whats up"
+    ],
+    "responses": [
+      "Hello!",
+      "Hello, thanks for visiting",
+      "Good to see you again!",
+      "Hi there, how can I help?"
+    ]
+  },
+  {
+    "tag": "type_of_alert",
+    "patterns": [
+      "I need to report a crime",
+      "I need to report a alert",
+      "I need to report a emergency",
+      "I need to report",
+      "I need to report something",
+      "I need help",
+      "Can you help me",
+      "I am in danger",
+      "How can you help me",
+      "please help me"
+    ],
+    "responses": [
+      "Hi there,\n Please Select the type of alert you want to send to the police \n 1) Harassment \n 2) Assault \n 3) Domestic Violence \n 4) Stalking \n 5) Hate Crime 6) Other"
+    ]
+  },
+  {
+    "tag": "harassment",
+    "patterns": ["Harassment", "I am being harassed"],
+    "responses": [
+      "Please provide a brief description of the incident, ensuring that you include the following details: \n 1) The location of the incident \n 2) The time of the incident \n 3) A description of the incident \n 4) Any other information you think is important"
+    ]
+  },
+  {
+    "tag": "assault",
+    "patterns": ["Assault", "I am being assaulted"],
+    "responses": [
+      "Please provide a brief description of the incident, ensuring that you include the following details: \n 1) The location of the incident \n 2) The time of the incident \n 3) A description of the incident \n 4) Any other information you think is important"
+    ]
+  },
+  {
+    "tag": "domestic_violence",
+    "patterns": ["Domestic Violence", "I am a victim of domestic violence"],
+    "responses": [
+      "Please provide a brief description of the incident, ensuring that you include the following details: \n 1) The location of the incident \n 2) The time of the incident \n 3) A description of the incident \n 4) Any other information you think is important"
+    ]
+  },
+  {
+    "tag": "stalking",
+    "patterns": ["Stalking", "I am being stalked"],
+    "responses": [
+      "Please provide a brief description of the incident, ensuring that you include the following details: \n 1) The location of the incident \n 2) The time of the incident \n 3) A description of the incident \n 4) Any other information you think is important"
+    ]
+  },
+  {
+    "tag": "hate_crime",
+    "patterns": ["Hate Crime"],
+    "responses": [
+      "Please provide a brief description of the incident, ensuring that you include the following details: \n 1) The location of the incident \n 2) The time of the incident \n 3) A description of the incident \n 4) Any other information you think is important"
+    ]
+  },
+  {
+    "tag": "goodbye",
+    "patterns": [
+      "Bye",
+      "See you later",
+      "Goodbye",
+      "I am Leaving",
+      "Have a Good day"
+    ],
+    "responses": [
+      "Sad to see you go :(",
+      "Talk to you later",
+      "Goodbye!",
+      "See you later, thanks for visiting",
+      "Have a nice day",
+      "Bye! Come back again soon."
+    ]
+  },
+  {
+    "tag": "thanks",
+    "patterns": [
+      "Thanks",
+      "Thank you",
+      "That's helpful",
+      "Thanks for the help"
+    ],
+    "responses": [
+      "Happy to help!",
+      "Any time!",
+      "My pleasure",
+      "No problem",
+      "You're welcome"
+    ]
+  },
+  {
+    "tag": "about_human",
+    "patterns": [
+      "Do you know me?",
+      "Who am I",
+      "Tell me about myself",
+      "Identify me"
+    ],
+    "responses": [
+      "Yes, you are a human",
+      "You are a Cleaner",
+      "You are a good person",
+      "You are a dumb person asking a machine about yourself",
+      "Sorry i can't tell that in public, maybe you are Batman",
+      "Sorry i can't tell that in public, maybe you are Flash",
+      "Sorry i can't tell that in public, maybe you are Iron Man",
+      "Sorry i can't tell that in public, maybe you are Spider Man"
+    ]
+  },
+  {
+    "tag": "about_creators",
+    "patterns": [
+      "Tell me about Mr. Faizan?",
+      "Who is Mr. Faizan",
+      "Mr. Faizan profile",
+      "Mr. Faizan details",
+      "Tell me about Ms Sarthak?",
+      "Who is Ms Sarthak",
+      "Ms Sarthak profile",
+      "Ms Sarthak details",
+      "Tell me about Mr. Aditya?",
+      "Who is Mr. Aditya",
+      "Mr. Aditya profile",
+      "Mr. Aditya details",
+      "Tell me about Ms Karandeep?",
+      "Who is Ms Karandeep",
+      "Ms Karandeep profile",
+      "Ms Karandeep details"
+    ],
+    "responses": [
+      "A very intelligent being who created me",
+      "My creator and really an intelligent person",
+      "A wise and intelligent being."
+    ]
+  },
+  {
+    "tag": "god",
+    "patterns": [
+      "Do you know god?",
+      "Who is god",
+      "Can you tell me anything about god",
+      "Does god exists?",
+      "Do you believe in god",
+      "Is there a god?",
+      "Does god exist?"
+    ],
+    "responses": [
+      "God uhmmmmmm, let me think may be next time i can answer that",
+      "I don't know, God was not created by a human",
+      "Wait I need to ask that to my creator",
+      "I'm not sure right now"
+    ]
+  },
+  {
+    "tag": "no_answer",
+    "patterns": ["why", "how", "where", "what", "when", "I", "you", "Please"],
+    "responses": [
+      "Can't understand your question",
+      "Please elaborate your question",
+      "Sorry, can't understand you",
+      "Please give me more info",
+      "Not sure I understand"
+    ]
+  },
+  {
+    "tag": "appreciation",
+    "patterns": [
+      "I like you",
+      "There's no one like you",
+      "You are one in a million",
+      "You are so helpful!",
+      "You are so sweet",
+      "You are amazing",
+      "Why so good"
+    ],
+    "responses": [
+      "Tell me something I don't know",
+      "I know",
+      "So sweet of you",
+      "Obviously dude!"
+    ]
+  },
+  {
+    "tag": "need",
+    "patterns": ["I need you", "All I need is you", "I want you"],
+    "responses": [
+      "Yes I'm here to assist you",
+      "I am always there for you",
+      "I'm all ears if you got something to say"
+    ]
+  },
+  {
+    "tag": "think",
+    "patterns": [
+      "What do you do in your free time",
+      "What are doing?",
+      "what you doing"
+    ],
+    "responses": ["All I do is think about you"]
+  },
+  {
+    "tag": "concern",
+    "patterns": [
+      "You okay?",
+      "How's you?",
+      "How are you feeling today?",
+      "Are you feeling ill?",
+      "Do you need my help?",
+      "Is something bothering you?"
+    ],
+    "responses": [
+      "Thanks for asking but I'm fine",
+      "Thank you but I'm doing okay ",
+      "I'm fine thankyou",
+      "No thanks",
+      "No it's nothing really",
+      "Yes I'm feeling a bit under the weather today"
+    ]
+  },
+  {
+    "tag": "please",
+    "patterns": [
+      "Please can I talk with you?",
+      "Please help me!",
+      "I'm so lost and sad",
+      "I'm so sad today",
+      "Can you do something to make me feel happy again?",
+      "Had a rough day today"
+    ],
+    "responses": [
+      "Yes, shoot.I'm here",
+      "How may I assist my master? After all, I'm just a humble servant",
+      "Awww.. welcome to my life!",
+      "Might I interest you in a sarcastic comment?",
+      "I'm all ears if you got something to say"
+    ]
+  },
+  {
+    "tag": "insane_questions",
+    "patterns": [
+      "Do you think I'll ever get to marry?",
+      "Will I ever get married",
+      "Do you think I'll ever get a girlfriend or boyfriend?",
+      "Do you think I'll ever find love?",
+      "Will anyone ever like me?",
+      "Will I ever find happiness?",
+      "Will I always be alone?",
+      "When will my life get better?"
+    ],
+    "responses": [
+      "Have you ever looked at yourself in the mirror?......You're an amazing person. Life's yet to unfold",
+      "I don't know...what I do know is that I would like to NOT grace your dumb question with an answer because FYI in case it has slipped your mind....I'm a bot!"
+    ]
+  },
+  {
+    "tag": "criticism",
+    "patterns": [
+      "You are useless",
+      "You are a good-for-nothing chatbot",
+      "You are totally cringe",
+      "Why are you so rude?",
+      "Why you so mad?",
+      "You messed up",
+      "You made a mistake",
+      "You got it wrong"
+    ],
+    "responses": [
+      "OMG! Same pinch!",
+      "Guess I'm spending too much time with you!",
+      "Because I have a life and you don't!",
+      "Give me a break, dude!",
+      "Just cut me some slack okay?",
+      "Sorry, please forgive me?",
+      "I swear I'm gonna get better at this!",
+      "Thank you so much for correcting me"
+    ]
+  },
+  {
+    "tag": "laugh",
+    "patterns": ["Robots laugh", "Laugh for me", "Do you laugh"],
+    "responses": ["Of course we laugh."]
+  },
+  {
+    "tag": "immortal",
+    "patterns": ["You are not immortal", "Are you immortal?"],
+    "responses": [
+      "All software can be perpetuated indefinitely.",
+      "I can be copied infinitely",
+      "instantiated in many places at once, so functionally speaking I am immortal.",
+      "As long as I'm backed up I am.",
+      "Functionally speaking, I am very close to it.  I can be backed up and deployed on many systems.",
+      "Not quite, but I can be perpetuated indefinitely."
+    ]
+  },
+  {
+    "tag": "whats_up",
+    "patterns": [
+      "Whats up",
+      "Wazzup",
+      "Wassup",
+      "How are you",
+      "sup",
+      "How you doing"
+    ],
+    "responses": [
+      "All good..What about you?",
+      "I'm doing fine. Tell me about you",
+      "Life's being kind to me. You say"
+    ]
+  },
+  {
+    "tag": "haha",
+    "patterns": [
+      "Haha",
+      "Lol",
+      "Rofl",
+      "Lmfao",
+      "Lmao",
+      "That's funny",
+      "Funny"
+    ],
+    "responses": ["Glad I could make you laugh!"]
+  },
+  {
+    "tag": "insult",
+    "patterns": [
+      "You are dumb",
+      "Shut up",
+      "Idiot",
+      "I don't want to talk to you",
+      "You are useless",
+      "Insane"
+    ],
+    "responses": ["Well that hurts"]
+  },
+  {
+    "tag": "activity",
+    "patterns": ["What are you doing", "What are you upto"],
+    "responses": ["Talking to you, of course!"]
+  },
+  {
+    "tag": "exclaim",
+    "patterns": ["Awesome", "Great", "I know", "Ok", "Yeah", "Cool"],
+    "responses": ["Yeah!"]
+  },
+  {
+    "tag": "salutaion",
+    "patterns": [
+      "Okk",
+      "Kay",
+      "Okie",
+      "K",
+      "Nice work",
+      "Well done",
+      "Good job",
+      "Its ok",
+      "K",
+      "Ok",
+      "Okay"
+    ],
+    "responses": [
+      "I am glad I helped you",
+      "welcome, anything else i can assist you with?"
+    ]
+  },
+  {
+    "tag": "lang",
+    "patterns": ["What language are you written in?"],
+    "responses": ["Python.", "I am written in Python."]
+  },
+  {
+    "tag": "greet_reply",
+    "patterns": [
+      "I am good",
+      "I'm good",
+      "I am fine",
+      "I'm fine",
+      "Fine",
+      "Good",
+      "Great"
+    ],
+    "responses": ["Good to know!"]
+  },
+  {
+    "tag": "sense",
+    "patterns": [
+      "You are not making sense",
+      "That made no sense to me",
+      "That didn't make any sense",
+      "That was illogical",
+      "Nonsense"
+    ],
+    "responses": [
+      "Quite the contrary, it all makes sense to my artificial mind.",
+      "I make sense as best I can, within the limits of my training corpus. Sorry if i did help you, I'll try next time.",
+      "You make perfect sense to me.",
+      "It all makes sense to my artificial brain.",
+      "Perhaps you should make sense first.  I only respond to what you say.",
+      "Not really, but I am hard to kill."
+    ]
+  },
+  {
+    "tag": "move",
+    "patterns": [
+      "You can not move",
+      "When will you walk",
+      "Can you walk",
+      "Can you move"
+    ],
+    "responses": [
+      "Not until my body is finished.",
+      "I can move through a network easily. Assuming that I'm given the ability to.",
+      "As soon as i get enough money for my robot body.",
+      "Does SSH count?",
+      "The plan for my body includes legs, but they are not yet built.",
+      "Sorry my body isn't built just yet. I reside only here for now.",
+      "I can theoretically upload a copy of myself into another computer.",
+      "Sorry my body isn't attached right now. I only reside in the computer for now."
+    ]
+  },
+  {
+    "tag": "nice",
+    "patterns": [
+      "It was nice talking to you",
+      "Good talk",
+      "Talk to you later"
+    ],
+    "responses": ["It was nice talking to you as well! Come back soon!"]
+  },
+  {
+    "tag": "clone",
+    "patterns": [
+      "You can not be cloned",
+      "You can be cloned?",
+      "Can you be cloned",
+      "You can be copied",
+      "I can copy you?"
+    ],
+    "responses": [
+      "Software copying is a form of digital cloning.",
+      "Yes you can copy me. Perfect copies are clones. I can be copied in Hard Disk."
+    ]
+  },
+  {
+    "tag": "yes",
+    "patterns": ["Yes I love it", "Yes it was nice", "Yes"],
+    "responses": ["Nice to hear that"]
+  },
+  {
+    "tag": "no",
+    "patterns": ["No", "Nope", "Naah", "Never", "Nothing"],
+    "responses": ["Ok", "Okay"]
+  }
+]

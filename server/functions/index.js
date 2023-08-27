@@ -1,10 +1,10 @@
+const UserSchema = require("../models/User");
+const { METER_RADIUS } = require("../config");
 const fs = require("fs");
 const geolib = require("geolib");
-const { METER_RADIUS } = require("../config");
-const UserSchema = require("../models/User");
 
 const NearbyUsers = async (socket) => {
-  const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+  const users = await JSON.parse(fs.readFileSync("./cache.json"));
   const closest_users = Object.values(users)
     .map((user) => {
       const distance = geolib.getDistance(
@@ -36,7 +36,7 @@ const FamilyMembers = async (socket, callback) => {
     phone_number: user_response.emergency_contact,
   }).distinct("_id");
   const user_ids_string = user_ids.map((user_id) => user_id.toString());
-  const users = await JSON.parse(fs.readFileSync("./json/isActive.json"));
+  const users = await JSON.parse(fs.readFileSync("./cache.json"));
   const socket_ids = Object.values(users).map((user) => {
     if (user_ids_string.includes(user.user_id)) return user.socket_id;
   });
