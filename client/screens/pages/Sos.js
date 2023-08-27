@@ -6,7 +6,6 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  // Alert,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
 
