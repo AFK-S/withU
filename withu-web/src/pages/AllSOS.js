@@ -5,9 +5,9 @@ import io from "socket.io-client";
 import { useCookies } from "react-cookie";
 import AlertModal from "../components/AlertModal";
 import axios from "axios";
+import { SERVER_URL } from "../config";
 
 const AllSOS = () => {
-  const SERVER_URL = "http://192.168.137.1:8000";
   const [cookies] = useCookies(["user_id"]);
   const [socket] = useState(
     io(SERVER_URL, {

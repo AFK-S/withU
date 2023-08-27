@@ -14,6 +14,7 @@ import {
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { SERVER_URL } from "../../config.js";
 
 export function Login({ setIsLogin }) {
   const [cookies, setCookie] = useCookies(["user_id"]);
@@ -55,7 +56,7 @@ export function Login({ setIsLogin }) {
             onSubmit={form.onSubmit(async (val) => {
               try {
                 const { data } = await axios.put(
-                  "http://192.168.137.1:8000/api/police/login",
+                  `${SERVER_URL}/api/police/login`,
                   val
                 );
                 setCookie("user_id", data.user_id, { path: "/" });
