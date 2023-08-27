@@ -30,7 +30,7 @@ const SOS = new Schema(
       enum: ["general", "accident", "medical"],
       required: [true, "Please add a Description"],
     },
-    accepted_commity_list: {
+    accepted_list: {
       type: Array,
       default: [],
     },
