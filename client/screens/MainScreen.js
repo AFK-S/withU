@@ -1,15 +1,14 @@
-import { View, Image, Platform, StyleSheet, Vibration } from "react-native";
+import { View, Image, Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import Sos from "./pages/Sos";
 import Map from "./pages/Map";
 import Alerts from "./pages/Alerts";
-import Help from "./pages/Help";
 import Profile from "./pages/Profile.js";
 import * as Notifications from "expo-notifications";
 import StateContext from "../context/StateContext";
 import * as Location from "expo-location";
-import Knowledge from "./pages/Knowledge";
+import Story from "./pages/Story";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -177,7 +176,7 @@ const MainScreen = () => {
           component={Sos}
         />
         <Tab.Screen
-          name="LEARN"
+          name="STORIES"
           options={{
             tabBarIcon: ({ focused }) => (
               <View
@@ -191,7 +190,7 @@ const MainScreen = () => {
                 }}
               >
                 <Image
-                  source={require("../assets/icons/learn.png")}
+                  source={require("../assets/icons/story.png")}
                   resizeMode="contain"
                   style={{
                     width: 30,
@@ -201,7 +200,7 @@ const MainScreen = () => {
               </View>
             ),
           }}
-          component={Knowledge}
+          component={Story}
         />
         <Tab.Screen
           name="PROFILE"

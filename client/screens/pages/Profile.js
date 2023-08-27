@@ -14,18 +14,21 @@ import {
 import axios from "axios";
 import StateContext from "../../context/StateContext";
 import { SERVER_URL } from "../../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
-  const { User, setLoading } = useContext(StateContext);
+  const { setLoading } = useContext(StateContext);
   const [user, setUser] = useState({
     name: "",
     emergency_contact1: "",
     emergency_contact2: "",
   });
+  const { Logout } = useContext(StateContext);
 
   const getUserData = async () => {
     setLoading(true);
     try {
+      const User = await JSON.parse(await AsyncStorage.getItem("user"));
       const { data } = await axios.get(
         `${SERVER_URL}/api/user/${User.user_id}`
       );
@@ -35,8 +38,9 @@ const Profile = () => {
         emergency_contact2: data.emergency_contact[1],
       });
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
     setLoading(false);
   };
@@ -44,14 +48,23 @@ const Profile = () => {
   const updateProfile = async () => {
     setLoading(true);
     try {
+      const User = await JSON.parse(await AsyncStorage.getItem("user"));
       await axios.put(`${SERVER_URL}/api/user/${User.user_id}`, {
         name: user.name,
         emergency_contact: [user.emergency_contact1, user.emergency_contact2],
       });
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...User,
+          emergency_contact: [user.emergency_contact1, user.emergency_contact2],
+        })
+      );
       Alert.alert("Success", "Profile updated successfully");
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
     setLoading(false);
   };
@@ -60,13 +73,16 @@ const Profile = () => {
     getUserData();
   }, []);
 
+  const keyboardVerticalOffset = Platform.OS === "ios" ? 130 : 0;
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="position"
+        keyboardVerticalOffset={keyboardVerticalOffset}
         style={{ width: "100%" }}
       >
-        <ScrollView style={{ width: "100%" }}>
+        <ScrollView style={{ width: "100%", marginBottom: 80 }}>
           <View style={styles.avatar}>
             <Image
               source={require("../../assets/icons/user.png")}
@@ -132,6 +148,28 @@ const Profile = () => {
                 }}
               >
                 Update
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={Logout}
+              style={{
+                borderWidth: 2,
+                borderColor: "#f75459",
+                padding: 20,
+                borderRadius: 20,
+                width: "80%",
+                marginTop: 20,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#f75459",
+                  fontSize: 18,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Logout
               </Text>
             </TouchableOpacity>
           </View>
