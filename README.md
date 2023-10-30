@@ -91,9 +91,9 @@ Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. S
 
 
 ## Developed by
-- [Karandeep Singh Sandhu](https://github.com/Karan2310)
 - [Aditya Rai](https://github.com/adi50920)
 - [Faizan Potrick](https://github.com/FaizanPotrick)
+- [Karandeep Singh Sandhu](https://github.com/Karan2310)
 - [Sarthak Deshmukh](https://github.com/SarthakDeshmukh13)
 
 ## **Screens**
