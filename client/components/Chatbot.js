@@ -96,17 +96,46 @@ const Chatbot = ({ modalVisible, setModalVisible }) => {
             <KeyboardAvoidingView
               behavior="position"
               keyboardVerticalOffset={keyboardVerticalOffset}
-              style={{ width: "100%" }}
             >
               <View
                 style={{
-                  width: "100%",
-                  height: "90%",
+                  height: "92%",
                   marginTop: 20,
                   marginBottom: 20,
+                  display: "flex",
+                  justifyContent: "flex-end",
                 }}
               >
-                <ScrollView
+                <View>
+                  <ScrollView
+                    style={{
+                      height: "90%",
+                      display: "flex",
+                      flexDirection: "column-reverse",
+                      marginBottom: 5,
+                    }}
+                  >
+                    <View style={styles.chatTextBox}>
+                      <Text style={styles.chatText}>OK</Text>
+                    </View>
+                    <View style={[styles.chatTextBox, styles.chatTextBoxRight]}>
+                      <Text style={styles.chatText}>OK okokokokok</Text>
+                    </View>
+                    <View style={styles.chatTextBox}>
+                      <Text style={styles.chatText}>OK</Text>
+                    </View>
+                    <View style={styles.chatTextBox}>
+                      <Text style={styles.chatText}>OK</Text>
+                    </View>
+                    <View style={styles.chatTextBox}>
+                      <Text style={styles.chatText}>OK</Text>
+                    </View>
+                    <View style={styles.chatTextBox}>
+                      <Text style={styles.chatText}>OK</Text>
+                    </View>
+                  </ScrollView>
+                </View>
+                {/* <ScrollView
                   style={{
                     paddingVertical: 20,
                     marginBottom: 30,
@@ -118,91 +147,7 @@ const Chatbot = ({ modalVisible, setModalVisible }) => {
                   <Text>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                   </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  </Text>
-                </ScrollView>
+                </ScrollView> */}
                 <View
                   style={{
                     display: "flex",
@@ -254,6 +199,8 @@ const styles = StyleSheet.create({
     height: "90%",
     backgroundColor: "white",
     borderRadius: 40,
+    borderBottomEndRadius: 0,
+    borderBottomLeftRadius: 0,
     padding: 35,
     shadowColor: "#000",
     shadowOffset: {
@@ -265,6 +212,22 @@ const styles = StyleSheet.create({
     elevation: 5,
     display: "flex",
     justifyContent: "space-between",
+  },
+  chatTextBox: {
+    backgroundColor: "#ACACAC",
+    marginBottom: 10,
+    padding: 10,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    alignSelf: "flex-start", // This makes the View's width fit its content.
+  },
+  chatTextBoxRight: {
+    backgroundColor: "#000",
+    alignSelf: "flex-end",
+  },
+  chatText: {
+    color: "#FFF",
+    fontWeight: "bold",
   },
 });
 
