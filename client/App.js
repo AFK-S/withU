@@ -9,8 +9,10 @@ import StateContext, {
   SocketProvider,
 } from "./context/StateContext";
 import Loading from "./screens/pages/Loading";
+import { LogBox } from "react-native";
 
 export default function App() {
+  LogBox.ignoreAllLogs();
   const [fontsLoaded] = useFonts({
     "Poppins-Bold": require("./assets/Fonts/Poppins-Bold.ttf"),
     "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),

@@ -14,7 +14,13 @@ import CommonStyles from "../CommonStyles";
 import axios from "axios";
 
 const Chatbot = ({ modalVisible, setModalVisible }) => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState([]);
+  const [chat, setChat] = useState([
+    {
+      message: "OKOKOk",
+      sender: "bot",
+    },
+  ]);
   const [typeAlert, setTypeAlert] = useState("");
   const [anonymous_alert, setAnonymous_alert] = useState({
     type: "",
@@ -22,16 +28,17 @@ const Chatbot = ({ modalVisible, setModalVisible }) => {
   });
 
   const onSubmit = async () => {
-    try {
-      const { data } = await axios.get(`${SERVER_URL}/api/chatbot/${message}`);
-      setMessage("");
-      setTypeAlert(data.type);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-      if (err.response) return alert(err.response.data);
-      alert(err);
-    }
+    alert("ok");
+    // try {
+    //   const { data } = await axios.get(`${SERVER_URL}/api/chatbot/${message}`);
+    //   setMessage("");
+    //   setTypeAlert(data.type);
+    //   console.log(data);
+    // } catch (err) {
+    //   console.error(err);
+    //   if (err.response) return alert(err.response.data);
+    //   alert(err);
+    // }
   };
   const CreateAnonymousAlert = async () => {
     try {
@@ -115,23 +122,46 @@ const Chatbot = ({ modalVisible, setModalVisible }) => {
                       marginBottom: 5,
                     }}
                   >
+                    {chat &&
+                      chat.map((e, index) => {
+                        const { message, sender } = e;
+                        return (
+                          <View
+                            key={index}
+                            style={[
+                              styles.chatTextBox,
+                              sender === "bot" ? "" : styles.chatTextBoxRight,
+                            ]}
+                          >
+                            <Text style={styles.chatText}>{message}</Text>
+                          </View>
+                        );
+                      })}
                     <View style={styles.chatTextBox}>
-                      <Text style={styles.chatText}>OK</Text>
+                      <Text style={styles.chatText}>Hi There!</Text>
                     </View>
                     <View style={[styles.chatTextBox, styles.chatTextBoxRight]}>
-                      <Text style={styles.chatText}>OK okokokokok</Text>
+                      <Text style={styles.chatText}>I need help!</Text>
                     </View>
                     <View style={styles.chatTextBox}>
-                      <Text style={styles.chatText}>OK</Text>
+                      <Text style={styles.chatText}>
+                        {`What type of help?
+
+1. General
+2. Medical
+3. Police `}
+                      </Text>
+                    </View>
+                    <View style={[styles.chatTextBox, styles.chatTextBoxRight]}>
+                      <Text style={styles.chatText}>1</Text>
                     </View>
                     <View style={styles.chatTextBox}>
-                      <Text style={styles.chatText}>OK</Text>
+                      <Text style={styles.chatText}>
+                        Okay! Getting General Help
+                      </Text>
                     </View>
                     <View style={styles.chatTextBox}>
-                      <Text style={styles.chatText}>OK</Text>
-                    </View>
-                    <View style={styles.chatTextBox}>
-                      <Text style={styles.chatText}>OK</Text>
+                      <Text style={styles.chatText}>SOS Generated !</Text>
                     </View>
                   </ScrollView>
                 </View>
@@ -157,7 +187,7 @@ const Chatbot = ({ modalVisible, setModalVisible }) => {
                   }}
                 >
                   <TextInput
-                    placeholder="Name"
+                    placeholder="Type a message here"
                     onChangeText={(text) => {
                       setMessage(text);
                     }}
