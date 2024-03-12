@@ -118,28 +118,30 @@ const Map = () => {
             provider="google"
           >
             {activeUsers.map((user, index) => {
-              return (
-                <Marker
-                  key={index}
-                  coordinate={user.coordinates}
-                  opacity={user.user_id === User.user_id ? 1 : 0.6}
-                  pinColor="red"
-                >
-                  <View
-                    style={{
-                      borderWidth: 2,
-                      borderColor: "black",
-                      borderRadius: 40,
-                    }}
+              if (user?.coordinates) {
+                return (
+                  <Marker
+                    key={index}
+                    coordinate={user.coordinates}
+                    opacity={user.user_id === User.user_id ? 1 : 0.6}
+                    pinColor="red"
                   >
-                    <Image
-                      source={require("../../assets/icons/woman.png")}
-                      style={{ width: 40, height: 40 }}
-                      resizeMode="contain"
-                    />
-                  </View>
-                </Marker>
-              );
+                    <View
+                      style={{
+                        borderWidth: 2,
+                        borderColor: "black",
+                        borderRadius: 40,
+                      }}
+                    >
+                      <Image
+                        source={require("../../assets/icons/woman.png")}
+                        style={{ width: 40, height: 40 }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  </Marker>
+                );
+              }
             })}
             {AdministratorInfo.map((administrator, index) => {
               return (
