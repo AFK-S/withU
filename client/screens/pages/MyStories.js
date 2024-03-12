@@ -10,6 +10,7 @@ import {
   Image,
   Alert,
   KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";

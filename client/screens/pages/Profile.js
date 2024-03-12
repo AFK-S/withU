@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import axios from "axios";
 import StateContext from "../../context/StateContext";
