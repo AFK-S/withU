@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import React, { useState } from "react";
 import CommonStyles from "../CommonStyles";
