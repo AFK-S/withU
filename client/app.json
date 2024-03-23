@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "withU",
-    "slug": "withU",
+    "slug": "withu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -41,8 +41,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "5cfab521-8b01-4acb-b72e-7759d8f63e81"
+        "projectId": "eca9c6fc-848f-47df-8aca-76d72ef19887"
       }
-    }
+    },
+    "owner": "karandeep"
   }
 }
